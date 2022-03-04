@@ -11,7 +11,7 @@ namespace BDSM
         private bool _moveMode = false;
         private int _windowPositionX;
         private int _windowPositionY;
-        private const int _windowSizeX = 350;
+        private const int _windowSizeX = 375;
         private const int _windowSizeY = 385;
 
         private string _aboutText = "This is a small mod for Bus Driver Simulator.\n" +
@@ -29,8 +29,8 @@ namespace BDSM
                                     "To move any window, just press \"M\" button in the top-left\n" +
                                     "corner of window, move it somewhere, and click again.\n\n\n" +
                                     "Mod authors:\n" +
-                                    "Lead developer: RidgyTheFox\n" +
-                                    "QA/Localization: Resident007\n" +
+                                    "  Lead developer: RidgyTheFox\n" +
+                                    "  QA/Localization: Resident007\n" +
                                     "    -Enjoy! ^_^";
 
         private void Awake()
