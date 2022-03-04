@@ -199,7 +199,7 @@ namespace BDSM
                 else
                 {
                     _isPasswordRequired = false;
-                    Debug.LogError("SERVER: Cannot read value \"passwrod\"! Passwords will be disabled!");
+                    Debug.LogError("SERVER: Cannot read value \"password\"! Passwords will be disabled!");
                 }
             }
             l_valueToken = null;
