@@ -25,7 +25,7 @@ namespace BDSM
                                     "  F2 - Server manager.\n" +
                                     "  F3 - About Window (This window).\n" +
                                     "You can open or close windows by pressing keys.\n" +
-                                    "You also can close windows by pressing \"X\" buttons.\n" +
+                                    "You also can close windows by pressing \"X\" button.\n" +
                                     "To move any window, just press \"M\" button in the top-left\n" +
                                     "corner of window, move it somewhere, and click again.\n\n\n" +
                                     "Mod authors:\n" +
