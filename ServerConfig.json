@@ -3,6 +3,6 @@
   "serverPort": 2022,
   "passwordRequired": true,
   "password": "bdsmIsCool",
-  "map": "serpuhov", // Available maps: "serpuhov", "serpuhovWinter" "keln", "murom", "solnechnogorsk"
+  "map": "serpuhov", // Available maps: "serpuhov", "serpuhovWinter" "keln", "murom", "muromWinter", "solnechnogorsk"
   "playersLimit": 10
 }
