@@ -1,0 +1,10 @@
+﻿This file describes the purpose of network packets. All packages are in the "Network" namespace. 
+There are three categories: "Nested Types" (Network.NestedTypes), 
+"Player Packets" (Network.PlayerPackets) and "Server Packets" (Network.ServerPackets).
+
+Nested Types - This kind of packet is not transmitted. But it is included in other packages.
+Player Packets - These are the packets that the server will send to the clients.
+Server Packets - These are the packets that clients will send to the server.
+
+Nested Types:
+	PlayerState - 

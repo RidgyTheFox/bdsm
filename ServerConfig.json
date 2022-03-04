@@ -1,0 +1,8 @@
+{
+  "serverName": "BDSM Server",
+  "serverPort": 2022,
+  "passwordRequired": true,
+  "password": "bdsmIsCool",
+  "map": "serpuhov", // Available maps: "serpuhov", "serpuhovWinter" "keln", "murom", "solnechnogorsk"
+  "playersLimit": 10
+}
