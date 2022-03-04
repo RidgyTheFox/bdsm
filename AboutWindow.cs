@@ -71,9 +71,9 @@ namespace BDSM
             if (_showWindow)
             {
                 GUI.Box(new Rect(_windowPositionX, _windowPositionY, _windowSizeX, _windowSizeY), "Bus Driver Simulator Mod | About Window");
-                if (GUI.Button(new Rect(_windowPositionX+1, _windowPositionY+1, 21, 21), "M"))
+                if (GUI.Button(new Rect(_windowPositionX+1, _windowPositionY+1, 23, 21), "M"))
                     _moveMode = !_moveMode;
-                if (GUI.Button(new Rect(_windowPositionX + _windowSizeX - 22, _windowPositionY + 1, 21, 21), "X"))
+                if (GUI.Button(new Rect(_windowPositionX + _windowSizeX - 24, _windowPositionY + 1, 23, 21), "X"))
                     _showWindow = !_showWindow;
 
                 GUI.Label(new Rect(_windowPositionX + 5, _windowPositionY + 26, _windowSizeX - 10, 20), "Bus Driver Simulator Multiplayer", _captionTextStyle);

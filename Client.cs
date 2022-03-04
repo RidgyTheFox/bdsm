@@ -92,9 +92,9 @@ namespace BDSM
                 }
 
                 GUI.Box(new Rect(_mainWindowPosX, _mainWindowPosY, 250, 155), "BDSM | Client Control Panel (F1)");
-                if (GUI.Button(new Rect(_mainWindowPosX + 1, _mainWindowPosY + 1, 21, 21), "M"))
+                if (GUI.Button(new Rect(_mainWindowPosX + 1, _mainWindowPosY + 1, 23, 21), "M"))
                     _mainWindowMoveMode = !_mainWindowMoveMode;
-                if (GUI.Button(new Rect(_mainWindowPosX + 228, _mainWindowPosY, 21, 21), "X"))
+                if (GUI.Button(new Rect(_mainWindowPosX + 226, _mainWindowPosY, 23, 21), "X"))
                 {
                     _mainWindowMoveMode = false;
                     _isMainWindowOpened = !_isMainWindowOpened;
