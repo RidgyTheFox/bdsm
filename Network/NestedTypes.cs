@@ -7,21 +7,18 @@ namespace BDSM.Network.NestedTypes
     public struct PlayerState : INetSerializable
     {
         public uint pid { get; set; }
-        public bool isBusHided { get; set; }
         public Vector3 position { get; set; }
         public Quaternion rotation { get; set; }
 
         public void Serialize(NetDataWriter l_writer)
         {
             l_writer.Put(pid);
-            l_writer.Put(isBusHided);
             l_writer.Put(position);
             l_writer.Put(rotation);
         }
         public void Deserialize(NetDataReader l_reader)
         {
             pid = l_reader.GetUInt();
-            isBusHided = l_reader.GetBool();
             position = l_reader.GetVector3();
             rotation = l_reader.GetQuaternion();
         }

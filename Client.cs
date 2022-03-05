@@ -47,7 +47,7 @@ namespace BDSM
             _client = new NetManager(this) { AutoRecycle = true };
             _writer = new NetDataWriter();
 
-            _localPlayerState = new Network.NestedTypes.PlayerState { isBusHided = true, position = new Vector3(1.0f, 2.0f, 3.0f), rotation = new Quaternion(4.0f, 3.0f, 2.0f, 1.0f) };
+            _localPlayerState = new Network.NestedTypes.PlayerState { position = new Vector3(1.0f, 2.0f, 3.0f), rotation = new Quaternion(4.0f, 3.0f, 2.0f, 1.0f) };
             _remotePlayers = new Dictionary<uint, Network.ClientPackets.RemotePlayer>();
 
             Debug.Log("CLIENT: Registering nested types...");
@@ -321,7 +321,7 @@ namespace BDSM
 
         public void OnAddRemotePlayer(Network.ClientPackets.AddRemotePlayer l_packet)
         {
-            Network.NestedTypes.PlayerState l_newPlaterState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, isBusHided = l_packet.state.isBusHided, position = l_packet.state.position, rotation = l_packet.state.rotation };
+            Network.NestedTypes.PlayerState l_newPlaterState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, position = l_packet.state.position, rotation = l_packet.state.rotation };
             Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, selectedBus = Enums.AvailableBuses.UNKNOWN, state = l_newPlaterState };
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
             _serverState.currentAmountOfPlayers++;

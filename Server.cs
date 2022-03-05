@@ -284,7 +284,7 @@ namespace BDSM
                     return;
                 }
             }
-            Network.NestedTypes.PlayerState newPlayerState = new Network.NestedTypes.PlayerState { pid = (uint)l_peer.Id, isBusHided = l_packet.state.isBusHided, position = l_packet.state.position, rotation = l_packet.state.rotation };
+            Network.NestedTypes.PlayerState newPlayerState = new Network.NestedTypes.PlayerState { pid = (uint)l_peer.Id, position = l_packet.state.position, rotation = l_packet.state.rotation };
             Network.ServerPackets.ServerPlayer l_newPlayer = new Network.ServerPackets.ServerPlayer { nickname = l_packet.nickname, peer = l_peer, state = newPlayerState };
             _players.Add(l_newPlayer.state.pid, l_newPlayer);
             SendPacket(new Network.ClientPackets.OnJoinAccepted { pid = l_newPlayer.state.pid }, l_peer, DeliveryMethod.ReliableOrdered);
