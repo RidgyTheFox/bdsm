@@ -17,6 +17,7 @@ namespace BDSM
             Logger.LogInfo("Patching methods...");
             _harmony.PatchAll(typeof(Patches.SteamManager_Patch));
             _harmony.PatchAll(typeof(Patches.MainMenu_Patch));
+            _harmony.PatchAll(typeof(Patches.PauseMenu_Patch));
             Logger.LogInfo("Patching complete! Plugin initialized!");
         }
     }

@@ -116,12 +116,22 @@ namespace BDSM
                 if (_isConnected)
                 {
                     if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 110, 200, 20), "Disconnect"))
+                    {
+                        UnityEngine.SceneManagement.SceneManager.LoadScene("menu");
                         Disconnect();
+                    }
                 }
                 else
                 {
                     if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 110, 200, 20), "Connect"))
-                        Connect();
+                    {
+                        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "menu")
+                        {
+                            Connect();
+                        }
+                        else
+                            Debug.LogError("CLIENT: Cannot connect! First you need to exit to the main menu.");
+                    }
                     if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 130, 200, 20), "Reload settings"))
                         ReloadSettings();
                 }
