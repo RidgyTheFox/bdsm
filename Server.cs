@@ -235,7 +235,7 @@ namespace BDSM
                         break;
                     default:
                         _selectedMap = Enums.AvailableMaps.SERPUKHOV;
-                        Debug.Log($"Undefined map: {l_valueToken.ToString()}! \"Serpuhov\" will be used...");
+                        Debug.LogWarning($"Undefined map: {l_valueToken.ToString()}! \"Serpuhov\" will be used...");
                         break;
                 }
             }
