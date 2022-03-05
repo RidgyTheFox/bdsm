@@ -308,12 +308,15 @@ namespace BDSM
 
         private void CreateBusesForRemotePlayers()
         {
-            foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
+            if (!isBusesForRemoteClientsWasCreated)
             {
-                if (l_player.remotePlayerBus == null)
-                    l_player.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_player.state.selectedBusShortName, true));
+                foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
+                {
+                    if (l_player.remotePlayerBus == null)
+                        l_player.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_player.state.selectedBusShortName, true));
+                }
+                isBusesForRemoteClientsWasCreated = true;
             }
-            isBusesForRemoteClientsWasCreated = true;
         }
 
         public void OnJoinRequestAccepted(Network.ClientPackets.OnJoinAccepted l_packet)
