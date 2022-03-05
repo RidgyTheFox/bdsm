@@ -169,6 +169,27 @@
                 default: return "VN";
             }
         }
+
+        public static string GetShortBusNameById(uint l_busId)
+        {
+            switch(l_busId)
+            {
+                case 0: return (GetShortBusName(Enums.AvailableBuses.VECTOR_NEXT));
+                case 1: return (GetShortBusName(Enums.AvailableBuses.LIAZ5292));
+                case 2: return (GetShortBusName(Enums.AvailableBuses.LIAZ677));
+                case 3: return (GetShortBusName(Enums.AvailableBuses.SPRINTER));
+                case 4: return (GetShortBusName(Enums.AvailableBuses.NEWPAZ3205));
+                case 5: return (GetShortBusName(Enums.AvailableBuses.CITARO));
+                case 6: return (GetShortBusName(Enums.AvailableBuses.MAN));
+                case 7: return (GetShortBusName(Enums.AvailableBuses.LAZ699));
+                case 8: return (GetShortBusName(Enums.AvailableBuses.PAZ672));
+                case 9: return (GetShortBusName(Enums.AvailableBuses.LAZ695));
+                case 10: return (GetShortBusName(Enums.AvailableBuses.ICARUS));
+                case 11: return (GetShortBusName(Enums.AvailableBuses.CITARO_L));
+                case 12: return (GetShortBusName(Enums.AvailableBuses.MAN15));
+                default: return (GetShortBusName(Enums.AvailableBuses.VECTOR_NEXT));
+            }
+        }
         #endregion
     }
 }
