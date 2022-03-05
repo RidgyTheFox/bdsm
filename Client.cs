@@ -263,12 +263,12 @@ namespace BDSM
                     Debug.LogError("CLIENT: Unable to load map! Disconnecting...");
                     Disconnect();
                     break;
-                case Enums.AvailableMaps.SERPUHOV:
+                case Enums.AvailableMaps.SERPUKHOV:
                     FileBasedPrefs.SetInt("winter", 0);
                     FileBasedPrefs.SetBool("IsAutomatic", true);
                     UnityEngine.SceneManagement.SceneManager.LoadScene("FreeModeRoutes");
                     break;
-                case Enums.AvailableMaps.SERPUHOV_WINTER:
+                case Enums.AvailableMaps.SERPUKHOV_WINTER:
                     FileBasedPrefs.SetInt("winter", 1);
                     FileBasedPrefs.SetBool("IsAutomatic", true);
                     UnityEngine.SceneManagement.SceneManager.LoadScene("FreeModeRoutes");

@@ -5,8 +5,8 @@
         public enum AvailableMaps : uint
         {
             UNKNOWN = 0,
-            SERPUHOV = 1,
-            SERPUHOV_WINTER = 2,
+            SERPUKHOV = 1,
+            SERPUKHOV_WINTER = 2,
             KELN = 3,
             MUROM = 4,
             MUROM_WINTER = 5,
@@ -40,8 +40,8 @@
             switch(l_map)
             {
                 case 0: return Enums.AvailableMaps.UNKNOWN;
-                case 1: return Enums.AvailableMaps.SERPUHOV;
-                case 2: return Enums.AvailableMaps.SERPUHOV_WINTER;
+                case 1: return Enums.AvailableMaps.SERPUKHOV;
+                case 2: return Enums.AvailableMaps.SERPUKHOV_WINTER;
                 case 3: return Enums.AvailableMaps.KELN;
                 case 4: return Enums.AvailableMaps.MUROM;
                 case 5: return Enums.AvailableMaps.MUROM_WINTER;
@@ -55,8 +55,8 @@
             switch (l_map)
             {
                 case Enums.AvailableMaps.UNKNOWN:           return 0;
-                case Enums.AvailableMaps.SERPUHOV:          return 1;
-                case Enums.AvailableMaps.SERPUHOV_WINTER:   return 2;
+                case Enums.AvailableMaps.SERPUKHOV:          return 1;
+                case Enums.AvailableMaps.SERPUKHOV_WINTER:   return 2;
                 case Enums.AvailableMaps.KELN:              return 3;
                 case Enums.AvailableMaps.MUROM:             return 4;
                 case Enums.AvailableMaps.MUROM_WINTER:      return 5;
@@ -70,8 +70,8 @@
             switch (mapEnum)
             {
                 case Enums.AvailableMaps.UNKNOWN:           return ("Unknown");
-                case Enums.AvailableMaps.SERPUHOV:          return ("Serpuhov");
-                case Enums.AvailableMaps.SERPUHOV_WINTER:   return ("Serpuhov Winter");
+                case Enums.AvailableMaps.SERPUKHOV:          return ("Serpuhov");
+                case Enums.AvailableMaps.SERPUKHOV_WINTER:   return ("Serpuhov Winter");
                 case Enums.AvailableMaps.KELN:              return ("Keln");
                 case Enums.AvailableMaps.MUROM:             return ("Murom");
                 case Enums.AvailableMaps.MUROM_WINTER:      return ("Murom Winter");

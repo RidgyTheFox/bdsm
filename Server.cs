@@ -21,7 +21,7 @@ namespace BDSM
         private int _serverPort = 2022;
         private bool _isPasswordRequired = true;
         private string _password = "somePassowrd";
-        private Enums.AvailableMaps _selectedMap = Enums.AvailableMaps.SERPUHOV;
+        private Enums.AvailableMaps _selectedMap = Enums.AvailableMaps.SERPUKHOV;
         private int _playersLimit = 10;
         public Dictionary<uint, Network.ServerPackets.ServerPlayer> _players;
 
@@ -209,13 +209,13 @@ namespace BDSM
             {
                 switch(l_valueToken.ToString())
                 {
-                    case "serpuhov":
-                        _selectedMap = Enums.AvailableMaps.SERPUHOV;
-                        Debug.Log("SERVER: Map was changed to \"Serpuhov\".");
+                    case "serpukhov":
+                        _selectedMap = Enums.AvailableMaps.SERPUKHOV;
+                        Debug.Log("SERVER: Map was changed to \"Serpukhov\".");
                         break;
-                    case "serpuhovWinter":
-                        _selectedMap = Enums.AvailableMaps.SERPUHOV_WINTER;
-                        Debug.Log("SERVER: Map was changed to \"Serpuhov Winter\".");
+                    case "serpukhovWinter":
+                        _selectedMap = Enums.AvailableMaps.SERPUKHOV_WINTER;
+                        Debug.Log("SERVER: Map was changed to \"Serpukhov Winter\".");
                         break;
                     case "keln":
                         _selectedMap = Enums.AvailableMaps.KELN;
@@ -234,14 +234,14 @@ namespace BDSM
                         Debug.Log("SERVER: Map was changed to \"Solnechnogorsl\".");
                         break;
                     default:
-                        _selectedMap = Enums.AvailableMaps.SERPUHOV;
+                        _selectedMap = Enums.AvailableMaps.SERPUKHOV;
                         Debug.Log($"Undefined map: {l_valueToken.ToString()}! \"Serpuhov\" will be used...");
                         break;
                 }
             }
             else
             {
-                _selectedMap = Enums.AvailableMaps.SERPUHOV;
+                _selectedMap = Enums.AvailableMaps.SERPUKHOV;
                 Debug.LogError("SERVER: Cannot read value \"map\". Default value \"serpuhov\" will be used...");
             }
             l_valueToken = null;
