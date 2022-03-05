@@ -61,7 +61,7 @@
                 case Enums.AvailableMaps.MUROM:             return 4;
                 case Enums.AvailableMaps.MUROM_WINTER:      return 5;
                 case Enums.AvailableMaps.SOLNECHNOGORSK:    return 6;
-                default: return 0;
+                default:                                    return 0;
             }
         }
 
@@ -76,7 +76,7 @@
                 case Enums.AvailableMaps.MUROM:             return ("Murom");
                 case Enums.AvailableMaps.MUROM_WINTER:      return ("Murom Winter");
                 case Enums.AvailableMaps.SOLNECHNOGORSK:    return ("Solnechnogorsk");
-                default: return ("Unknown");
+                default:                                    return ("Unknown");
             }
         }
         #endregion
@@ -122,7 +122,7 @@
                 case Enums.AvailableBuses.NEWPAZ3205:   return 11;
                 case Enums.AvailableBuses.PAZ672:       return 12;
                 case Enums.AvailableBuses.SPRINTER:     return 13;
-                default: return 0;
+                default:                                return 0;
             }
         }
 
@@ -144,7 +144,7 @@
                 case Enums.AvailableBuses.NEWPAZ3205:   return "New PAZ 3205";
                 case Enums.AvailableBuses.PAZ672:       return "PAZ 672";
                 case Enums.AvailableBuses.SPRINTER:     return "Sprinter";
-                default: return "Unknown";
+                default:                                return "Unknown";
             }
         }
 
@@ -166,7 +166,7 @@
                 case Enums.AvailableBuses.NEWPAZ3205:   return "PZ";
                 case Enums.AvailableBuses.PAZ672:       return "OLDPZ672";
                 case Enums.AvailableBuses.SPRINTER:     return "SPR";
-                default: return "VN";
+                default:                                return "VN";
             }
         }
 
