@@ -190,6 +190,28 @@
                 default: return (GetShortBusName(Enums.AvailableBuses.VECTOR_NEXT));
             }
         }
+
+        public static Enums.AvailableBuses GetBusEnumByBusId(uint l_busId)
+        {
+            switch (l_busId)
+            {
+                case 0: return Enums.AvailableBuses.VECTOR_NEXT;
+                case 1: return Enums.AvailableBuses.LIAZ5292;
+                case 2: return Enums.AvailableBuses.LIAZ677;
+                case 3: return Enums.AvailableBuses.SPRINTER;
+                case 4: return Enums.AvailableBuses.NEWPAZ3205;
+                case 5: return Enums.AvailableBuses.CITARO;
+                case 6: return Enums.AvailableBuses.MAN;
+                case 7: return Enums.AvailableBuses.LAZ699;
+                case 8: return Enums.AvailableBuses.PAZ672;
+                case 9: return Enums.AvailableBuses.LAZ695;
+                case 10: return Enums.AvailableBuses.ICARUS;
+                case 11: return Enums.AvailableBuses.CITARO_L;
+                case 12: return Enums.AvailableBuses.MAN15;
+                default: return Enums.AvailableBuses.VECTOR_NEXT;
+            }
+
+        }
         #endregion
     }
 }
