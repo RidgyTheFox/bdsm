@@ -322,8 +322,8 @@ namespace BDSM
 
         public void OnAddRemotePlayer(Network.ClientPackets.AddRemotePlayer l_packet)
         {
-            Network.NestedTypes.PlayerState l_newPlaterState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, busId = l_packet.state.busId, position = l_packet.state.position, rotation = l_packet.state.rotation };
-            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, selectedBus = EnumUtils.GetBusEnumByBusId(l_packet.busId), state = l_newPlaterState };
+            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, busId = l_packet.state.busId, position = l_packet.state.position, rotation = l_packet.state.rotation };
+            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, selectedBus = EnumUtils.GetBusEnumByBusId(l_packet.busId), state = l_newPlayerState };
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
             _serverState.currentAmountOfPlayers++;
 
