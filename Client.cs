@@ -173,6 +173,7 @@ namespace BDSM
                 }
 
                 isSceneLoaded = false;
+                isBusesForRemoteClientsWasCreated = false;
                 UnityEngine.SceneManagement.SceneManager.LoadScene("menu");
 
                 _isConnected = false;
