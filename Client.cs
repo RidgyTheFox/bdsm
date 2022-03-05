@@ -350,7 +350,7 @@ namespace BDSM
             Network.ClientPackets.RemotePlayer l_playerToEdit;
             _remotePlayers.TryGetValue(l_packet.pid, out l_playerToEdit);
 
-            if (l_playerToEdit !=null)
+            if (l_playerToEdit != null)
             {
                 if (l_playerToEdit.remotePlayerBus != null)
                     GameObject.Destroy(l_playerToEdit.remotePlayerBus);
@@ -363,6 +363,8 @@ namespace BDSM
                 _remotePlayers.Add(l_packet.pid, l_playerToEdit);
                 Debug.Log($"CLIENT: player {l_playerToEdit.nickname}[{l_playerToEdit.state.pid}] changed bus to {EnumUtils.GetShortBusName(l_playerToEdit.selectedBus)}.");
             }
+            else
+                Debug.LogError($"CLIENT: Cannot find remote player with PID {l_packet.pid} for changing!");
         }
 
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()
