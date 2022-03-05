@@ -50,7 +50,7 @@ namespace BDSM
                 case 23:    return 'x';
                 case 24:    return 'y';
                 case 25:    return 'z';
-                default: return 'a';
+                default:    return 'a';
             }
         }
     }

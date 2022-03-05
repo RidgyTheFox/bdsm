@@ -55,8 +55,8 @@
             switch (l_map)
             {
                 case Enums.AvailableMaps.UNKNOWN:           return 0;
-                case Enums.AvailableMaps.SERPUKHOV:          return 1;
-                case Enums.AvailableMaps.SERPUKHOV_WINTER:   return 2;
+                case Enums.AvailableMaps.SERPUKHOV:         return 1;
+                case Enums.AvailableMaps.SERPUKHOV_WINTER:  return 2;
                 case Enums.AvailableMaps.KELN:              return 3;
                 case Enums.AvailableMaps.MUROM:             return 4;
                 case Enums.AvailableMaps.MUROM_WINTER:      return 5;
@@ -70,8 +70,8 @@
             switch (mapEnum)
             {
                 case Enums.AvailableMaps.UNKNOWN:           return ("Unknown");
-                case Enums.AvailableMaps.SERPUKHOV:          return ("Serpukhov");
-                case Enums.AvailableMaps.SERPUKHOV_WINTER:   return ("Serpukhov Winter");
+                case Enums.AvailableMaps.SERPUKHOV:         return ("Serpukhov");
+                case Enums.AvailableMaps.SERPUKHOV_WINTER:  return ("Serpukhov Winter");
                 case Enums.AvailableMaps.KELN:              return ("Keln");
                 case Enums.AvailableMaps.MUROM:             return ("Murom");
                 case Enums.AvailableMaps.MUROM_WINTER:      return ("Murom Winter");
