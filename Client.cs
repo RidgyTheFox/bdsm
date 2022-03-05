@@ -32,6 +32,7 @@ namespace BDSM
         private Network.NestedTypes.ServerState _serverState;
         private Dictionary<uint, Network.ClientPackets.RemotePlayer> _remotePlayers;
 
+        public bool isSceneLoaded = false;
         public GameObject localPlayerBus;
 
         #region Client GUI data;
@@ -164,6 +165,7 @@ namespace BDSM
         {
             if (_isConnected)
             {
+                isSceneLoaded = false;
                 _isConnected = false;
                 _isAuthorized = false;
                 _client.DisconnectAll();
