@@ -120,19 +120,14 @@ namespace BDSM
                 if (_isConnected)
                 {
                     if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 110, 200, 20), "Disconnect"))
-                    {
-                        UnityEngine.SceneManagement.SceneManager.LoadScene("menu");
                         Disconnect();
-                    }
                 }
                 else
                 {
                     if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 110, 200, 20), "Connect"))
                     {
                         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "menu")
-                        {
                             Connect();
-                        }
                         else
                             Debug.LogError("CLIENT: Cannot connect! First you need to exit to the main menu.");
                     }
@@ -148,12 +143,14 @@ namespace BDSM
             {
                 if (_usePassword)
                 {
+                    isSceneLoaded = false;
                     _client.Start();
                     _client.Connect(_serverIp, _serverPort, _password);
                     Debug.Log($"CLIENT: Connecting to {_serverIp}:{_serverPort} with password...");
                 }
                 else
                 {
+                    isSceneLoaded = false;
                     _client.Start();
                     _client.Connect(_serverIp, _serverPort, "ass");
                     Debug.Log($"CLIENT: Connecting to {_serverIp}:{_serverPort} without password.");
@@ -165,7 +162,15 @@ namespace BDSM
         {
             if (_isConnected)
             {
+                foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
+                {
+                    if (l_player.remotePlayerBus != null)
+                        GameObject.Destroy(l_player.remotePlayerBus);
+                }
+
                 isSceneLoaded = false;
+                UnityEngine.SceneManagement.SceneManager.LoadScene("menu");
+
                 _isConnected = false;
                 _isAuthorized = false;
                 _client.DisconnectAll();
