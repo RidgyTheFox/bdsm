@@ -410,6 +410,7 @@ namespace BDSM
                 _server = null;
                 _client.Stop();
                 _remotePlayers.Clear();
+                UnityEngine.SceneManagement.SceneManager.LoadScene("menu");
                 Debug.Log($"CLIENT: Server disconnected!");
             }
         }
