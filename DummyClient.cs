@@ -32,7 +32,7 @@ namespace BDSM
             _client = new NetManager(this) { AutoRecycle = true };
             _writer = new NetDataWriter();
             
-            _localPlayerState = new Network.NestedTypes.PlayerState { busId = 3, position = _position, rotation = _rotation };
+            _localPlayerState = new Network.NestedTypes.PlayerState { position = _position, rotation = _rotation };
             _remotePlayers = new Dictionary<uint, Network.ClientPackets.RemotePlayer>();
 
             Debug.Log("DUMMY: Registering nested types...");
@@ -50,7 +50,6 @@ namespace BDSM
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.ReceiveServerState>(OnReceiveServerState);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.AddRemotePlayer>(OnAddRemotePlayer);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemoveRemotePlayer>(OnRemoveRemotePlayer);
-            _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemotePlayerChangedBus>(OnRemotePlayerChangedBus);
             Debug.Log("DUMMY: Initialized!");
         }
 
@@ -121,14 +120,14 @@ namespace BDSM
 
         public void OnAddRemotePlayer(Network.ClientPackets.AddRemotePlayer l_packet)
         {
-            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, busId = l_packet.state.busId, position = l_packet.state.position, rotation = l_packet.state.rotation };
-            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, selectedBus = EnumUtils.GetBusEnumByBusId(l_packet.busId), state = l_newPlayerState };
+            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, position = l_packet.state.position, rotation = l_packet.state.rotation };
+            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, state = l_newPlayerState };
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
             _serverState.currentAmountOfPlayers++;
 
             // Add bus creation code here according to l_newPlayer.state.busId.
 
-            Debug.Log($"DUMMY: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was created. Player bus is {EnumUtils.GetShortBusNameById(l_newPlayer.state.busId)}.");
+            Debug.Log($"DUMMY: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was created.");
         }
 
         public void OnRemoveRemotePlayer(Network.ClientPackets.RemoveRemotePlayer l_packet)
@@ -145,24 +144,6 @@ namespace BDSM
                 Debug.Log($"DUMMY: Remote player for {l_playerToRemove.nickname}[{l_playerToRemove.state.pid}] was removed.");
                 _remotePlayers.Remove(l_packet.pid);
             }
-        }
-
-        public void OnRemotePlayerChangedBus(Network.ClientPackets.RemotePlayerChangedBus l_packet)
-        {
-            Debug.Log($"DUMMY: Player with PID {l_packet.pid} changed bus. Searching for player...");
-            Network.ClientPackets.RemotePlayer l_playerToEdit;
-            _remotePlayers.TryGetValue(l_packet.pid, out l_playerToEdit);
-
-            if (l_playerToEdit != null)
-            {
-                Debug.Log($"DUMMY: Bus for {l_playerToEdit.nickname}[{l_playerToEdit.state.pid}] was changed from {EnumUtils.GetShortBusNameById(l_playerToEdit.state.busId)} to {EnumUtils.GetShortBusNameById(l_packet.busId)}.");
-                Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.pid, busId = l_packet.busId, position = l_playerToEdit.state.position, rotation = l_playerToEdit.state.rotation };
-                l_playerToEdit.state = l_newPlayerState;
-                _remotePlayers.Remove(l_packet.pid);
-                _remotePlayers.Add(l_playerToEdit.state.pid, l_playerToEdit);
-            }
-            else
-                Debug.LogError($"DUMMY: Cannot find player with PID {l_packet.pid}!");
         }
 
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()

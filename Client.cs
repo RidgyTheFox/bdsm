@@ -47,7 +47,7 @@ namespace BDSM
             _client = new NetManager(this) { AutoRecycle = true };
             _writer = new NetDataWriter();
 
-            _localPlayerState = new Network.NestedTypes.PlayerState { busId = (uint)FreeMode.PlayerData.GetCurrentData().selectedBus, position = new Vector3(1.0f, 2.0f, 3.0f), rotation = new Quaternion(4.0f, 3.0f, 2.0f, 1.0f) };
+            _localPlayerState = new Network.NestedTypes.PlayerState { position = new Vector3(1.0f, 2.0f, 3.0f), rotation = new Quaternion(4.0f, 3.0f, 2.0f, 1.0f) };
             _remotePlayers = new Dictionary<uint, Network.ClientPackets.RemotePlayer>();
 
             Debug.Log("CLIENT: Registering nested types...");
@@ -65,7 +65,6 @@ namespace BDSM
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.ReceiveServerState>(OnReceiveServerState);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.AddRemotePlayer>(OnAddRemotePlayer);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemoveRemotePlayer>(OnRemoveRemotePlayer);
-            _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemotePlayerChangedBus>(OnRemotePlayerChangeBus);
 
             ReloadSettings();
             Debug.Log("CLIENT: Initialized!");
@@ -322,14 +321,14 @@ namespace BDSM
 
         public void OnAddRemotePlayer(Network.ClientPackets.AddRemotePlayer l_packet)
         {
-            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, busId = l_packet.state.busId, position = l_packet.state.position, rotation = l_packet.state.rotation };
-            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, selectedBus = EnumUtils.GetBusEnumByBusId(l_packet.busId), state = l_newPlayerState };
+            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, position = l_packet.state.position, rotation = l_packet.state.rotation };
+            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, state = l_newPlayerState };
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
             _serverState.currentAmountOfPlayers++;
 
             // Add bus creation code here according to l_newPlayer.state.busId.
 
-            Debug.Log($"CLIENT: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was created. Player bus is {EnumUtils.GetShortBusNameById(l_newPlayer.state.busId)}.");
+            Debug.Log($"CLIENT: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was created.");
         }
 
         public void OnRemoveRemotePlayer(Network.ClientPackets.RemoveRemotePlayer l_packet)
@@ -351,15 +350,9 @@ namespace BDSM
                 Debug.LogError($"CLIENT: Cannot find remote player with PID {l_packet.pid}!");
         }
 
-        public void OnRemotePlayerChangeBus(Network.ClientPackets.RemotePlayerChangedBus l_packet)
-        {
-        }
-
         public void OnPlayerChangedBusInGarage()
         {
-            Debug.Log($"CLIENT: Player changed bus from {EnumUtils.GetShortBusNameById(_localPlayerState.busId)} to {EnumUtils.GetShortBusNameById((uint)FreeMode.PlayerData.GetCurrentData().selectedBus)}.");
-            _localPlayerState.busId = (uint)FreeMode.PlayerData.GetCurrentData().selectedBus;
-            SendPacket(new Network.ServerPackets.ChangeBus { pid = _localPlayerState.pid, busId = (uint)FreeMode.PlayerData.GetCurrentData().selectedBus }, DeliveryMethod.ReliableOrdered);
+
         }
 
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()

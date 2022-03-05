@@ -6,7 +6,6 @@ namespace BDSM.Network.ClientPackets
     {
         public string nickname { get; set; }
         public GameObject remotePlayerBus { get; set; }
-        public Enums.AvailableBuses selectedBus { get; set; }
         public NestedTypes.PlayerState state { get; set; }
     }
 
@@ -30,18 +29,11 @@ namespace BDSM.Network.ClientPackets
     public class AddRemotePlayer
     {
         public string nickname { get; set; }
-        public uint busId { get; set; }
         public NestedTypes.PlayerState state { get; set; }
     }
 
     public class RemoveRemotePlayer
     {
         public uint pid { get; set; }
-    }
-
-    public class RemotePlayerChangedBus
-    {
-        public uint pid { get; set; }
-        public uint busId { get; set; }
     }
 }
