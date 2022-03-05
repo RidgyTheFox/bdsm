@@ -315,7 +315,7 @@ namespace BDSM
             {
                 Network.ClientPackets.ReceiveServerState l_serverState = new Network.ClientPackets.ReceiveServerState { currentAmountOfPlayers = (uint)_players.Count, currentMap = EnumUtils.MapEnumToUint(_selectedMap), playersLimit = (uint)_playersLimit, serverName = _serverName};
                 SendPacket(l_serverState, l_player.peer, DeliveryMethod.ReliableOrdered);
-                Debug.Log($"SERVER: Server state was sent to {l_player.nickname}[{l_player.state.pid}.]");
+                Debug.Log($"SERVER: Server state was sent to {l_player.nickname}[{l_player.state.pid}].");
             }
         }
 
