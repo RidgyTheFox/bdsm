@@ -20,4 +20,10 @@ namespace BDSM.Network.ServerPackets
     {
         public uint pid { get; set; }
     }
+
+    public class ChangeBus
+    {
+        public uint pid { get; set; }
+        public string busShortName { get; set; }
+    }
 }

@@ -32,7 +32,7 @@ namespace BDSM
             _client = new NetManager(this) { AutoRecycle = true };
             _writer = new NetDataWriter();
             
-            _localPlayerState = new Network.NestedTypes.PlayerState { position = _position, rotation = _rotation };
+            _localPlayerState = new Network.NestedTypes.PlayerState { selectedBusShortName = "MN", position = _position, rotation = _rotation };
             _remotePlayers = new Dictionary<uint, Network.ClientPackets.RemotePlayer>();
 
             Debug.Log("DUMMY: Registering nested types...");
@@ -50,6 +50,7 @@ namespace BDSM
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.ReceiveServerState>(OnReceiveServerState);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.AddRemotePlayer>(OnAddRemotePlayer);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemoveRemotePlayer>(OnRemoveRemotePlayer);
+            _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemotePlayerChangedBus>(OnRemotePlayerChangedBus);
             Debug.Log("DUMMY: Initialized!");
         }
 
@@ -144,6 +145,26 @@ namespace BDSM
                 Debug.Log($"DUMMY: Remote player for {l_playerToRemove.nickname}[{l_playerToRemove.state.pid}] was removed.");
                 _remotePlayers.Remove(l_packet.pid);
             }
+        }
+
+        public void OnRemotePlayerChangedBus(Network.ClientPackets.RemotePlayerChangedBus l_packet)
+        {
+            Debug.Log($"DUMMY: Player with PID {l_packet.pid} changed bus. Searching...");
+            Network.ClientPackets.RemotePlayer l_playerForEdit;
+            _remotePlayers.TryGetValue(l_packet.pid, out l_playerForEdit);
+            if (l_playerForEdit != null)
+            {
+                Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_playerForEdit.state.pid, selectedBusShortName = l_packet.busShortName, position = l_playerForEdit.state.position, rotation = l_playerForEdit.state.rotation };
+                l_playerForEdit.state = l_newPlayerState;
+
+                // Add bus model change code here.
+
+                _remotePlayers.Remove(l_packet.pid);
+                _remotePlayers.Add(l_packet.pid, l_playerForEdit);
+                Debug.Log($"DUMMY: Bus for {l_playerForEdit.nickname}[{l_playerForEdit.state.pid}] was changed to {l_playerForEdit.state.selectedBusShortName}.");
+            }
+            else
+                Debug.LogError($"DUMMY: Cannot find remote player for {l_packet.pid}!");
         }
 
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()

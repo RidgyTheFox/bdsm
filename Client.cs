@@ -47,7 +47,7 @@ namespace BDSM
             _client = new NetManager(this) { AutoRecycle = true };
             _writer = new NetDataWriter();
 
-            _localPlayerState = new Network.NestedTypes.PlayerState { position = new Vector3(1.0f, 2.0f, 3.0f), rotation = new Quaternion(4.0f, 3.0f, 2.0f, 1.0f) };
+            _localPlayerState = new Network.NestedTypes.PlayerState { selectedBusShortName = FreeMode.PlayerData.GetCurrentData().boughtBuses[FreeMode.PlayerData.GetCurrentData().selectedBus].ShortName, position = new Vector3(1.0f, 2.0f, 3.0f), rotation = new Quaternion(4.0f, 3.0f, 2.0f, 1.0f) };
             _remotePlayers = new Dictionary<uint, Network.ClientPackets.RemotePlayer>();
 
             Debug.Log("CLIENT: Registering nested types...");
@@ -65,6 +65,7 @@ namespace BDSM
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.ReceiveServerState>(OnReceiveServerState);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.AddRemotePlayer>(OnAddRemotePlayer);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemoveRemotePlayer>(OnRemoveRemotePlayer);
+            _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemotePlayerChangedBus>(OnRemotePlayerChangedBus);
 
             ReloadSettings();
             Debug.Log("CLIENT: Initialized!");
@@ -321,14 +322,14 @@ namespace BDSM
 
         public void OnAddRemotePlayer(Network.ClientPackets.AddRemotePlayer l_packet)
         {
-            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, position = l_packet.state.position, rotation = l_packet.state.rotation };
+            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, selectedBusShortName = l_packet.state.selectedBusShortName, position = l_packet.state.position, rotation = l_packet.state.rotation };
             Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, state = l_newPlayerState };
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
             _serverState.currentAmountOfPlayers++;
 
             // Add bus creation code here according to l_newPlayer.state.busId.
 
-            Debug.Log($"CLIENT: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was created.");
+            Debug.Log($"CLIENT: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was created. His bus is {l_newPlayer.state.selectedBusShortName}.");
         }
 
         public void OnRemoveRemotePlayer(Network.ClientPackets.RemoveRemotePlayer l_packet)
@@ -350,9 +351,31 @@ namespace BDSM
                 Debug.LogError($"CLIENT: Cannot find remote player with PID {l_packet.pid}!");
         }
 
+        public void OnRemotePlayerChangedBus(Network.ClientPackets.RemotePlayerChangedBus l_packet)
+        {
+            Debug.Log($"CLIENT: Player with PID {l_packet.pid} changed bus. Searching...");
+            Network.ClientPackets.RemotePlayer l_playerForEdit;
+            _remotePlayers.TryGetValue(l_packet.pid, out l_playerForEdit);
+            if (l_playerForEdit != null)
+            {
+                Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_playerForEdit.state.pid, selectedBusShortName = l_packet.busShortName, position = l_playerForEdit.state.position, rotation = l_playerForEdit.state.rotation };
+                l_playerForEdit.state = l_newPlayerState;
+
+                // Add bus model change code here.
+
+                _remotePlayers.Remove(l_packet.pid);
+                _remotePlayers.Add(l_packet.pid, l_playerForEdit);
+                Debug.Log($"CLIENT: Bus for {l_playerForEdit.nickname}[{l_playerForEdit.state.pid}] was changed to {l_playerForEdit.state.selectedBusShortName}.");
+            }
+            else
+                Debug.LogError($"CLIENT: Cannot find remote player for {l_packet.pid}!");
+        }
+
         public void OnPlayerChangedBusInGarage()
         {
-
+            _localPlayerState.selectedBusShortName = FreeMode.PlayerData.GetCurrentData().boughtBuses[FreeMode.PlayerData.GetCurrentData().selectedBus].ShortName;
+            SendPacket( new Network.ServerPackets.ChangeBus { pid = _localPlayerState.pid, busShortName = _localPlayerState.selectedBusShortName }, DeliveryMethod.ReliableOrdered);
+            Debug.Log($"CLIENT: Bus was changed to {_localPlayerState.selectedBusShortName}.");
         }
 
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()

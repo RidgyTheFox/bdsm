@@ -57,6 +57,7 @@ namespace BDSM
             Debug.Log("SERVER: Registering callbacks...");
             _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.RequestJoin, NetPeer>(OnJoinRequest);
             _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.RequestServerState>(OnServerStateRequest);
+            _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.ChangeBus>(OnPlayerChangedBus);
 
             ReloadSettings();
 
@@ -285,7 +286,7 @@ namespace BDSM
                 }
             }
 
-            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = (uint)l_peer.Id, position = l_packet.state.position, rotation = l_packet.state.rotation };
+            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = (uint)l_peer.Id, selectedBusShortName = l_packet.state.selectedBusShortName, position = l_packet.state.position, rotation = l_packet.state.rotation };
             Network.ServerPackets.ServerPlayer l_newPlayer = new Network.ServerPackets.ServerPlayer { nickname = l_packet.nickname, peer = l_peer, state = l_newPlayerState };
             _players.Add(l_newPlayer.state.pid, l_newPlayer);
             SendPacket(new Network.ClientPackets.OnJoinAccepted { pid = l_newPlayer.state.pid }, l_peer, DeliveryMethod.ReliableOrdered);
@@ -299,7 +300,7 @@ namespace BDSM
                 }
             }
 
-            Debug.Log($"SERVER: new player {l_newPlayer.nickname}[{l_newPlayer.state.pid}] connected!");
+            Debug.Log($"SERVER: new player {l_newPlayer.nickname}[{l_newPlayer.state.pid}] connected! His bus is {l_newPlayer.state.selectedBusShortName}.");
         }
 
         public void OnServerStateRequest(Network.ServerPackets.RequestServerState l_packet)
@@ -318,6 +319,36 @@ namespace BDSM
                 SendPacket(l_serverState, l_player.peer, DeliveryMethod.ReliableOrdered);
                 Debug.Log($"SERVER: Server state was sent to {l_player.nickname}[{l_player.state.pid}].");
             }
+        }
+
+        public void OnPlayerChangedBus(Network.ServerPackets.ChangeBus l_packet)
+        {
+            Debug.Log($"SERVER: Player with PID {l_packet.pid} changed bus. Searching for player...");
+            Network.ServerPackets.ServerPlayer l_playerForEdit;
+            _players.TryGetValue(l_packet.pid, out l_playerForEdit);
+
+            if (l_playerForEdit != null)
+            {
+                if (l_playerForEdit.state.selectedBusShortName == l_packet.busShortName)
+                {
+                    Debug.LogWarning($"SERVER: {l_playerForEdit.nickname}[{l_playerForEdit.state.pid}] changed bus to \"{l_packet.busShortName}\" but already driving this bus...");
+                    return;
+                }
+                Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_playerForEdit.state.pid, selectedBusShortName = l_packet.busShortName, position = l_playerForEdit.state.position, rotation = l_playerForEdit.state.rotation };
+                l_playerForEdit.state = l_newPlayerState;
+                _players.Remove(l_packet.pid);
+                _players.Add(l_packet.pid, l_playerForEdit);
+
+                foreach(Network.ServerPackets.ServerPlayer l_player in _players.Values)
+                {
+                    if (l_player.state.pid != l_packet.pid)
+                        SendPacket( new Network.ClientPackets.RemotePlayerChangedBus { pid = l_packet.pid, busShortName = l_packet.busShortName }, l_player.peer, DeliveryMethod.ReliableOrdered);
+                }
+
+                Debug.Log($"SERVER: Bus for {l_playerForEdit.nickname}[{l_playerForEdit.state.pid}] was changed to {l_packet.busShortName} and synced with other players.");
+            }
+            else
+                Debug.LogError($"SERVER: Cannot find player with PID {l_packet.pid}!");
         }
 
         public void OnConnectionRequest(ConnectionRequest l_request)
