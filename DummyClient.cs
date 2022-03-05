@@ -32,7 +32,7 @@ namespace BDSM
             _client = new NetManager(this) { AutoRecycle = true };
             _writer = new NetDataWriter();
             
-            _localPlayerState = new Network.NestedTypes.PlayerState { position = _position, rotation = _rotation };
+            _localPlayerState = new Network.NestedTypes.PlayerState { busId = 3, position = _position, rotation = _rotation };
             _remotePlayers = new Dictionary<uint, Network.ClientPackets.RemotePlayer>();
 
             Debug.Log("DUMMY: Registering nested types...");
@@ -120,10 +120,14 @@ namespace BDSM
 
         public void OnAddRemotePlayer(Network.ClientPackets.AddRemotePlayer l_packet)
         {
-            Network.NestedTypes.PlayerState l_newState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, position = l_packet.state.position, rotation = l_packet.state.rotation };
-            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, selectedBus = Enums.AvailableBuses.UNKNOWN, remotePlayerBus = null, state = l_newState };
+            Network.NestedTypes.PlayerState l_newPlaterState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, busId = l_packet.state.busId, position = l_packet.state.position, rotation = l_packet.state.rotation };
+            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, selectedBus = EnumUtils.GetBusEnumByBusId(l_packet.busId), state = l_newPlaterState };
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
-            Debug.Log($"DUMMY: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was added.");
+            _serverState.currentAmountOfPlayers++;
+
+            // Add bus creation code here according to l_newPlayer.state.busId.
+
+            Debug.Log($"DUMMY: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was created. Player bus is {EnumUtils.GetShortBusNameById(l_newPlayer.state.busId)}.");
         }
 
         public void OnRemoveRemotePlayer(Network.ClientPackets.RemoveRemotePlayer l_packet)

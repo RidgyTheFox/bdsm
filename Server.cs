@@ -57,6 +57,7 @@ namespace BDSM
             Debug.Log("SERVER: Registering callbacks...");
             _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.RequestJoin, NetPeer>(OnJoinRequest);
             _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.RequestServerState>(OnServerStateRequest);
+            _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.ChangeBus>(OnChangeBus);
 
             ReloadSettings();
 
@@ -284,8 +285,9 @@ namespace BDSM
                     return;
                 }
             }
-            Network.NestedTypes.PlayerState newPlayerState = new Network.NestedTypes.PlayerState { pid = (uint)l_peer.Id, position = l_packet.state.position, rotation = l_packet.state.rotation };
-            Network.ServerPackets.ServerPlayer l_newPlayer = new Network.ServerPackets.ServerPlayer { nickname = l_packet.nickname, peer = l_peer, state = newPlayerState };
+
+            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = (uint)l_peer.Id, busId = l_packet.state.busId, position = l_packet.state.position, rotation = l_packet.state.rotation };
+            Network.ServerPackets.ServerPlayer l_newPlayer = new Network.ServerPackets.ServerPlayer { nickname = l_packet.nickname, peer = l_peer, state = l_newPlayerState };
             _players.Add(l_newPlayer.state.pid, l_newPlayer);
             SendPacket(new Network.ClientPackets.OnJoinAccepted { pid = l_newPlayer.state.pid }, l_peer, DeliveryMethod.ReliableOrdered);
 
@@ -293,12 +295,12 @@ namespace BDSM
             {
                 if (l_player.state.pid != l_newPlayer.state.pid)
                 {
-                    SendPacket(new Network.ClientPackets.AddRemotePlayer { nickname = l_newPlayer.nickname, state = l_newPlayer.state }, l_player.peer, DeliveryMethod.ReliableOrdered);
+                    SendPacket(new Network.ClientPackets.AddRemotePlayer { nickname = l_newPlayer.nickname, state = l_newPlayerState }, l_player.peer, DeliveryMethod.ReliableOrdered);
                     SendPacket(new Network.ClientPackets.AddRemotePlayer { nickname = l_player.nickname, state = l_player.state }, l_newPlayer.peer, DeliveryMethod.ReliableOrdered);
                 }
             }
 
-            Debug.Log($"SERVER: new player {l_newPlayer.nickname}[{l_newPlayer.state.pid}] connected!");
+            Debug.Log($"SERVER: new player {l_newPlayer.nickname}[{l_newPlayer.state.pid}] connected! His bus is {EnumUtils.GetShortBusNameById(l_newPlayer.state.busId)}.");
         }
 
         public void OnServerStateRequest(Network.ServerPackets.RequestServerState l_packet)
@@ -317,6 +319,37 @@ namespace BDSM
                 SendPacket(l_serverState, l_player.peer, DeliveryMethod.ReliableOrdered);
                 Debug.Log($"SERVER: Server state was sent to {l_player.nickname}[{l_player.state.pid}].");
             }
+        }
+
+        public void OnChangeBus(Network.ServerPackets.ChangeBus l_packet)
+        {
+            Debug.Log($"SERVER: ChangeBus request from player with PID {l_packet.pid}. Searching for player...");
+            Network.ServerPackets.ServerPlayer l_playerToEdit;
+            _players.TryGetValue(l_packet.pid, out l_playerToEdit);
+
+            if (l_playerToEdit != null)
+            {
+                if (l_playerToEdit.state.busId == l_packet.busId)
+                {
+                    Debug.Log($"SERVER: Bus for {l_playerToEdit.nickname}[{l_playerToEdit.state.pid}] already set to {EnumUtils.GetShortBusNameById(l_packet.busId)}. Skipping...");
+                    return;
+                }
+                else
+                {
+                    Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_playerToEdit.state.pid, busId = l_packet.busId, position = l_playerToEdit.state.position, rotation = l_playerToEdit.state.rotation };
+                    l_playerToEdit.state = l_newPlayerState;
+                    _players.Remove(l_packet.pid);
+                    _players.Add(l_packet.pid, l_playerToEdit);
+                    foreach(Network.ServerPackets.ServerPlayer l_player in _players.Values)
+                    {
+                        if (l_player.state.pid != l_playerToEdit.state.pid)
+                            SendPacket(new Network.ClientPackets.RemotePlayerChangedBus { pid = l_packet.pid, busId = l_packet.busId }, l_player.peer, DeliveryMethod.ReliableOrdered);
+                    }
+                    Debug.Log($"SERVER: Bus for {l_playerToEdit.nickname}[{l_playerToEdit.state.pid}] was set to {EnumUtils.GetShortBusNameById(l_packet.busId)} and synced with other players.");
+                }
+            }
+            else
+                Debug.LogError("SERVER: Cannot find player!");
         }
 
         public void OnConnectionRequest(ConnectionRequest l_request)

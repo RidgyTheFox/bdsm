@@ -47,7 +47,7 @@ namespace BDSM
             _client = new NetManager(this) { AutoRecycle = true };
             _writer = new NetDataWriter();
 
-            _localPlayerState = new Network.NestedTypes.PlayerState { position = new Vector3(1.0f, 2.0f, 3.0f), rotation = new Quaternion(4.0f, 3.0f, 2.0f, 1.0f) };
+            _localPlayerState = new Network.NestedTypes.PlayerState { busId = (uint)FreeMode.PlayerData.GetCurrentData().selectedBus, position = new Vector3(1.0f, 2.0f, 3.0f), rotation = new Quaternion(4.0f, 3.0f, 2.0f, 1.0f) };
             _remotePlayers = new Dictionary<uint, Network.ClientPackets.RemotePlayer>();
 
             Debug.Log("CLIENT: Registering nested types...");
@@ -322,11 +322,14 @@ namespace BDSM
 
         public void OnAddRemotePlayer(Network.ClientPackets.AddRemotePlayer l_packet)
         {
-            Network.NestedTypes.PlayerState l_newPlaterState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, position = l_packet.state.position, rotation = l_packet.state.rotation };
-            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, selectedBus = Enums.AvailableBuses.UNKNOWN, state = l_newPlaterState };
+            Network.NestedTypes.PlayerState l_newPlaterState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, busId = l_packet.state.busId, position = l_packet.state.position, rotation = l_packet.state.rotation };
+            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, selectedBus = EnumUtils.GetBusEnumByBusId(l_packet.busId), state = l_newPlaterState };
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
             _serverState.currentAmountOfPlayers++;
-            Debug.Log($"CLIENT: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was created.");
+
+            // Add bus creation code here according to l_newPlayer.state.busId.
+
+            Debug.Log($"CLIENT: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was created. Player bus is {EnumUtils.GetShortBusNameById(l_newPlayer.state.busId)}.");
         }
 
         public void OnRemoveRemotePlayer(Network.ClientPackets.RemoveRemotePlayer l_packet)
@@ -339,6 +342,9 @@ namespace BDSM
             {
                 _remotePlayers.Remove(l_packet.pid);
                 _serverState.currentAmountOfPlayers--;
+
+                // Add bus removal code here.
+
                 Debug.Log($"CLIENT: Remote player {l_playerToRemove.nickname}[{l_playerToRemove.state.pid}] was removed.");
             }
             else
@@ -347,24 +353,6 @@ namespace BDSM
 
         public void OnRemotePlayerChangeBus(Network.ClientPackets.RemotePlayerChangedBus l_packet)
         {
-            Network.ClientPackets.RemotePlayer l_playerToEdit;
-            _remotePlayers.TryGetValue(l_packet.pid, out l_playerToEdit);
-
-            if (l_playerToEdit != null)
-            {
-                if (l_playerToEdit.remotePlayerBus != null)
-                    GameObject.Destroy(l_playerToEdit.remotePlayerBus);
-
-                GameObject l_newBus = GameObject.Instantiate<GameObject>(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(EnumUtils.GetShortBusNameById(l_packet.busId), true));
-                l_playerToEdit.busId = l_packet.busId;
-                l_playerToEdit.selectedBus = EnumUtils.GetBusEnumByBusId(l_packet.busId);
-                l_playerToEdit.remotePlayerBus = l_newBus;
-                _remotePlayers.Remove(l_packet.pid);
-                _remotePlayers.Add(l_packet.pid, l_playerToEdit);
-                Debug.Log($"CLIENT: player {l_playerToEdit.nickname}[{l_playerToEdit.state.pid}] changed bus to {EnumUtils.GetShortBusName(l_playerToEdit.selectedBus)}.");
-            }
-            else
-                Debug.LogError($"CLIENT: Cannot find remote player with PID {l_packet.pid} for changing!");
         }
 
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()
