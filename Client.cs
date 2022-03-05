@@ -371,10 +371,11 @@ namespace BDSM
 
             if (l_playerToRemove != null)
             {
+                if (l_playerToRemove.remotePlayerBus != null)
+                    GameObject.Destroy(l_playerToRemove.remotePlayerBus);
+
                 _remotePlayers.Remove(l_packet.pid);
                 _serverState.currentAmountOfPlayers--;
-
-                // Add bus removal code here.
 
                 Debug.Log($"CLIENT: Remote player {l_playerToRemove.nickname}[{l_playerToRemove.state.pid}] was removed.");
             }
