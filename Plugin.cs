@@ -18,6 +18,7 @@ namespace BDSM
             _harmony.PatchAll(typeof(Patches.SteamManager_Patch));
             _harmony.PatchAll(typeof(Patches.MainMenu_Patch));
             _harmony.PatchAll(typeof(Patches.PauseMenu_Patch));
+            _harmony.PatchAll(typeof(Patches.BusShopController_Patch));
             Logger.LogInfo("Patching complete! Plugin initialized!");
         }
     }
