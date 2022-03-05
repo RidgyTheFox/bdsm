@@ -34,7 +34,7 @@ namespace BDSM
         private bool _mainWindowMoveMode = false;
 
         private uint _mainWindowPosX = 0;
-        private uint _mainWindowPosY = 0;
+        private uint _mainWindowPosY = 211;
         #endregion
 
         private void Awake()
