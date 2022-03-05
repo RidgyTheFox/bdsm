@@ -24,6 +24,7 @@
   
   <ItemGroup>
     <Folder Include="Libs\" />
+    <Folder Include="Patches\Buses\" />
     <Folder Include="Refs\" />
   </ItemGroup>
   

@@ -32,6 +32,8 @@ namespace BDSM
         private Network.NestedTypes.ServerState _serverState;
         private Dictionary<uint, Network.ClientPackets.RemotePlayer> _remotePlayers;
 
+        public GameObject localPlayerBus;
+
         #region Client GUI data;
         private bool _isMainWindowOpened = true;
         private bool _mainWindowMoveMode = false;
