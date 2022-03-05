@@ -33,6 +33,7 @@ namespace BDSM
         private Dictionary<uint, Network.ClientPackets.RemotePlayer> _remotePlayers;
 
         public bool isSceneLoaded = false;
+        private bool isBusesForRemoteClientsWasCreated = false;
         public GameObject localPlayerBus;
 
         #region Client GUI data;
@@ -80,6 +81,9 @@ namespace BDSM
 
             if (Input.GetKeyDown(KeyCode.F1))
                 _isMainWindowOpened = !_isMainWindowOpened;
+
+            if (_isConnected && _isAuthorized && isSceneLoaded && !isBusesForRemoteClientsWasCreated)
+                CreateBusesForRemotePlayers();
         }
 
         private void OnGUI()
@@ -302,6 +306,16 @@ namespace BDSM
             }
         }
 
+        private void CreateBusesForRemotePlayers()
+        {
+            foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
+            {
+                if (l_player.remotePlayerBus == null)
+                    l_player.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_player.state.selectedBusShortName, true));
+            }
+            isBusesForRemoteClientsWasCreated = true;
+        }
+
         public void OnJoinRequestAccepted(Network.ClientPackets.OnJoinAccepted l_packet)
         {
             _localPlayerState.pid = l_packet.pid;
@@ -333,10 +347,14 @@ namespace BDSM
         {
             Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, selectedBusShortName = l_packet.state.selectedBusShortName, position = l_packet.state.position, rotation = l_packet.state.rotation };
             Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, state = l_newPlayerState };
+            
+            if (isSceneLoaded && isBusesForRemoteClientsWasCreated)
+            {
+                l_newPlayer.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_newPlayer.state.selectedBusShortName, true));
+            }
+
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
             _serverState.currentAmountOfPlayers++;
-
-            // Add bus creation code here according to l_newPlayer.state.busId.
 
             Debug.Log($"CLIENT: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was created. His bus is {l_newPlayer.state.selectedBusShortName}.");
         }
