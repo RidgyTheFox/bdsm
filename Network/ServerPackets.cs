@@ -23,6 +23,7 @@ namespace BDSM.Network.ServerPackets
 
     public class ChangeBus
     {
+        public uint pid { get; set; }
         public uint busId { get; set; }
     }
 }
