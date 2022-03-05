@@ -5,7 +5,6 @@ namespace BDSM.Network.ClientPackets
     public class RemotePlayer
     {
         public string nickname { get; set; }
-        public uint busId { get; set; }
         public GameObject remotePlayerBus { get; set; }
         public Enums.AvailableBuses selectedBus { get; set; }
         public NestedTypes.PlayerState state { get; set; }
