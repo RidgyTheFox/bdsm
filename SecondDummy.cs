@@ -22,8 +22,8 @@ namespace BDSM
 
         private Network.NestedTypes.PlayerState _localPlayerState;
         private Network.NestedTypes.ServerState _serverState;
-        private Vector3 _position = new Vector3(1.0f, 2.0f, 3.0f);
-        private Quaternion _rotation = new Quaternion(1.0f, 2.0f, 3.0f, 1.0f);
+        private Vector3 _position = new Vector3(9.0f, 8.0f, 7.0f);
+        private Quaternion _rotation = new Quaternion(10.0f, 11.0f, 12.0f, 1.0f);
         private Dictionary<uint, Network.ClientPackets.RemotePlayer> _remotePlayers;
 
         private void Awake()
@@ -32,7 +32,7 @@ namespace BDSM
             _client = new NetManager(this) { AutoRecycle = true };
             _writer = new NetDataWriter();
 
-            _localPlayerState = new Network.NestedTypes.PlayerState { position = _position, rotation = _rotation };
+            _localPlayerState = new Network.NestedTypes.PlayerState { busId = 3, position = _position, rotation = _rotation };
             _remotePlayers = new Dictionary<uint, Network.ClientPackets.RemotePlayer>();
 
             Debug.Log("SECOND_DUMMY: Registering nested types...");
@@ -108,6 +108,7 @@ namespace BDSM
             _client.DisconnectAll();
             _client.Stop();
             _server = null;
+            _remotePlayers.Clear();
             Debug.LogError($"SECOND_DUMMY: Cannot join on server! Reason: {l_packet.message}.");
         }
 
@@ -119,10 +120,14 @@ namespace BDSM
 
         public void OnAddRemotePlayer(Network.ClientPackets.AddRemotePlayer l_packet)
         {
-            Network.NestedTypes.PlayerState l_newState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, position = l_packet.state.position, rotation = l_packet.state.rotation };
-            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, state = l_newState };
+            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, busId = l_packet.state.busId, position = l_packet.state.position, rotation = l_packet.state.rotation };
+            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, selectedBus = EnumUtils.GetBusEnumByBusId(l_packet.busId), state = l_newPlayerState };
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
-            Debug.Log($"SECOND_DUMMY: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was added.");
+            _serverState.currentAmountOfPlayers++;
+
+            // Add bus creation code here according to l_newPlayer.state.busId.
+
+            Debug.Log($"SECOND_DUMMY: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was created. Player bus is {EnumUtils.GetShortBusNameById(l_newPlayer.state.busId)}.");
         }
 
         public void OnRemoveRemotePlayer(Network.ClientPackets.RemoveRemotePlayer l_packet)
