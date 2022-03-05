@@ -156,7 +156,7 @@ namespace BDSM
             }
         }
 
-        public void OnConnectionRequest(ConnectionRequest request)
+        public void OnConnectionRequest(ConnectionRequest l_request)
         {
         }
 
@@ -196,6 +196,5 @@ namespace BDSM
                 Debug.Log($"DUMMY: Server disconnected!");
             }
         }
-
     }
 }
