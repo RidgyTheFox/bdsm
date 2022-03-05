@@ -395,8 +395,8 @@ namespace BDSM
 
                 if (l_playerForEdit.remotePlayerBus != null)
                     GameObject.Destroy(l_playerForEdit.remotePlayerBus);
-                else
-                    l_playerForEdit.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_playerForEdit.state.selectedBusShortName, true));
+
+                l_playerForEdit.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_playerForEdit.state.selectedBusShortName, true));
 
                 _remotePlayers.Remove(l_packet.pid);
                 _remotePlayers.Add(l_packet.pid, l_playerForEdit);
