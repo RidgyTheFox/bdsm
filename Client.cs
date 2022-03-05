@@ -393,7 +393,10 @@ namespace BDSM
                 Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_playerForEdit.state.pid, selectedBusShortName = l_packet.busShortName, position = l_playerForEdit.state.position, rotation = l_playerForEdit.state.rotation };
                 l_playerForEdit.state = l_newPlayerState;
 
-                // Add bus model change code here.
+                if (l_playerForEdit.remotePlayerBus != null)
+                    GameObject.Destroy(l_playerForEdit.remotePlayerBus);
+                else
+                    l_playerForEdit.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_playerForEdit.state.selectedBusShortName, true));
 
                 _remotePlayers.Remove(l_packet.pid);
                 _remotePlayers.Add(l_packet.pid, l_playerForEdit);
