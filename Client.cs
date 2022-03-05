@@ -65,6 +65,7 @@ namespace BDSM
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.ReceiveServerState>(OnReceiveServerState);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.AddRemotePlayer>(OnAddRemotePlayer);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemoveRemotePlayer>(OnRemoveRemotePlayer);
+            _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemotePlayerChangedBus>(OnRemotePlayerChangeBus);
 
             ReloadSettings();
             Debug.Log("CLIENT: Initialized!");
@@ -342,6 +343,26 @@ namespace BDSM
             }
             else
                 Debug.LogError($"CLIENT: Cannot find remote player with PID {l_packet.pid}!");
+        }
+
+        public void OnRemotePlayerChangeBus(Network.ClientPackets.RemotePlayerChangedBus l_packet)
+        {
+            Network.ClientPackets.RemotePlayer l_playerToEdit;
+            _remotePlayers.TryGetValue(l_packet.pid, out l_playerToEdit);
+
+            if (l_playerToEdit !=null)
+            {
+                if (l_playerToEdit.remotePlayerBus != null)
+                    GameObject.Destroy(l_playerToEdit.remotePlayerBus);
+
+                GameObject l_newBus = GameObject.Instantiate<GameObject>(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(EnumUtils.GetShortBusNameById(l_packet.busId), true));
+                l_playerToEdit.busId = l_packet.busId;
+                l_playerToEdit.selectedBus = EnumUtils.GetBusEnumByBusId(l_packet.busId);
+                l_playerToEdit.remotePlayerBus = l_newBus;
+                _remotePlayers.Remove(l_packet.pid);
+                _remotePlayers.Add(l_packet.pid, l_playerToEdit);
+                Debug.Log($"CLIENT: player {l_playerToEdit.nickname}[{l_playerToEdit.state.pid}] changed bus to {EnumUtils.GetShortBusName(l_playerToEdit.selectedBus)}.");
+            }
         }
 
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()
