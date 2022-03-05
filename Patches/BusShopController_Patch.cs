@@ -4,11 +4,11 @@ namespace BDSM.Patches
 {
     class BusShopController_Patch
     {
-        [HarmonyPatch(typeof(FreeMode.Garage.UI.BusShopController), "SelectBus")]
+        [HarmonyPatch(typeof(FreeMode.Garage.UI.BusShopController), "SelectToDriveSelected")]
         [HarmonyPostfix]
-        public static void SelectBus()
+        public static void SelectToDriveSelected()
         {
-
+            StaticData.clientInstance.OnPlayerChangedBusInGarage();
         }
     }
 }

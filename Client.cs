@@ -355,6 +355,13 @@ namespace BDSM
         {
         }
 
+        public void OnPlayerChangedBusInGarage()
+        {
+            Debug.Log($"CLIENT: Player changed bus from {EnumUtils.GetShortBusNameById(_localPlayerState.busId)} to {EnumUtils.GetShortBusNameById((uint)FreeMode.PlayerData.GetCurrentData().selectedBus)}.");
+            _localPlayerState.busId = (uint)FreeMode.PlayerData.GetCurrentData().selectedBus;
+            SendPacket(new Network.ServerPackets.ChangeBus { pid = _localPlayerState.pid, busId = (uint)FreeMode.PlayerData.GetCurrentData().selectedBus }, DeliveryMethod.ReliableOrdered);
+        }
+
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()
         {
             if (_server != null)

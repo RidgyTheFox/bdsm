@@ -50,6 +50,7 @@ namespace BDSM
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.ReceiveServerState>(OnReceiveServerState);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.AddRemotePlayer>(OnAddRemotePlayer);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemoveRemotePlayer>(OnRemoveRemotePlayer);
+            _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemotePlayerChangedBus>(OnRemotePlayerChangedBus);
             Debug.Log("SECOND_DUMMY: Initialized!");
         }
 
@@ -144,6 +145,23 @@ namespace BDSM
                 Debug.Log($"SECOND_DUMMY: Remote player for {l_playerToRemove.nickname}[{l_playerToRemove.state.pid}] was removed.");
                 _remotePlayers.Remove(l_packet.pid);
             }
+        }
+        public void OnRemotePlayerChangedBus(Network.ClientPackets.RemotePlayerChangedBus l_packet)
+        {
+            Debug.Log($"DUMMY: Player with PID {l_packet.pid} changed bus. Searching for player...");
+            Network.ClientPackets.RemotePlayer l_playerToEdit;
+            _remotePlayers.TryGetValue(l_packet.pid, out l_playerToEdit);
+
+            if (l_playerToEdit != null)
+            {
+                Debug.Log($"DUMMY: Bus for {l_playerToEdit.nickname}[{l_playerToEdit.state.pid}] was changed from {EnumUtils.GetShortBusNameById(l_playerToEdit.state.busId)} to {EnumUtils.GetShortBusNameById(l_packet.busId)}.");
+                Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.pid, busId = l_packet.busId, position = l_playerToEdit.state.position, rotation = l_playerToEdit.state.rotation };
+                l_playerToEdit.state = l_newPlayerState;
+                _remotePlayers.Remove(l_packet.pid);
+                _remotePlayers.Add(l_playerToEdit.state.pid, l_playerToEdit);
+            }
+            else
+                Debug.LogError($"DUMMY: Cannot find player with PID {l_packet.pid}!");
         }
 
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()
