@@ -454,6 +454,8 @@ namespace BDSM
             {
                 _isAuthorized = false;
                 _isConnected = false;
+                isSceneLoaded = false;
+                isBusesForRemoteClientsWasCreated = false;
                 _server = null;
                 _client.Stop();
                 _remotePlayers.Clear();
