@@ -232,18 +232,18 @@ namespace BDSM
                         break;
                     case "solnechnogorsk":
                         _selectedMap = Enums.AvailableMaps.SOLNECHNOGORSK;
-                        Debug.Log("SERVER: Map was changed to \"Solnechnogorsl\".");
+                        Debug.Log("SERVER: Map was changed to \"Solnechnogorsk\".");
                         break;
                     default:
                         _selectedMap = Enums.AvailableMaps.SERPUKHOV;
-                        Debug.LogWarning($"Undefined map: {l_valueToken.ToString()}! \"Serpuhov\" will be used...");
+                        Debug.LogWarning($"Undefined map: {l_valueToken.ToString()}! \"Serpukhov\" will be used...");
                         break;
                 }
             }
             else
             {
                 _selectedMap = Enums.AvailableMaps.SERPUKHOV;
-                Debug.LogError("SERVER: Cannot read value \"map\". Default value \"serpuhov\" will be used...");
+                Debug.LogError("SERVER: Cannot read value \"map\". Default value \"serpukhov\" will be used...");
             }
             l_valueToken = null;
 

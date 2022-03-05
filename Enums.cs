@@ -70,8 +70,8 @@
             switch (mapEnum)
             {
                 case Enums.AvailableMaps.UNKNOWN:           return ("Unknown");
-                case Enums.AvailableMaps.SERPUKHOV:          return ("Serpuhov");
-                case Enums.AvailableMaps.SERPUKHOV_WINTER:   return ("Serpuhov Winter");
+                case Enums.AvailableMaps.SERPUKHOV:          return ("Serpukhov");
+                case Enums.AvailableMaps.SERPUKHOV_WINTER:   return ("Serpukhov Winter");
                 case Enums.AvailableMaps.KELN:              return ("Keln");
                 case Enums.AvailableMaps.MUROM:             return ("Murom");
                 case Enums.AvailableMaps.MUROM_WINTER:      return ("Murom Winter");
