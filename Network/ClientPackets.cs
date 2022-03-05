@@ -31,6 +31,7 @@ namespace BDSM.Network.ClientPackets
     public class AddRemotePlayer
     {
         public string nickname { get; set; }
+        public uint busId { get; set; }
         public NestedTypes.PlayerState state { get; set; }
     }
 
