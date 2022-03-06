@@ -84,6 +84,22 @@ namespace BDSM
 
             if (_isConnected && _isAuthorized && isSceneLoaded && !isBusesForRemoteClientsWasCreated)
                 CreateBusesForRemotePlayers();
+
+            if (_isConnected && _isAuthorized && isSceneLoaded && isBusesForRemoteClientsWasCreated)
+            {
+                if (localPlayerBus == null)
+                {
+                    _localPlayerState.position = new Vector3(-999.0f, -999.0f, -999.0f);
+                    _localPlayerState.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+                }
+                else
+                {
+                    _localPlayerState.position = localPlayerBus.transform.position;
+                    _localPlayerState.rotation = localPlayerBus.transform.rotation;
+                }
+
+                SendPacket( new Network.ServerPackets.UpdatePlayerState { pid = _localPlayerState.pid, state = _localPlayerState }, DeliveryMethod.Sequenced);
+            }
         }
 
         private void OnGUI()
