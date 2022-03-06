@@ -58,6 +58,7 @@ namespace BDSM
             _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.RequestJoin, NetPeer>(OnJoinRequest);
             _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.RequestServerState>(OnServerStateRequest);
             _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.ChangeBus>(OnPlayerChangedBus);
+            _packetProcessor.SubscribeReusable<Network.ServerPackets.UpdatePlayerState>(OnUpdatePlayerState);
 
             ReloadSettings();
 
@@ -349,6 +350,19 @@ namespace BDSM
             }
             else
                 Debug.LogError($"SERVER: Cannot find player with PID {l_packet.pid}!");
+        }
+
+        public void OnUpdatePlayerState(Network.ServerPackets.UpdatePlayerState l_packet)
+        {
+            Network.ServerPackets.ServerPlayer l_playerForEdit;
+            _players.TryGetValue(l_packet.pid, out l_playerForEdit);
+
+            if (l_playerForEdit != null)
+            {
+                l_playerForEdit.state = l_packet.state;
+                _players.Remove(l_packet.pid);
+                _players.Add(l_packet.pid, l_playerForEdit);
+            }
         }
 
         public void OnConnectionRequest(ConnectionRequest l_request)
