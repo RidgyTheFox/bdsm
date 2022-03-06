@@ -28,7 +28,7 @@ namespace BDSM
         private bool _usePassword = true;
         private string _password = "bdsmIsCool";
 
-        private Vector3 _remotePlayerPositionOffset = new Vector3(0.0f, -0.1f, 0.0f);
+        private Vector3 _remotePlayerPositionOffset = new Vector3(0.0f, -0.39f, 0.0f);
 
         private Network.NestedTypes.PlayerState _localPlayerState;
         private Network.NestedTypes.ServerState _serverState;
@@ -109,7 +109,7 @@ namespace BDSM
                 {
                     if (l_player.remotePlayerBus != null)
                     {
-                        l_player.remotePlayerBus.transform.position = l_player.state.position;
+                        l_player.remotePlayerBus.transform.position = l_player.state.position + _remotePlayerPositionOffset;
                         l_player.remotePlayerBus.transform.rotation = l_player.state.rotation;
                     }
                 }
@@ -121,7 +121,7 @@ namespace BDSM
                 }
                 else
                 {
-                    _localPlayerState.position = localPlayerBus.transform.position + _remotePlayerPositionOffset;
+                    _localPlayerState.position = localPlayerBus.transform.position;
                     _localPlayerState.rotation = localPlayerBus.transform.rotation;
                 }
 
