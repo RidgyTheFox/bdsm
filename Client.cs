@@ -70,6 +70,7 @@ namespace BDSM
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.AddRemotePlayer>(OnAddRemotePlayer);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemoveRemotePlayer>(OnRemoveRemotePlayer);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemotePlayerChangedBus>(OnRemotePlayerChangedBus);
+            _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.UpdateRemotePlayers>(OnUpdateRemotePlayers);
 
             ReloadSettings();
             Debug.Log("CLIENT: Initialized!");
@@ -420,6 +421,20 @@ namespace BDSM
             }
             else
                 Debug.LogError($"CLIENT: Cannot find remote player for {l_packet.pid}!");
+        }
+
+        public void OnUpdateRemotePlayers(Network.ClientPackets.UpdateRemotePlayers l_packet)
+        {
+            foreach(Network.NestedTypes.PlayerState l_newState in l_packet.states)
+            {
+                Network.ClientPackets.RemotePlayer l_playerToEdit;
+                if (l_newState.pid != _localPlayerState.pid)
+                {
+                    _remotePlayers.TryGetValue(l_newState.pid, out l_playerToEdit);
+                    if (l_playerToEdit != null)
+                        l_playerToEdit.state = l_newState;
+                }
+            }
         }
 
         public void OnPlayerChangedBusInGarage()
