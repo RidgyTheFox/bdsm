@@ -83,7 +83,7 @@ namespace BDSM
                 }
                 foreach (Network.ServerPackets.ServerPlayer l_player in _players.Values)
                 {
-                    SendPacket( new Network.ClientPackets.UpdateRemotePlayers { states = states } , l_player.peer, DeliveryMethod.Sequenced);
+                    SendPacket( new Network.ClientPackets.UpdateRemotePlayers { states = states } , l_player.peer, DeliveryMethod.Unreliable);
                 }
             }
         }

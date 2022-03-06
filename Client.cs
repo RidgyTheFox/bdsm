@@ -125,7 +125,7 @@ namespace BDSM
                     _localPlayerState.rotation = localPlayerBus.transform.rotation;
                 }
 
-                SendPacket( new Network.ServerPackets.UpdatePlayerState { pid = _localPlayerState.pid, state = _localPlayerState }, DeliveryMethod.Sequenced);
+                SendPacket( new Network.ServerPackets.UpdatePlayerState { pid = _localPlayerState.pid, state = _localPlayerState }, DeliveryMethod.Unreliable);
             }
         }
 
