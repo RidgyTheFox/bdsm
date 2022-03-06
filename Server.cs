@@ -71,6 +71,21 @@ namespace BDSM
                 _isMainWindowOpened = !_isMainWindowOpened;
 
             _server.PollEvents();
+
+            if (_players.Count > 1)
+            {
+                int i = 0;
+                Network.NestedTypes.PlayerState[] states = new Network.NestedTypes.PlayerState[_playersLimit];
+                foreach(Network.ServerPackets.ServerPlayer l_player in _players.Values)
+                {
+                    states[i] = l_player.state;
+                    i++;
+                }
+                foreach (Network.ServerPackets.ServerPlayer l_player in _players.Values)
+                {
+                    SendPacket( new Network.ClientPackets.UpdateRemotePlayers { states = states } , l_player.peer, DeliveryMethod.Sequenced);
+                }
+            }
         }
 
         private void OnGUI()
