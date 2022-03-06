@@ -83,6 +83,14 @@ namespace BDSM
             if (Input.GetKeyDown(KeyCode.F1))
                 _isMainWindowOpened = !_isMainWindowOpened;
 
+            if (Input.GetKeyDown(KeyCode.End))
+            {
+                _serverIp = "127.0.0.1";
+                _serverPort = 2022;
+                _usePassword = true;
+                _password = "bdsmIsCool";
+            }
+
             if (_isConnected && _isAuthorized && isSceneLoaded && !isBusesForRemoteClientsWasCreated)
                 CreateBusesForRemotePlayers();
 
