@@ -42,4 +42,9 @@ namespace BDSM.Network.ClientPackets
         public uint pid { get; set; }
         public string busShortName { get; set; }
     }
+
+    public class UpdateRemotePlayers
+    {
+        public NestedTypes.PlayerState[] states { get; set; }
+    }
 }
