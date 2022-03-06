@@ -42,12 +42,19 @@ namespace BDSM
 
         private uint _mainWindowPosX = 0;
         private uint _mainWindowPosY = 57;
+
+        private GUIStyle _netStatsTextStyle;
         #endregion
 
         private void Awake()
         {
             Debug.Log("CLIENT: Initializing...");
             StaticData.clientInstance = this;
+
+            _netStatsTextStyle = new GUIStyle();
+            _netStatsTextStyle.normal.textColor = Color.green;
+            _netStatsTextStyle.fontStyle = FontStyle.Bold;
+
             _client = new NetManager(this) { AutoRecycle = true };
             _writer = new NetDataWriter();
 
@@ -122,6 +129,9 @@ namespace BDSM
 
         private void OnGUI()
         {
+            if (_isConnected && _isAuthorized)
+                GUI.Label(new Rect(5, Screen.currentResolution.height-20, 300, 20), $"Connected to {_serverIp}:{_serverPort} | Ping: {_server.Ping}", _netStatsTextStyle);
+
             if (_isMainWindowOpened)
             {
                 if (_mainWindowMoveMode)
