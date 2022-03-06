@@ -88,6 +88,15 @@ namespace BDSM
 
             if (_isConnected && _isAuthorized && isSceneLoaded && isBusesForRemoteClientsWasCreated)
             {
+                foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
+                {
+                    if (l_player.remotePlayerBus != null)
+                    {
+                        l_player.remotePlayerBus.transform.position = l_player.state.position;
+                        l_player.remotePlayerBus.transform.rotation = l_player.state.rotation;
+                    }
+                }
+
                 if (localPlayerBus == null)
                 {
                     _localPlayerState.position = new Vector3(-999.0f, -999.0f, -999.0f);
