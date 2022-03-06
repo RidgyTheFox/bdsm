@@ -459,7 +459,11 @@ namespace BDSM
                 {
                     _remotePlayers.TryGetValue(l_newState.pid, out l_playerToEdit);
                     if (l_playerToEdit != null)
+                    {
                         l_playerToEdit.state = l_newState;
+                        _remotePlayers.Remove(l_newState.pid);
+                        _remotePlayers.Add(l_newState.pid, l_playerToEdit);
+                    }
                 }
             }
         }
