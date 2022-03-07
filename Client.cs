@@ -100,6 +100,19 @@ namespace BDSM
                 _password = "bdsmIsCool";
             }
 
+            if (Input.GetKeyDown(KeyCode.Keypad9))
+            {
+                Network.ClientPackets.RemotePlayer l_player;
+                _remotePlayers.TryGetValue(1, out l_player);
+                if (l_player != null)
+                {
+                    Debug.Log("CLIENT: Calling...");
+                    l_player.remotePlayerController.OnTriggerToggleAction("Fucking test");
+                }
+                else
+                    Debug.LogError("CLIENT:Cannot find player!");
+            }
+
             if (_isConnected && _isAuthorized && isSceneLoaded && !isBusesForRemoteClientsWasCreated)
                 CreateBusesForRemotePlayers();
 
@@ -360,9 +373,21 @@ namespace BDSM
                 foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
                 {
                     if (l_player.remotePlayerBus == null)
+                    {
                         l_player.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_player.state.selectedBusShortName, true));
+                        CreateAssociatedControolerForBus(l_player);
+                    }
                 }
                 isBusesForRemoteClientsWasCreated = true;
+            }
+        }
+
+        private void CreateAssociatedControolerForBus(Network.ClientPackets.RemotePlayer l_player)
+        {
+            switch (l_player.state.selectedBusShortName)
+            {
+                case "SPR": l_player.remotePlayerController = l_player.remotePlayerBus.AddComponent<RemotePlayerControllers.RmeotePlayerController_Sprinter>(); break;
+                default: Debug.LogError($"CLIENT: Controller for \"{l_player.state.selectedBusShortName}\" nor found!"); break;
             }
         }
 
@@ -401,6 +426,7 @@ namespace BDSM
             if (isSceneLoaded && isBusesForRemoteClientsWasCreated)
             {
                 l_newPlayer.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_newPlayer.state.selectedBusShortName, true));
+                CreateAssociatedControolerForBus(l_newPlayer);
             }
 
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
@@ -443,6 +469,8 @@ namespace BDSM
                     GameObject.Destroy(l_playerForEdit.remotePlayerBus);
 
                 l_playerForEdit.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_playerForEdit.state.selectedBusShortName, true));
+                CreateAssociatedControolerForBus(l_playerForEdit);
+                
 
                 _remotePlayers.Remove(l_packet.pid);
                 _remotePlayers.Add(l_packet.pid, l_playerForEdit);

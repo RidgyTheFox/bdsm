@@ -6,6 +6,7 @@ namespace BDSM.Network.ClientPackets
     {
         public string nickname { get; set; }
         public GameObject remotePlayerBus { get; set; }
+        public RemotePlayerControllers.RemotePlayerControllerBase remotePlayerController { get; set; }
         public NestedTypes.PlayerState state { get; set; }
     }
 
