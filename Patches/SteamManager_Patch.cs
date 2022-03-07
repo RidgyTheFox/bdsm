@@ -15,6 +15,7 @@ namespace BDSM.Patches
             l_ridgysStuffGameObject.AddComponent<DummyClient>();
             l_ridgysStuffGameObject.AddComponent<SecondDummyClient>();
             l_ridgysStuffGameObject.AddComponent<AboutWindow>();
+            l_ridgysStuffGameObject.AddComponent<ClockMachine>();
             GameObject.DontDestroyOnLoad(l_ridgysStuffGameObject);
             Debug.Log("GameObject for Ridgys stuff was created.");
         }
