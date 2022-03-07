@@ -4,5 +4,6 @@
   "passwordRequired": true,
   "password": "bdsmIsCool",
   "map": "serpukhov", // Available maps: "serpukhov", "serpukhovWinter" "keln", "murom", "muromWinter", "solnechnogorsk"
-  "playersLimit": 10
+  "playersLimit": 10,
+  "startAtNight": true
 }

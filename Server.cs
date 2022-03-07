@@ -276,6 +276,26 @@ namespace BDSM
             }
             l_valueToken = null;
 
+            l_settings.TryGetValue("startAtNight", out l_valueToken);
+            if (l_valueToken != null)
+            {
+                if (bool.Parse(l_valueToken.ToString()))
+                {
+                    StaticData.clockMachine.SetTime(1, 12, 0, 0);
+                    Debug.Log("SERVER: Time set to Day 1 12:00:00.");
+                }
+                else
+                {
+                    StaticData.clockMachine.SetTime(1, 0, 0, 0);
+                    Debug.Log("SERVER: Time set to Day 1 00:00:00.");
+                }
+            }
+            else
+            {
+                StaticData.clockMachine.SetTime(1, 12, 0, 0);
+                Debug.LogError("SERVER: Cannot read valoe \"startAtDay\"! Default value \"True\" will be used...");
+            }
+
             Debug.Log("SERVER: Settings loaded!");
         }
 
