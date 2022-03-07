@@ -58,6 +58,7 @@ namespace BDSM
             Debug.Log("SERVER: Registering callbacks...");
             _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.RequestJoin, NetPeer>(OnJoinRequest);
             _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.RequestServerState>(OnServerStateRequest);
+            _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.RequestServerDateAndTime>(OnRequestServerDateAndTime);
             _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.ChangeBus>(OnPlayerChangedBus);
             _packetProcessor.SubscribeReusable<Network.ServerPackets.UpdatePlayerState>(OnUpdatePlayerState);
 
@@ -358,6 +359,20 @@ namespace BDSM
                 SendPacket(l_serverState, l_player.peer, DeliveryMethod.ReliableOrdered);
                 Debug.Log($"SERVER: Server state was sent to {l_player.nickname}[{l_player.state.pid}].");
             }
+        }
+
+        public void OnRequestServerDateAndTime(Network.ServerPackets.RequestServerDateAndTime l_packet)
+        {
+            Debug.Log($"SERVER: Requst date and time was received from player with PID {l_packet.pid}. Searching for player...");
+            Network.ServerPackets.ServerPlayer l_player;
+            _players.TryGetValue(l_packet.pid, out l_player);
+            if (l_player != null)
+            {
+                SendPacket( new Network.ClientPackets.ReceiveServerDateAndTime { currentServerDateAndTime = new Network.NestedTypes.NetDateAndTime { day = StaticData.clockMachine.currentDay, hours = StaticData.clockMachine.currentHour, minutes = StaticData.clockMachine.currentMinute, seconds = StaticData.clockMachine.currentSecond } }, l_player.peer, DeliveryMethod.ReliableOrdered);
+                Debug.Log($"SERVER: Server date and time was sent to {l_player.nickname}[{l_player.state.pid}].");
+            }
+            else
+                Debug.LogError($"SERVER: Cannot find player with PID {l_packet.pid}!");
         }
 
         public void OnPlayerChangedBus(Network.ServerPackets.ChangeBus l_packet)
