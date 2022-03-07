@@ -72,21 +72,9 @@ namespace BDSM
         public void SetTime(uint l_day, uint l_hour, uint l_minute, uint l_second)
         {
             _currentDay = l_day;
-
-            if (l_hour < 24)
-                _currentHour = l_hour;
-            else
-                _currentHour = 24;
-
-            if (l_minute < 60)
-                _currentMinute = l_minute;
-            else
-                _currentMinute = 0;
-
-            if (l_second < 60)
-                _currentSecond = l_second;
-            else
-                _currentSecond = 0;
+            _currentHour = l_hour;
+            _currentMinute = l_minute;
+            _currentSecond = l_second;
 
             Debug.Log($"CLOCK_MACHINE: Time was set to {_currentDay} Day, {_currentHour}:{_currentMinute}:{_currentSecond} (HH:MM:SS).");
         }
