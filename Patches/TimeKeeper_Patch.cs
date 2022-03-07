@@ -38,8 +38,6 @@ namespace BDSM.Patches
         [HarmonyPrefix]
         public static void AddSecond(FreeMode.TimeKeeper __instance)
         {
-            if (StaticData.timeKeeper == null)
-                StaticData.timeKeeper = __instance;
         }
     }
 }
