@@ -91,6 +91,11 @@ namespace BDSM
             Debug.Log($"CLOCK_MACHINE: Time was set to {_currentDay} Day, {_currentHour}:{_currentMinute}:{_currentSecond} (HH:MM:SS).");
         }
 
+        public DateAndTime GetTime()
+        {
+            return new DateAndTime { days = _currentDay, hours = _currentHour, minutes = _currentMinute, seconds = _currentSecond };
+        }
+
         public void StartTime()
         {
             _mainTimer.Start();
