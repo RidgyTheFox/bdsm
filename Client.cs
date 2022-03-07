@@ -19,7 +19,7 @@ namespace BDSM
         private NetPacketProcessor _packetProcessor;
 
         private NetPeer _server;
-        private bool _isConnected = false;
+        public bool _isConnected = false;
         private bool _isAuthorized = false;
 
         private string _nickname = "test";
