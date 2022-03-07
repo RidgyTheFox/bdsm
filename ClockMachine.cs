@@ -4,8 +4,16 @@ using UnityEngine;
 
 namespace BDSM
 {
-    class ClockMachine : MonoBehaviour
+    public class ClockMachine : MonoBehaviour
     {
+        public struct DateAndTime
+        {
+            public uint days;
+            public uint hours;
+            public uint minutes;
+            public uint seconds;
+        }
+
         private static System.Timers.Timer _mainTimer;
 
         private static uint _currentDay;
