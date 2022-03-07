@@ -286,12 +286,12 @@ namespace BDSM
                 if (bool.Parse(l_valueToken.ToString()))
                 {
                     StaticData.clockMachine.SetTime(1, 12, 0, 0);
-                    Debug.Log("SERVER: Time set to Day 1 12:00:00.");
+                    Debug.Log("SERVER: Time set to Day 1 00:00:00.");
                 }
                 else
                 {
                     StaticData.clockMachine.SetTime(1, 0, 0, 0);
-                    Debug.Log("SERVER: Time set to Day 1 00:00:00.");
+                    Debug.Log("SERVER: Time set to Day 1 12:00:00.");
                 }
             }
             else
