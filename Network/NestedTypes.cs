@@ -52,4 +52,28 @@ namespace BDSM.Network.NestedTypes
             currentAmountOfPlayers = l_reader.GetUInt();
         }
     }
+
+    public struct NetDateAndTime : INetSerializable
+    {
+        public uint day { get; set; }
+        public uint hours { get; set; }
+        public uint minutes { get; set; }
+        public uint seconds { get; set; }
+
+        public void Serialize(NetDataWriter l_writer)
+        {
+            l_writer.Put(day);
+            l_writer.Put(hours);
+            l_writer.Put(minutes);
+            l_writer.Put(seconds);
+
+        }
+        public void Deserialize(NetDataReader l_reader)
+        {
+            l_reader.GetUInt();
+            l_reader.GetUInt();
+            l_reader.GetUInt();
+            l_reader.GetUInt();
+        }
+    }
 }

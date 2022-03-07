@@ -54,6 +54,7 @@ namespace BDSM
             _packetProcessor.RegisterNestedType((w, v) => w.Put(v), reader => reader.GetVector3Int());
             _packetProcessor.RegisterNestedType<BDSM.Network.NestedTypes.PlayerState>();
             _packetProcessor.RegisterNestedType<BDSM.Network.NestedTypes.ServerState>();
+            _packetProcessor.RegisterNestedType<BDSM.Network.NestedTypes.NetDateAndTime>();
             Debug.Log("SERVER: Registering callbacks...");
             _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.RequestJoin, NetPeer>(OnJoinRequest);
             _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.RequestServerState>(OnServerStateRequest);
