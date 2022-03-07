@@ -99,7 +99,8 @@ namespace BDSM
                 _usePassword = true;
                 _password = "bdsmIsCool";
             }
-
+            
+            /* Example how to send commands to bus controllers.
             if (Input.GetKeyDown(KeyCode.Keypad9))
             {
                 Network.ClientPackets.RemotePlayer l_player;
@@ -111,7 +112,7 @@ namespace BDSM
                 }
                 else
                     Debug.LogError("CLIENT:Cannot find player!");
-            }
+            }*/
 
             if (_isConnected && _isAuthorized && isSceneLoaded && !isBusesForRemoteClientsWasCreated)
                 CreateBusesForRemotePlayers();
