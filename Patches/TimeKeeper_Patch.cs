@@ -35,7 +35,7 @@ namespace BDSM.Patches
         }
 
         [HarmonyPatch(typeof(FreeMode.TimeKeeper), "AddSecond")]
-        [HarmonyPostfix]
+        [HarmonyPrefix]
         public static void AddSecond(FreeMode.TimeKeeper __instance)
         {
             if (StaticData.timeKeeper == null)
