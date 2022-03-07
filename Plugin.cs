@@ -22,6 +22,7 @@ namespace BDSM
             _harmony.PatchAll(typeof(Patches.GarageController_Pach));
             _harmony.PatchAll(typeof(Patches.AISpawner_Patch));
             _harmony.PatchAll(typeof(Patches.TimeKeeper_Patch));
+            _harmony.PatchAll(typeof(Patches.GameTime_Patch));
 
             _harmony.PatchAll(typeof(Patches.Buses.CitaroK_Patch));
             _harmony.PatchAll(typeof(Patches.Buses.Icarus260_Patch));
