@@ -27,6 +27,11 @@ namespace BDSM.Network.ClientPackets
         public uint currentAmountOfPlayers { get; set; }
     }
 
+    public class ReceiveServerDateAndTime
+    {
+        public NestedTypes.NetDateAndTime currentServerDateAndTime { get; set; }
+    }
+
     public class AddRemotePlayer
     {
         public string nickname { get; set; }

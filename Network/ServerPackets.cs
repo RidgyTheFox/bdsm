@@ -21,6 +21,11 @@ namespace BDSM.Network.ServerPackets
         public uint pid { get; set; }
     }
 
+    public class RequestServerDateAndTime
+    {
+        public uint pid { get; set; }
+    }
+
     public class ChangeBus
     {
         public uint pid { get; set; }
