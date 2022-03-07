@@ -33,5 +33,13 @@ namespace BDSM.Patches
             else
                 return true;
         }
+
+        [HarmonyPatch(typeof(FreeMode.TimeKeeper), "AddSecond")]
+        [HarmonyPostfix]
+        public static void AddSecond(FreeMode.TimeKeeper __instance)
+        {
+            if (StaticData.timeKeeper == null)
+                StaticData.timeKeeper = __instance;
+        }
     }
 }
