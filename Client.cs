@@ -37,6 +37,7 @@ namespace BDSM
         public bool isSceneLoaded = false;
         private bool _isBusesForRemoteClientsWasCreated = false;
         private bool _hidePlayerNicknames = false;
+        private const float _maxDistanceForNicknames = 60.0f;
         public GameObject localPlayerBus;
 
         #region Client GUI data;
@@ -99,6 +100,23 @@ namespace BDSM
                 _serverPort = 2022;
                 _usePassword = true;
                 _password = "bdsmIsCool";
+            }
+
+            foreach(Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
+            {
+                if (!_hidePlayerNicknames)
+                {
+                    if (Vector3.Distance(l_player.remotePlayerController.gameObject.transform.position, _localPlayerState.position) > _maxDistanceForNicknames)
+                    {
+                        if (l_player.remotePlayerController.GetFlyingNicknameVisibility())
+                            l_player.remotePlayerController.SetFlyingNicknameVisibility();
+                    }
+                    else
+                    {
+                        if (!l_player.remotePlayerController.GetFlyingNicknameVisibility())
+                            l_player.remotePlayerController.SetFlyingNicknameVisibility();
+                    }
+                }
             }
         }
 
