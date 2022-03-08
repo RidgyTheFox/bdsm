@@ -12,7 +12,7 @@ namespace BDSM.RemotePlayerControllers
             Color _headLightColor = new Color(0.9854f, 1.0f, 0.8443f, 1.0f);
 
             SetFlyingNicknameYOffset(2.8f);
-            _vehicleGroundOffset = new Vector3(0.0f, 0.312f, 0.0f);
+            _vehicleGroundOffset = new Vector3(0.0f, -0.312f, 0.0f);
 
             #region Taillights.
 
