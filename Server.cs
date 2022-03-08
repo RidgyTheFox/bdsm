@@ -67,11 +67,14 @@ namespace BDSM
             Debug.Log("SERVER: Initialized!");
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             if (Input.GetKeyDown(KeyCode.F2))
                 _isMainWindowOpened = !_isMainWindowOpened;
+        }
 
+        private void FixedUpdate()
+        {
             _server.PollEvents();
 
             if (_players.Count > 1)

@@ -86,11 +86,9 @@ namespace BDSM
             ReloadSettings();
             Debug.Log("CLIENT: Initialized!");
         }
-
-        private void FixedUpdate()
+        
+        private void Update()
         {
-            _client.PollEvents();
-
             if (Input.GetKeyDown(KeyCode.F1))
                 _isMainWindowOpened = !_isMainWindowOpened;
 
@@ -101,6 +99,11 @@ namespace BDSM
                 _usePassword = true;
                 _password = "bdsmIsCool";
             }
+        }
+
+        private void FixedUpdate()
+        {
+            _client.PollEvents();
             
             /* Example how to send commands to bus controllers.
             if (Input.GetKeyDown(KeyCode.Keypad9))
@@ -419,7 +422,7 @@ namespace BDSM
             _remotePlayers.Clear();
             Debug.LogError($"CLIENT: Cannot join on server! Reason: {l_packet.message}.");
         }
-
+        S
         public void OnReceiveServerState(Network.ClientPackets.ReceiveServerState l_packet)
         {
             Debug.Log($"CLIENT: Server state was received! Server name: {l_packet.serverName}. Current map: {EnumUtils.MapUintToEnum(l_packet.currentMap)}. Players limit: {l_packet.playersLimit}. Amount of players: {l_packet.currentAmountOfPlayers}.");

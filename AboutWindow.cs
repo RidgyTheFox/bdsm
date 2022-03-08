@@ -51,11 +51,14 @@ namespace BDSM
             _windowPositionY = (Screen.currentResolution.height / 2) - (_windowSizeY / 2);
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             if (Input.GetKeyDown(KeyCode.F3))
                 _showWindow = !_showWindow;
+        }
 
+        private void FixedUpdate()
+        {
             if (_moveMode)
             {
                 _windowPositionX = (int)Input.mousePosition.x - 10;
