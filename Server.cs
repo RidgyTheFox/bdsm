@@ -332,7 +332,14 @@ namespace BDSM
             }
 
             Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = (uint)l_peer.Id, selectedBusShortName = l_packet.state.selectedBusShortName, position = l_packet.state.position, rotation = l_packet.state.rotation };
-            Network.ServerPackets.ServerPlayer l_newPlayer = new Network.ServerPackets.ServerPlayer { nickname = l_packet.nickname, peer = l_peer, state = l_newPlayerState };
+            Network.NestedTypes.BusState l_newPlayerBusState = new Network.NestedTypes.BusState { 
+                isRearDoorOpened = false, isBothBlinkersBlinking = false, 
+                isBraking = false, isDriverLightsTurnedOn = false, 
+                isEngineTurnedOn = false, isFrontDoorOpened = false, 
+                isHighBeamTurnedOn = false, isInsideLightsTurnedOn = false, 
+                isLeftBlinkerBlinking = false, isMiddleDoorOpened = false, 
+                isReverseGear = false, isRightBlinkerBlinking = false, };
+            Network.ServerPackets.ServerPlayer l_newPlayer = new Network.ServerPackets.ServerPlayer { nickname = l_packet.nickname, currentBusState = l_newPlayerBusState, peer = l_peer, state = l_newPlayerState };
             _players.Add(l_newPlayer.state.pid, l_newPlayer);
             SendPacket(new Network.ClientPackets.OnJoinAccepted { pid = l_newPlayer.state.pid }, l_peer, DeliveryMethod.ReliableOrdered);
 
@@ -340,8 +347,8 @@ namespace BDSM
             {
                 if (l_player.state.pid != l_newPlayer.state.pid)
                 {
-                    SendPacket(new Network.ClientPackets.AddRemotePlayer { nickname = l_newPlayer.nickname, state = l_newPlayerState }, l_player.peer, DeliveryMethod.ReliableOrdered);
-                    SendPacket(new Network.ClientPackets.AddRemotePlayer { nickname = l_player.nickname, state = l_player.state }, l_newPlayer.peer, DeliveryMethod.ReliableOrdered);
+                    SendPacket(new Network.ClientPackets.AddRemotePlayer { nickname = l_newPlayer.nickname, busState = l_newPlayerBusState, state = l_newPlayerState }, l_player.peer, DeliveryMethod.ReliableOrdered);
+                    SendPacket(new Network.ClientPackets.AddRemotePlayer { nickname = l_player.nickname, busState = l_player.currentBusState, state = l_player.state }, l_newPlayer.peer, DeliveryMethod.ReliableOrdered);
                 }
             }
 
