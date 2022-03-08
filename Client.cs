@@ -36,6 +36,7 @@ namespace BDSM
 
         public bool isSceneLoaded = false;
         private bool isBusesForRemoteClientsWasCreated = false;
+        private bool _hidePlayerNicknames = false;
         public GameObject localPlayerBus;
 
         #region Client GUI data;
@@ -190,6 +191,22 @@ namespace BDSM
                 {
                     if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 110, 200, 20), "Disconnect"))
                         Disconnect();
+                    if (_hidePlayerNicknames)
+                    {
+                        if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 130, 200, 20), "Show player nicknames"))
+                        {
+                            _hidePlayerNicknames = !_hidePlayerNicknames;
+                            SwitchFlyingNicknameVisibilityForRemotePlayers();
+                        }
+                    }
+                    else
+                    {
+                        if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 130, 200, 20), "Hide player nicknames"))
+                        {
+                            _hidePlayerNicknames = !_hidePlayerNicknames;
+                            SwitchFlyingNicknameVisibilityForRemotePlayers();
+                        }
+                    }
                 }
                 else
                 {
@@ -382,6 +399,8 @@ namespace BDSM
                     {
                         l_player.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_player.state.selectedBusShortName, true));
                         CreateAssociatedControolerForBus(l_player);
+                        if (_hidePlayerNicknames)
+                            l_player.remotePlayerController.SetFlyingNicknameVisibility();
                     }
                 }
                 isBusesForRemoteClientsWasCreated = true;
@@ -392,6 +411,15 @@ namespace BDSM
         {
             SendPacket(new Network.ServerPackets.RequestServerDateAndTime { pid = _localPlayerState.pid }, DeliveryMethod.ReliableOrdered);
             Debug.Log("CLIENT: Server date and time requested...");
+        }
+
+        private void SwitchFlyingNicknameVisibilityForRemotePlayers()
+        {
+            foreach(Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
+            {
+                if (l_player.remotePlayerController != null)
+                    l_player.remotePlayerController.SetFlyingNicknameVisibility();
+            }
         }
 
         private void CreateAssociatedControolerForBus(Network.ClientPackets.RemotePlayer l_player)
@@ -457,6 +485,8 @@ namespace BDSM
             {
                 l_newPlayer.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_newPlayer.state.selectedBusShortName, true));
                 CreateAssociatedControolerForBus(l_newPlayer);
+                if (_hidePlayerNicknames)
+                    l_newPlayer.remotePlayerController.SetFlyingNicknameVisibility();
             }
 
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
@@ -500,7 +530,9 @@ namespace BDSM
 
                 l_playerForEdit.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_playerForEdit.state.selectedBusShortName, true));
                 CreateAssociatedControolerForBus(l_playerForEdit);
-                
+                if (_hidePlayerNicknames)
+                    l_playerForEdit.remotePlayerController.SetFlyingNicknameVisibility();
+
 
                 _remotePlayers.Remove(l_packet.pid);
                 _remotePlayers.Add(l_packet.pid, l_playerForEdit);
