@@ -10,6 +10,18 @@ namespace BDSM.Network.ServerPackets
         public NestedTypes.PlayerState state { get; set; }
     }
 
+    public class BusState
+    {
+        public bool isEngineTurnedOn { get; set; }
+        public bool isHighBeamTurnedOn { get; set; }
+        public bool isLeftBlinkerBlinking { get; set; }
+        public bool isRightBlinkerBlinking { get; set; }
+        public bool isBothBlinkersBlinking { get; set; }
+        public bool isReverseGear { get; set; }
+        public bool isBraking { get; set; }
+        public bool isDriverLightsTurnedOn { get; set; }
+        public bool isInsideLightsTurnedOn { get; set; }
+    }
     public class RequestJoin
     {
         public string nickname { get; set; }
