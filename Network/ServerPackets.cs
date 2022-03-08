@@ -22,6 +22,9 @@ namespace BDSM.Network.ServerPackets
         public bool isBraking { get; set; }
         public bool isDriverLightsTurnedOn { get; set; }
         public bool isInsideLightsTurnedOn { get; set; }
+        public bool isFrontDoorOpened { get; set; }
+        public bool isMiddleDoorOpened { get; set; }
+        public bool isRearDoorOpened { get; set; }
     }
 
     public class UpgradesState
