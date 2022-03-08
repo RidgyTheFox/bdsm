@@ -22,6 +22,12 @@ namespace BDSM.Network.ServerPackets
         public bool isDriverLightsTurnedOn { get; set; }
         public bool isInsideLightsTurnedOn { get; set; }
     }
+
+    public class UpgradesState
+    {
+        public string[] installedUpgrades { get; set; }
+    }
+
     public class RequestJoin
     {
         public string nickname { get; set; }
