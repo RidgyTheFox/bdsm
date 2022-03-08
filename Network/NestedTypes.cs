@@ -70,10 +70,10 @@ namespace BDSM.Network.NestedTypes
         }
         public void Deserialize(NetDataReader l_reader)
         {
-            l_reader.GetUInt();
-            l_reader.GetUInt();
-            l_reader.GetUInt();
-            l_reader.GetUInt();
+            day = l_reader.GetUInt();
+            hours = l_reader.GetUInt();
+            minutes = l_reader.GetUInt();
+            seconds = l_reader.GetUInt();
         }
     }
 }
