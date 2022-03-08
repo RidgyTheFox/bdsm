@@ -8,6 +8,7 @@ namespace BDSM.Network.ServerPackets
         public NetPeer peer { get; set; }
         public string nickname { get; set; }
         public NestedTypes.PlayerState state { get; set; }
+        public BusState currentBusState { get; set; }
     }
 
     public class BusState
