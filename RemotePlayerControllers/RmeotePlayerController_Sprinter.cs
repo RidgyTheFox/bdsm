@@ -13,6 +13,8 @@ namespace BDSM.RemotePlayerControllers
             Color _sideLightColor = new Color(0.6549f, 0.3804f, 0.1569f);
             Color _headLightColor = new Color(0.9854f, 1.0f, 0.8443f, 1.0f);
 
+            SetFlyingNicknameYOffset(2.8f);
+
             #region Taillights.
 
             #region Rear lights.

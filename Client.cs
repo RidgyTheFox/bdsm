@@ -398,7 +398,10 @@ namespace BDSM
         {
             switch (l_player.state.selectedBusShortName)
             {
-                case "SPR": l_player.remotePlayerController = l_player.remotePlayerBus.AddComponent<RemotePlayerControllers.RmeotePlayerController_Sprinter>(); break;
+                case "SPR":
+                    l_player.remotePlayerController = l_player.remotePlayerBus.AddComponent<RemotePlayerControllers.RmeotePlayerController_Sprinter>();
+                    l_player.remotePlayerController.SetNickname(l_player.nickname, l_player.state.pid);
+                    break;
                 default: Debug.LogError($"CLIENT: Controller for \"{l_player.state.selectedBusShortName}\" nor found!"); break;
             }
         }
@@ -422,7 +425,7 @@ namespace BDSM
             _remotePlayers.Clear();
             Debug.LogError($"CLIENT: Cannot join on server! Reason: {l_packet.message}.");
         }
-        S
+        
         public void OnReceiveServerState(Network.ClientPackets.ReceiveServerState l_packet)
         {
             Debug.Log($"CLIENT: Server state was received! Server name: {l_packet.serverName}. Current map: {EnumUtils.MapUintToEnum(l_packet.currentMap)}. Players limit: {l_packet.playersLimit}. Amount of players: {l_packet.currentAmountOfPlayers}.");
