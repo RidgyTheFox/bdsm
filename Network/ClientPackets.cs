@@ -53,4 +53,10 @@ namespace BDSM.Network.ClientPackets
     {
         public NestedTypes.PlayerState[] states { get; set; }
     }
+
+    public class ReceiveBusState
+    {
+        public uint pid { get; set; }
+        public ServerPackets.BusState newBusState { get; set; }
+    }
 }
