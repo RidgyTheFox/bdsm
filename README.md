@@ -54,7 +54,7 @@ There are two files for configuring server and client part of this mod: ClientCo
 First off, clone this repository using your tool of choice (Visual Studio's git plugin, GitHub Desktop, Sourcetree etc.)
 ### Preparing your IDE
 1. Make sure you have VS 2019 or 2022 with **.NET desktop development workload installed.**
-2. Install .NET 6.0 SDK from [here](https://dotnet.microsoft.com/en-us/download) and install it.
+2. Install .NET 6.0 SDK from [here](https://dotnet.microsoft.com/en-us/download) and install it. After rebooting, you can enter ``dotnet --list-sdks`` into you terminal to check that .NET SDK is sucessfuly installed.
 3. Launch CMD or Windows Terminal or PowerShell as an Administrator and execute the following command to install templates for BepInEx:
 ``dotnet new -i BepInEx.Templates —nuget-source https://nuget.bepinex.dev/v3/index.json``
 4. Open the project in Visual Studiom right-click on the **project** and select Properties. Go to Build - Events. In Post build events, enter the following:
