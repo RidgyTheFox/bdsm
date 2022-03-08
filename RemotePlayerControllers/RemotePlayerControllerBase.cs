@@ -6,7 +6,6 @@ namespace BDSM.RemotePlayerControllers
     public interface RemotePlayerControllerInterface
     {
         public void TriggerToggleAction(string l_actionName);
-        public void UpdatePosition(Network.ClientPackets.RemotePlayer l_player);
     }
 
     public abstract class RemotePlayerControllerBase : MonoBehaviour, RemotePlayerControllerInterface
@@ -15,6 +14,8 @@ namespace BDSM.RemotePlayerControllers
         private TextMesh _flyingTextMesh;
 
         private string _playerNickname;
+
+        private Vector3 _vehicleGroundOffset = new Vector3(0.0f, 0.0f, 0.0f);
 
         public GameObject _brakingLightsRoot;
         public GameObject _rearLightsRoot;
@@ -53,9 +54,11 @@ namespace BDSM.RemotePlayerControllers
         {
             OnTriggerToggleAction(l_actionName);
         }
-        void RemotePlayerControllerInterface.UpdatePosition(Network.ClientPackets.RemotePlayer l_player)
+
+        public void UpdatePosition(Network.ClientPackets.RemotePlayer l_player)
         {
-            OnUpdatePosition(l_player);
+            gameObject.transform.position = l_player.state.position + _vehicleGroundOffset;
+            gameObject.transform.rotation = l_player.state.rotation;
         }
 
         public void SetFlyingNicknameVisibility()
@@ -89,7 +92,5 @@ namespace BDSM.RemotePlayerControllers
         }
 
         public abstract void OnTriggerToggleAction(string l_actionName);
-
-        public abstract void OnUpdatePosition(Network.ClientPackets.RemotePlayer l_player);
     }
 }

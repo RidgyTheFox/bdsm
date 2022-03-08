@@ -303,11 +303,5 @@ namespace BDSM.RemotePlayerControllers
         {
             throw new System.NotImplementedException();
         }
-
-        public override void OnUpdatePosition(Network.ClientPackets.RemotePlayer l_player)
-        {
-            gameObject.transform.position = l_player.state.position;
-            gameObject.transform.rotation = l_player.state.rotation;
-        }
     }
 }
