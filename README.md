@@ -70,3 +70,13 @@ If everything is done correctly, pressing F5 should compile the mod, copy it int
 ## Authors
 The main developer of this mod is [RidgyTheFox](https://github.com/RidgyTheFox).
 [Resident007](https://github.com/Resident007) is responsible for English localization of UI and QA/Testing.
+
+## Licensing
+MIT License.
+Copyright (c) 2022 RidgyTheFox ♥
+See file LICENSE.md	
+
+## Third-party tools
+* [BepInEx 5.4.19](https://github.com/BepInEx/BepInEx) - was used for injecting mod.
+* [HarmonyX 2.9.0 (NuGet)](https://github.com/BepInEx/HarmonyX) - was used for patching functions\Classes.
+* [Newtonsoft.JSON 13.0.1 (NuGet)](https://www.newtonsoft.com/json) - was used for parsing settings files.
