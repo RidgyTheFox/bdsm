@@ -4,13 +4,10 @@ namespace BDSM.RemotePlayerControllers
 {
     class RmeotePlayerController_Sprinter : RemotePlayerControllerBase
     {
-
         private Vector3 _positionOffset = new Vector3(0.0f, -0.06f, 0.0f);
-
 
         void Awake()
         {
-
             Color _tailLightsColor = new Color(0.8f, 0.0f, 0.0f, 1.0f);
             Color _blinkerColor = new Color(1.0f, 0.5f, 0.0f);
             Color _sideLightColor = new Color(0.6549f, 0.3804f, 0.1569f);
