@@ -73,7 +73,7 @@ namespace BDSM
             _client.PollEvents();
 
             if (_isMoving)
-                _localPlayerState.position += new Vector3(0.01f * Time.deltaTime, 0.01f * Time.deltaTime, 0.01f * Time.deltaTime);
+                _localPlayerState.position += new Vector3(0.1f * Time.deltaTime, 0.1f * Time.deltaTime, 0.1f * Time.deltaTime);
 
             if (_isConnected && _isAuthorized)
                 SendPacket( new Network.ServerPackets.UpdatePlayerState { pid = _localPlayerState.pid, state = _localPlayerState }, DeliveryMethod.Sequenced);
