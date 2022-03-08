@@ -60,6 +60,11 @@ namespace BDSM.RemotePlayerControllers
             _flyingNickname.SetActive(!_flyingNickname.activeSelf);
         }
 
+        public bool GetFlyingNicknameVisibility()
+        {
+            return _flyingNickname.activeSelf;
+        }
+
         public void SetNickname(string l_playerNickname, uint l_playerPid)
         {
             if (_flyingNickname == null)
