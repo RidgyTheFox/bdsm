@@ -145,11 +145,8 @@ namespace BDSM
             {
                 foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
                 {
-                    if (l_player.remotePlayerBus != null)
-                    {
-                        l_player.remotePlayerBus.transform.position = l_player.state.position + _remotePlayerPositionOffset;
-                        l_player.remotePlayerBus.transform.rotation = l_player.state.rotation;
-                    }
+                    if (l_player.remotePlayerBus != null && l_player.remotePlayerController != null)
+                        l_player.remotePlayerController.OnUpdatePosition(l_player);
                 }
 
                 if (localPlayerBus == null)
