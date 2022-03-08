@@ -55,33 +55,23 @@ namespace BDSM
             Debug.Log("DUMMY: Initialized!");
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
-            _client.PollEvents();
-
             if (Input.GetKeyDown(KeyCode.PageUp))
                 Connect();
             if (Input.GetKeyDown(KeyCode.PageDown))
                 Disconnect();
 
-            if (_isMoving)
-            {
-                _localPlayerState.position += new Vector3(0.01f, 0.01f, 0.01f);
-            }
             if (Input.GetKeyDown(KeyCode.KeypadPlus))
-            {
                 _isMoving = !_isMoving;
-                if (_isMoving)
-                {
-                    _localPlayerState.position = new Vector3(-207.7788f, 12.4482f, -492.7207f);
-                    Debug.Log("DUMMY: Movement enbaled...");
-                }
-                else
-                {
-                    _localPlayerState.position = new Vector3(-999.0f, -999.0f, -999.0f);
-                    Debug.Log("DUMMY: Movement disabled...");
-                }
-            }
+        }
+
+        private void FixedUpdate()
+        {
+            _client.PollEvents();
+
+            if (_isMoving)
+                _localPlayerState.position += new Vector3(0.01f * Time.deltaTime, 0.01f * Time.deltaTime, 0.01f * Time.deltaTime);
 
             if (_isConnected && _isAuthorized)
                 SendPacket( new Network.ServerPackets.UpdatePlayerState { pid = _localPlayerState.pid, state = _localPlayerState }, DeliveryMethod.Sequenced);
