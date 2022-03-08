@@ -36,6 +36,7 @@ namespace BDSM.Network.ClientPackets
     {
         public string nickname { get; set; }
         public NestedTypes.PlayerState state { get; set; }
+        public NestedTypes.BusState busState { get; set; }
     }
 
     public class RemoveRemotePlayer
