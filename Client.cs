@@ -35,7 +35,7 @@ namespace BDSM
         private Dictionary<uint, Network.ClientPackets.RemotePlayer> _remotePlayers;
 
         public bool isSceneLoaded = false;
-        private bool isBusesForRemoteClientsWasCreated = false;
+        private bool _isBusesForRemoteClientsWasCreated = false;
         private bool _hidePlayerNicknames = false;
         public GameObject localPlayerBus;
 
@@ -120,10 +120,10 @@ namespace BDSM
                     Debug.LogError("CLIENT:Cannot find player!");
             }*/
 
-            if (_isConnected && _isAuthorized && isSceneLoaded && !isBusesForRemoteClientsWasCreated)
+            if (_isConnected && _isAuthorized && isSceneLoaded && !_isBusesForRemoteClientsWasCreated)
                 CreateBusesForRemotePlayers();
 
-            if (_isConnected && _isAuthorized && isSceneLoaded && isBusesForRemoteClientsWasCreated)
+            if (_isConnected && _isAuthorized && isSceneLoaded && _isBusesForRemoteClientsWasCreated)
             {
                 foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
                 {
@@ -255,7 +255,7 @@ namespace BDSM
                 }
 
                 isSceneLoaded = false;
-                isBusesForRemoteClientsWasCreated = false;
+                _isBusesForRemoteClientsWasCreated = false;
                 UnityEngine.SceneManagement.SceneManager.LoadScene("menu");
 
                 _isConnected = false;
@@ -391,7 +391,7 @@ namespace BDSM
 
         private void CreateBusesForRemotePlayers()
         {
-            if (!isBusesForRemoteClientsWasCreated)
+            if (!_isBusesForRemoteClientsWasCreated)
             {
                 foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
                 {
@@ -403,7 +403,7 @@ namespace BDSM
                             l_player.remotePlayerController.SetFlyingNicknameVisibility();
                     }
                 }
-                isBusesForRemoteClientsWasCreated = true;
+                _isBusesForRemoteClientsWasCreated = true;
             }
         }
 
@@ -481,7 +481,7 @@ namespace BDSM
             Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, selectedBusShortName = l_packet.state.selectedBusShortName, position = l_packet.state.position, rotation = l_packet.state.rotation };
             Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, state = l_newPlayerState };
             
-            if (isSceneLoaded && isBusesForRemoteClientsWasCreated)
+            if (isSceneLoaded && _isBusesForRemoteClientsWasCreated)
             {
                 l_newPlayer.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_newPlayer.state.selectedBusShortName, true));
                 CreateAssociatedControolerForBus(l_newPlayer);
@@ -617,7 +617,7 @@ namespace BDSM
                 _isAuthorized = false;
                 _isConnected = false;
                 isSceneLoaded = false;
-                isBusesForRemoteClientsWasCreated = false;
+                _isBusesForRemoteClientsWasCreated = false;
                 _server = null;
                 _client.Stop();
                 _remotePlayers.Clear();
