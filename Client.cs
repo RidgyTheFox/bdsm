@@ -84,6 +84,7 @@ namespace BDSM
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemoveRemotePlayer>(OnRemoveRemotePlayer);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemotePlayerChangedBus>(OnRemotePlayerChangedBus);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.UpdateRemotePlayers>(OnUpdateRemotePlayers);
+            _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.ReceiveBusState>(OnReceiveBusState);
 
             ReloadSettings();
             Debug.Log("CLIENT: Initialized!");
@@ -584,6 +585,11 @@ namespace BDSM
             _localPlayerState.selectedBusShortName = FreeMode.PlayerData.GetCurrentData().boughtBuses[FreeMode.PlayerData.GetCurrentData().selectedBus].ShortName;
             SendPacket( new Network.ServerPackets.ChangeBus { pid = _localPlayerState.pid, busShortName = _localPlayerState.selectedBusShortName }, DeliveryMethod.ReliableOrdered);
             Debug.Log($"CLIENT: Bus was changed to {_localPlayerState.selectedBusShortName}.");
+        }
+
+        public void OnReceiveBusState(Network.ClientPackets.ReceiveBusState l_newState)
+        {
+
         }
 
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()
