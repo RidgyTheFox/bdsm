@@ -435,6 +435,7 @@ namespace BDSM
                 StaticData.timeKeeper.Hour = (int)l_packet.currentServerDateAndTime.hours;
                 StaticData.timeKeeper.Minute = (int)l_packet.currentServerDateAndTime.minutes;
                 StaticData.timeKeeper.Second = (int)l_packet.currentServerDateAndTime.seconds;
+                StaticData.timeKeeper.UpdateSky();
                 Debug.Log($"CLIENT: Time was set to day {l_packet.currentServerDateAndTime.day}, {l_packet.currentServerDateAndTime.hours}:{l_packet.currentServerDateAndTime.minutes}:{l_packet.currentServerDateAndTime.seconds}!");
             }
             else
