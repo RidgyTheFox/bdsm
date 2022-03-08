@@ -17,6 +17,8 @@ namespace BDSM.RemotePlayerControllers
 
         protected Vector3 _vehicleGroundOffset;
 
+        protected Network.NestedTypes.BusState _currentBusState;
+
         public GameObject _brakingLightsRoot;
         public GameObject _rearLightsRoot;
         public GameObject _backwardLightsRoot;
@@ -89,6 +91,28 @@ namespace BDSM.RemotePlayerControllers
                 CreateFlyingNicknameIfNull();
 
             _flyingNickname.transform.localPosition = new Vector3(0.0f, l_newOffset, 0.0f);
+        }
+
+        public void AssignBuState(Network.NestedTypes.BusState l_busState)
+        {
+            _currentBusState = l_busState;
+
+            if (l_busState.isEngineTurnedOn)
+            {
+                _headlightsLowBeam.SetActive(true);
+                _sideLights.SetActive(true);
+                _rearLightsRoot.SetActive(true);
+            }
+
+            if (l_busState.isBraking)
+                _brakingLightsRoot.SetActive(true);
+            else
+                _brakingLightsRoot.SetActive(false);
+
+            if (l_busState.isReverseGear)
+                _backwardLightsRoot.SetActive(true);
+            else
+                _backwardLightsRoot.SetActive(false);
         }
 
         public abstract void OnTriggerToggleAction(string l_actionName);

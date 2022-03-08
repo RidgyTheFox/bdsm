@@ -57,6 +57,6 @@ namespace BDSM.Network.ClientPackets
     public class ReceiveBusState
     {
         public uint pid { get; set; }
-        public ServerPackets.BusState newBusState { get; set; }
+        public NestedTypes.BusState newBusState { get; set; }
     }
 }

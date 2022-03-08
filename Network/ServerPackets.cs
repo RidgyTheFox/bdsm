@@ -8,23 +8,7 @@ namespace BDSM.Network.ServerPackets
         public NetPeer peer { get; set; }
         public string nickname { get; set; }
         public NestedTypes.PlayerState state { get; set; }
-        public BusState currentBusState { get; set; }
-    }
-
-    public class BusState
-    {
-        public bool isEngineTurnedOn { get; set; }
-        public bool isHighBeamTurnedOn { get; set; }
-        public bool isLeftBlinkerBlinking { get; set; }
-        public bool isRightBlinkerBlinking { get; set; }
-        public bool isBothBlinkersBlinking { get; set; }
-        public bool isReverseGear { get; set; }
-        public bool isBraking { get; set; }
-        public bool isDriverLightsTurnedOn { get; set; }
-        public bool isInsideLightsTurnedOn { get; set; }
-        public bool isFrontDoorOpened { get; set; }
-        public bool isMiddleDoorOpened { get; set; }
-        public bool isRearDoorOpened { get; set; }
+        public NestedTypes.BusState currentBusState { get; set; }
     }
 
     public class UpgradesState
@@ -63,6 +47,6 @@ namespace BDSM.Network.ServerPackets
     public class SetBusState
     {
         public uint pid;
-        public BusState newBusState { get; set; }
+        public NestedTypes.BusState newBusState { get; set; }
     }
 }

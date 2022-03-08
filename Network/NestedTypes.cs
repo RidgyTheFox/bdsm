@@ -76,4 +76,52 @@ namespace BDSM.Network.NestedTypes
             seconds = l_reader.GetUInt();
         }
     }
+
+    public struct BusState : INetSerializable
+    {
+        public bool isEngineTurnedOn { get; set; }
+        public bool isHighBeamTurnedOn { get; set; }
+        public bool isLeftBlinkerBlinking { get; set; }
+        public bool isRightBlinkerBlinking { get; set; }
+        public bool isBothBlinkersBlinking { get; set; }
+        public bool isReverseGear { get; set; }
+        public bool isBraking { get; set; }
+        public bool isDriverLightsTurnedOn { get; set; }
+        public bool isInsideLightsTurnedOn { get; set; }
+        public bool isFrontDoorOpened { get; set; }
+        public bool isMiddleDoorOpened { get; set; }
+        public bool isRearDoorOpened { get; set; }
+
+        public void Serialize(NetDataWriter l_writer)
+        {
+            l_writer.Put(isEngineTurnedOn);
+            l_writer.Put(isHighBeamTurnedOn);
+            l_writer.Put(isLeftBlinkerBlinking);
+            l_writer.Put(isRightBlinkerBlinking);
+            l_writer.Put(isBothBlinkersBlinking);
+            l_writer.Put(isReverseGear);
+            l_writer.Put(isBraking);
+            l_writer.Put(isDriverLightsTurnedOn);
+            l_writer.Put(isInsideLightsTurnedOn);
+            l_writer.Put(isFrontDoorOpened);
+            l_writer.Put(isMiddleDoorOpened);
+            l_writer.Put(isRearDoorOpened);
+        }
+
+        public void Deserialize(NetDataReader l_reader)
+        {
+            isEngineTurnedOn = l_reader.GetBool();
+            isHighBeamTurnedOn = l_reader.GetBool();
+            isLeftBlinkerBlinking = l_reader.GetBool();
+            isRightBlinkerBlinking = l_reader.GetBool();
+            isBothBlinkersBlinking = l_reader.GetBool();
+            isReverseGear = l_reader.GetBool();
+            isBraking = l_reader.GetBool();
+            isDriverLightsTurnedOn = l_reader.GetBool();
+            isInsideLightsTurnedOn = l_reader.GetBool();
+            isFrontDoorOpened = l_reader.GetBool();
+            isMiddleDoorOpened = l_reader.GetBool();
+            isRearDoorOpened = l_reader.GetBool();
+        }
+    }
 }
