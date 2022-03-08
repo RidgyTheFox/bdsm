@@ -64,6 +64,8 @@ namespace BDSM
 
             if (Input.GetKeyDown(KeyCode.KeypadPlus))
                 _isMoving = !_isMoving;
+            if (Input.GetKeyDown(KeyCode.KeypadMinus))
+                _localPlayerState.position = new Vector3(-207.7788f, 12.4482f, - 492.7207f);
         }
 
         private void FixedUpdate()
