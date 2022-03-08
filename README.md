@@ -8,7 +8,7 @@ This is the same Bus Driver Simulator as before, but with Multiplayer.
 ![bds2](https://i.imgur.com/H4Z0Z8X.png)
 
 ## Create your own multiplayer sessions and join others - it's easy!
-Just install the mod, set up the server and client configs, and you're ready to go!
+Just install the mod, set up the server and client configs, and you're ready to go!  
 ![bds3](https://i.imgur.com/TD835bs.png)
 
 
