@@ -61,6 +61,7 @@ namespace BDSM
             _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.RequestServerDateAndTime>(OnRequestServerDateAndTime);
             _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.ChangeBus>(OnPlayerChangedBus);
             _packetProcessor.SubscribeReusable<Network.ServerPackets.UpdatePlayerState>(OnUpdatePlayerState);
+            _packetProcessor.SubscribeReusable<Network.ServerPackets.SetBusState>(OnSetBusState);
 
             ReloadSettings();
 
@@ -419,6 +420,24 @@ namespace BDSM
                 _players.Remove(l_packet.pid);
                 _players.Add(l_packet.pid, l_playerForEdit);
             }
+        }
+
+        public void OnSetBusState(Network.ServerPackets.SetBusState l_packet)
+        {
+            Network.ServerPackets.ServerPlayer l_player;
+            _players.TryGetValue(l_packet.pid, out l_player);
+            if (l_player != null)
+            {
+                l_player.currentBusState = l_packet.newBusState;
+                foreach(Network.ServerPackets.ServerPlayer l_playerToSend in _players.Values)
+                {
+                    if (l_playerToSend.state.pid != l_packet.pid)
+                        SendPacket( new Network.ClientPackets.ReceiveBusState { pid = l_packet.pid, newBusState = l_packet.newBusState }, l_playerToSend.peer, DeliveryMethod.ReliableOrdered);
+                }
+                Debug.Log($"SERVER: Bus state for {l_player.nickname}[{l_player.state.pid}] was updated and synced!");
+            }
+            else
+                Debug.LogError($"SERVER: New bus state was received from player with PID {l_packet.pid}, but server cannot find him in players list!");
         }
 
         public void OnConnectionRequest(ConnectionRequest l_request)
