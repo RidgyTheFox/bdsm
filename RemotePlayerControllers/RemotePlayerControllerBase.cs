@@ -29,13 +29,22 @@ namespace BDSM.RemotePlayerControllers
 
         private void Awake()
         {
-            _flyingNickname = new GameObject("FlyingNickname");
-            _flyingNickname.transform.parent = this.transform;
-            _flyingTextMesh.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-            _flyingNickname.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
-            _flyingTextMesh = _flyingNickname.AddComponent<TextMesh>();
-            _flyingTextMesh.fontSize = 20;
-            _flyingTextMesh.text = "Test [999]";
+        }
+
+        private void CreateFlyingNicknameIfNull()
+        {
+            if (_flyingNickname == null)
+            {
+                _flyingNickname = new GameObject("FlyingNickname");
+                _flyingNickname.transform.parent = this.transform;
+                _flyingNickname.transform.rotation = new Quaternion(0.0f, 180.0f, 0.0f, 1.0f);
+                _flyingNickname.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+                _flyingNickname.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+                _flyingTextMesh = _flyingNickname.AddComponent<TextMesh>();
+                _flyingTextMesh.anchor = TextAnchor.MiddleCenter;
+                _flyingTextMesh.fontSize = 22;
+                _flyingTextMesh.text = "Test [999]";
+            }
         }
 
         void RemotePlayerControllerInterface.TriggerToggleAction(string l_actionName)
@@ -45,17 +54,26 @@ namespace BDSM.RemotePlayerControllers
 
         public void SetFlyingNicknameVisibility()
         {
+            if (_flyingNickname == null)
+                CreateFlyingNicknameIfNull();
+
             _flyingNickname.SetActive(!_flyingNickname.activeSelf);
         }
 
         public void SetNickname(string l_playerNickname, uint l_playerPid)
         {
+            if (_flyingNickname == null)
+                CreateFlyingNicknameIfNull();
+
             _playerNickname = l_playerNickname;
             _flyingTextMesh.text = $"{l_playerNickname} [{l_playerPid}]";
         }
 
         public void SetFlyingNicknameYOffset(float l_newOffset)
         {
+            if (_flyingNickname == null)
+                CreateFlyingNicknameIfNull();
+
             _flyingNickname.transform.localPosition = new Vector3(0.0f, l_newOffset, 0.0f);
         }
 
