@@ -399,7 +399,7 @@ namespace BDSM
             switch (l_player.state.selectedBusShortName)
             {
                 case "SPR":
-                    l_player.remotePlayerController = l_player.remotePlayerBus.AddComponent<RemotePlayerControllers.RmeotePlayerController_Sprinter>();
+                    l_player.remotePlayerController = l_player.remotePlayerBus.AddComponent<RemotePlayerControllers.RemotePlayerController_Sprinter>();
                     l_player.remotePlayerController.SetNickname(l_player.nickname, l_player.state.pid);
                     break;
                 default: Debug.LogError($"CLIENT: Controller for \"{l_player.state.selectedBusShortName}\" nor found!"); break;

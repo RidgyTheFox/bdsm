@@ -2,7 +2,7 @@
 
 namespace BDSM.RemotePlayerControllers
 {
-    class RmeotePlayerController_Sprinter : RemotePlayerControllerBase
+    class RemotePlayerController_Sprinter : RemotePlayerControllerBase
     {
         private Vector3 _positionOffset = new Vector3(0.0f, -0.06f, 0.0f);
 
