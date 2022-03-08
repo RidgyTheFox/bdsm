@@ -9,6 +9,7 @@ namespace BDSM.Patches
         public static void OpenGarage()
         {
             StaticData.clientInstance.isSceneLoaded = true;
+            StaticData.clientInstance.RequestTimeUpdate();
         }
     }
 }

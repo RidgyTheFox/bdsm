@@ -77,6 +77,7 @@ namespace BDSM
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.OnJoinAccepted>(OnJoinRequestAccepted);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.OnJoinDeclined>(OnJoinRequestDeclined);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.ReceiveServerState>(OnReceiveServerState);
+            _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.ReceiveServerDateAndTime>(OnReceiveServerDateAndTime);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.AddRemotePlayer>(OnAddRemotePlayer);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemoveRemotePlayer>(OnRemoveRemotePlayer);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemotePlayerChangedBus>(OnRemotePlayerChangedBus);
@@ -384,6 +385,12 @@ namespace BDSM
             }
         }
 
+        public void RequestTimeUpdate()
+        {
+            SendPacket(new Network.ServerPackets.RequestServerDateAndTime { pid = _localPlayerState.pid }, DeliveryMethod.ReliableOrdered);
+            Debug.Log("CLIENT: Server date and time requested...");
+        }
+
         private void CreateAssociatedControolerForBus(Network.ClientPackets.RemotePlayer l_player)
         {
             switch (l_player.state.selectedBusShortName)
@@ -418,6 +425,20 @@ namespace BDSM
             Debug.Log($"CLIENT: Server state was received! Server name: {l_packet.serverName}. Current map: {EnumUtils.MapUintToEnum(l_packet.currentMap)}. Players limit: {l_packet.playersLimit}. Amount of players: {l_packet.currentAmountOfPlayers}.");
             _serverState = new Network.NestedTypes.ServerState { serverName = l_packet.serverName, currentMap = EnumUtils.MapUintToEnum(l_packet.currentMap), playersLimit = l_packet.playersLimit, currentAmountOfPlayers = l_packet.currentAmountOfPlayers };
             ProceedMapLoading();
+        }
+
+        public void OnReceiveServerDateAndTime(Network.ClientPackets.ReceiveServerDateAndTime l_packet)
+        {
+            if (StaticData.timeKeeper != null)
+            {
+                StaticData.timeKeeper.Day = (int)l_packet.currentServerDateAndTime.day;
+                StaticData.timeKeeper.Hour = (int)l_packet.currentServerDateAndTime.hours;
+                StaticData.timeKeeper.Minute = (int)l_packet.currentServerDateAndTime.minutes;
+                StaticData.timeKeeper.Second = (int)l_packet.currentServerDateAndTime.seconds;
+                Debug.Log($"CLIENT: Time was set to day {l_packet.currentServerDateAndTime.day}, {l_packet.currentServerDateAndTime.hours}:{l_packet.currentServerDateAndTime.minutes}:{l_packet.currentServerDateAndTime.seconds}!");
+            }
+            else
+                Debug.LogError("CLIENT: Cannot find FreeMode.TimeKeeper!");
         }
 
         public void OnAddRemotePlayer(Network.ClientPackets.AddRemotePlayer l_packet)
