@@ -57,7 +57,6 @@ namespace BDSM.RemotePlayerControllers
 
         public void UpdatePosition(Network.ClientPackets.RemotePlayer l_player)
         {
-            Debug.Log($"OFFSET: {_vehicleGroundOffset}");
             gameObject.transform.position = l_player.state.position + _vehicleGroundOffset;
             gameObject.transform.rotation = l_player.state.rotation;
         }
