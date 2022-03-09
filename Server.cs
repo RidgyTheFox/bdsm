@@ -98,45 +98,45 @@ namespace BDSM
         private void OnGUI()
         {
             if (_isMainWindowOpened)
+                return;
+
+            if (_mainWindowMoveMode)
             {
-                if (_mainWindowMoveMode)
-                {
-                    _mainWindowPosX = (uint)Input.mousePosition.x - 10;
-                    // Cursor coordinates are taken from the bottom left corner.
-                    // And the coordinates of the windows come from the top left corner.
-                    // Therefore, you need to invert the coordinates along the Y axis.
-                    _mainWindowPosY = (uint)Screen.currentResolution.height - (uint)Input.mousePosition.y - 10;
-                }
+                _mainWindowPosX = (uint)Input.mousePosition.x - 10;
+                // Cursor coordinates are taken from the bottom left corner.
+                // And the coordinates of the windows come from the top left corner.
+                // Therefore, you need to invert the coordinates along the Y axis.
+                _mainWindowPosY = (uint)Screen.currentResolution.height - (uint)Input.mousePosition.y - 10;
+            }
 
-                GUI.Box(new Rect(_mainWindowPosX, _mainWindowPosY, 250, 155), "BDSM | Server Control Panel (F2)");
-                if (GUI.Button(new Rect(_mainWindowPosX + 1, _mainWindowPosY + 1, 23, 21), "M"))
-                    _mainWindowMoveMode = !_mainWindowMoveMode;
-                if (GUI.Button(new Rect(_mainWindowPosX + 226, _mainWindowPosY, 23, 21), "X"))
-                {
-                    _isMainWindowOpened = !_isMainWindowOpened;
-                    _mainWindowMoveMode = false;
-                }
+            GUI.Box(new Rect(_mainWindowPosX, _mainWindowPosY, 250, 155), "BDSM | Server Control Panel (F2)");
+            if (GUI.Button(new Rect(_mainWindowPosX + 1, _mainWindowPosY + 1, 23, 21), "M"))
+                _mainWindowMoveMode = !_mainWindowMoveMode;
+            if (GUI.Button(new Rect(_mainWindowPosX + 226, _mainWindowPosY, 23, 21), "X"))
+            {
+                _isMainWindowOpened = !_isMainWindowOpened;
+                _mainWindowMoveMode = false;
+            }
 
-                if (!_isServerLaunched)
-                {
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 30, 250, 20), "State: Stopped.");
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 50, 250, 20), $"Password protection: {_isPasswordRequired}");
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 70, 250, 20), $"Map: {EnumUtils.MapEnumToString(_selectedMap)}.");
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 90, 250, 20), $"Players {_players.Count} of {_playersLimit}.");
-                    if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 110, 200, 20), "Launch server"))
-                        LaunchServer();
-                    if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 130, 200, 20), "Reload settings"))
-                        ReloadSettings();
-                }
-                else
-                {
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 30, 250, 20), $"State: Launched on port {_serverPort}!");
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 50, 250, 20), $"Password protection: {_isPasswordRequired}");
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 70, 250, 20), $"Map: {EnumUtils.MapEnumToString(_selectedMap)}.");
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 90, 250, 20), $"Players {_players.Count} of {_playersLimit}.");
-                    if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 110, 200, 20), "Stop server"))
-                        StopServer();
-                }
+            if (!_isServerLaunched)
+            {
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 30, 250, 20), "State: Stopped.");
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 50, 250, 20), $"Password protection: {_isPasswordRequired}");
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 70, 250, 20), $"Map: {EnumUtils.MapEnumToString(_selectedMap)}.");
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 90, 250, 20), $"Players {_players.Count} of {_playersLimit}.");
+                if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 110, 200, 20), "Launch server"))
+                    LaunchServer();
+                if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 130, 200, 20), "Reload settings"))
+                    ReloadSettings();
+            }
+            else
+            {
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 30, 250, 20), $"State: Launched on port {_serverPort}!");
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 50, 250, 20), $"Password protection: {_isPasswordRequired}");
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 70, 250, 20), $"Map: {EnumUtils.MapEnumToString(_selectedMap)}.");
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 90, 250, 20), $"Players {_players.Count} of {_playersLimit}.");
+                if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 110, 200, 20), "Stop server"))
+                    StopServer();
             }
         }
 
