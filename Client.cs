@@ -143,72 +143,72 @@ namespace BDSM
             if (_isConnected && _isAuthorized)
                 GUI.Label(new Rect(5, Screen.currentResolution.height-20, 300, 20), $"Connected to {_serverIp}:{_serverPort} | Ping: {_server.Ping}", _netStatsTextStyle);
 
-            if (_isMainWindowOpened)
-            {
-                if (_mainWindowMoveMode)
-                {
-                    _mainWindowPosX = (uint)Input.mousePosition.x - 10;
-                    // Cursor coordinates are taken from the bottom left corner.
-                    // And the coordinates of the windows come from the top left corner.
-                    // Therefore, you need to invert the coordinates along the Y axis.
-                    _mainWindowPosY = (uint)Screen.currentResolution.height - (uint)Input.mousePosition.y - 10;
-                }
+            if (!_isMainWindowOpened)
+                return;
 
-                GUI.Box(new Rect(_mainWindowPosX, _mainWindowPosY, 250, 155), "BDSM | Client Control Panel (F1)");
-                if (GUI.Button(new Rect(_mainWindowPosX + 1, _mainWindowPosY + 1, 23, 21), "M"))
-                    _mainWindowMoveMode = !_mainWindowMoveMode;
-                if (GUI.Button(new Rect(_mainWindowPosX + 226, _mainWindowPosY, 23, 21), "X"))
+            if (_mainWindowMoveMode)
+            {
+                _mainWindowPosX = (uint)Input.mousePosition.x - 10;
+                // Cursor coordinates are taken from the bottom left corner.
+                // And the coordinates of the windows come from the top left corner.
+                // Therefore, you need to invert the coordinates along the Y axis.
+                _mainWindowPosY = (uint)Screen.currentResolution.height - (uint)Input.mousePosition.y - 10;
+            }
+
+            GUI.Box(new Rect(_mainWindowPosX, _mainWindowPosY, 250, 155), "BDSM | Client Control Panel (F1)");
+            if (GUI.Button(new Rect(_mainWindowPosX + 1, _mainWindowPosY + 1, 23, 21), "M"))
+                _mainWindowMoveMode = !_mainWindowMoveMode;
+            if (GUI.Button(new Rect(_mainWindowPosX + 226, _mainWindowPosY, 23, 21), "X"))
+            {
+                _mainWindowMoveMode = false;
+                _isMainWindowOpened = !_isMainWindowOpened;
+            }
+            if (!_isConnected)
+            {
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 30, 250, 20), $"Nickname: {_nickname}");
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 50, 250, 20), $"Server IP: {_serverIp}");
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 70, 250, 20), $"Server port: {_serverPort}");
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 90, 250, 20), $"Use password: {_usePassword.ToString()}");
+            }
+            else if (_isAuthorized)
+            {
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 30, 250, 20), $"Connected as {_nickname}[{_localPlayerState.pid}]");
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 50, 250, 20), $"Players {_serverState.currentAmountOfPlayers} of {_serverState.playersLimit}.");
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 70, 250, 20), $"Map: {EnumUtils.MapEnumToString(_serverState.currentMap)}.");
+                GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 90, 250, 20), $"Connected to {_serverIp}:{_serverPort}");
+            }
+            if (_isConnected)
+            {
+                if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 110, 200, 20), "Disconnect"))
+                    Disconnect();
+                if (_hidePlayerNicknames)
                 {
-                    _mainWindowMoveMode = false;
-                    _isMainWindowOpened = !_isMainWindowOpened;
-                }
-                if (!_isConnected)
-                {
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 30, 250, 20), $"Nickname: {_nickname}");
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 50, 250, 20), $"Server IP: {_serverIp}");
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 70, 250, 20), $"Server port: {_serverPort}");
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 90, 250, 20), $"Use password: {_usePassword.ToString()}");
-                }
-                else if (_isAuthorized)
-                {
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 30, 250, 20), $"Connected as {_nickname}[{_localPlayerState.pid}]");
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 50, 250, 20), $"Players {_serverState.currentAmountOfPlayers} of {_serverState.playersLimit}.");
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 70, 250, 20), $"Map: {EnumUtils.MapEnumToString(_serverState.currentMap)}.");
-                    GUI.Label(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 90, 250, 20), $"Connected to {_serverIp}:{_serverPort}");
-                }
-                if (_isConnected)
-                {
-                    if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 110, 200, 20), "Disconnect"))
-                        Disconnect();
-                    if (_hidePlayerNicknames)
+                    if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 130, 200, 20), "Show player nicknames"))
                     {
-                        if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 130, 200, 20), "Show player nicknames"))
-                        {
-                            _hidePlayerNicknames = !_hidePlayerNicknames;
-                            SwitchFlyingNicknameVisibilityForRemotePlayers();
-                        }
-                    }
-                    else
-                    {
-                        if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 130, 200, 20), "Hide player nicknames"))
-                        {
-                            _hidePlayerNicknames = !_hidePlayerNicknames;
-                            SwitchFlyingNicknameVisibilityForRemotePlayers();
-                        }
+                        _hidePlayerNicknames = !_hidePlayerNicknames;
+                        SwitchFlyingNicknameVisibilityForRemotePlayers();
                     }
                 }
                 else
                 {
-                    if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 110, 200, 20), "Connect"))
+                    if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 130, 200, 20), "Hide player nicknames"))
                     {
-                        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "menu")
-                            Connect();
-                        else
-                            Debug.LogError("CLIENT: Cannot connect! First you need to exit to the main menu.");
+                        _hidePlayerNicknames = !_hidePlayerNicknames;
+                        SwitchFlyingNicknameVisibilityForRemotePlayers();
                     }
-                    if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 130, 200, 20), "Reload settings"))
-                        ReloadSettings();
                 }
+            }
+            else
+            {
+                if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 110, 200, 20), "Connect"))
+                {
+                    if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "menu")
+                        Connect();
+                    else
+                        Debug.LogError("CLIENT: Cannot connect! First you need to exit to the main menu.");
+                }
+                if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 130, 200, 20), "Reload settings"))
+                    ReloadSettings();
             }
         }
 
