@@ -36,6 +36,16 @@ namespace BDSM.RemotePlayerControllers
         {
         }
 
+        void RemotePlayerControllerInterface.TriggerToggleAction(string l_actionName)
+        {
+            OnTriggerToggleAction(l_actionName);
+        }
+
+        public void UpdatePosition(Network.ClientPackets.RemotePlayer l_player)
+        {
+            gameObject.transform.position = l_player.state.position + _vehicleGroundOffset;
+            gameObject.transform.rotation = l_player.state.rotation;
+        }
         private void CreateFlyingNicknameIfNull()
         {
             if (_flyingNickname == null)
@@ -50,17 +60,6 @@ namespace BDSM.RemotePlayerControllers
                 _flyingTextMesh.fontSize = 22;
                 _flyingTextMesh.text = "Test [999]";
             }
-        }
-
-        void RemotePlayerControllerInterface.TriggerToggleAction(string l_actionName)
-        {
-            OnTriggerToggleAction(l_actionName);
-        }
-
-        public void UpdatePosition(Network.ClientPackets.RemotePlayer l_player)
-        {
-            gameObject.transform.position = l_player.state.position + _vehicleGroundOffset;
-            gameObject.transform.rotation = l_player.state.rotation;
         }
 
         public void SetFlyingNicknameVisibility()
@@ -104,16 +103,6 @@ namespace BDSM.RemotePlayerControllers
                 _sideLights.SetActive(true);
                 _rearLightsRoot.SetActive(true);
             }
-
-            if (l_busState.isBraking)
-                _brakingLightsRoot.SetActive(true);
-            else
-                _brakingLightsRoot.SetActive(false);
-
-            if (l_busState.isReverseGear)
-                _backwardLightsRoot.SetActive(true);
-            else
-                _backwardLightsRoot.SetActive(false);
         }
 
         public abstract void OnTriggerToggleAction(string l_actionName);
