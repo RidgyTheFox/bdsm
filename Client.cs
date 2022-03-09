@@ -543,7 +543,7 @@ namespace BDSM
 
         public void OnReceiveRemotePlayerBusAction(Network.ClientPackets.ReceiveRemotePlayerBusAction l_packet)
         {
-            _remotePlayers[l_packet.pid].remotePlayerController.OnTriggerToggleAction(l_packet.actionName);
+            _remotePlayers[l_packet.pid].remotePlayerController.TriggerStandartAction(l_packet.actionName);
         }
         private void DEBUG_TriggerRemotePlayerBusAction(uint l_pid, string l_actionName)
         {

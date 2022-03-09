@@ -254,6 +254,6 @@ namespace BDSM.RemotePlayerControllers
             }
         }
 
-        public abstract void OnTriggerToggleAction(string l_actionName);
+        protected abstract void OnTriggerToggleAction(string l_actionName);
     }
 }

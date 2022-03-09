@@ -298,7 +298,7 @@ namespace BDSM.RemotePlayerControllers
             #endregion
         }
 
-        public override void OnTriggerToggleAction(string l_actionName)
+        protected override void OnTriggerToggleAction(string l_actionName)
         {
             Debug.Log($"SPRINTER_CONTROLLER: Custom trigger on child class: {l_actionName}!");
         }

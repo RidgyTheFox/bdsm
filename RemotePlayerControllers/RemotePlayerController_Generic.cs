@@ -9,7 +9,7 @@ namespace BDSM.RemotePlayerControllers
             SetFlyingNicknameYOffset(3.0f);
         }
 
-        public override void OnTriggerToggleAction(string l_actionName)
+        protected override void OnTriggerToggleAction(string l_actionName)
         {
 
         }
