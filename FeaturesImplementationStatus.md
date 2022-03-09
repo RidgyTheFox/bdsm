@@ -25,6 +25,7 @@ Here is my ideas:
 * Workshop support.
 * Updater for my mod. This is a small program that you can run and it will update your mod to the latest version.
 * Cool GUI. Now GUI in mod based on IMGUI. This is a deprecated system for GUI in Unity. Usually, developers using this kind of a GUI for debugging. But you know... I dont actually care: it\`s works, and its enough for me. (Or: It\`s works? Don\`t touch!)
+* Random license plates with procedural PBR material. I think i know how to do it, but it\`s requires so many time. 
 
 ## Bus features status
 Here you will find a table with all the buses from the game. Each bus is controlled by its own class. And writing these classes takes a huge amount of time. To see what has already been done, you can refer to this plate in the indev branch. Lines contain buses. And each column is one or another part of this bus.
