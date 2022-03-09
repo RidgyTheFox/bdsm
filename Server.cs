@@ -97,7 +97,7 @@ namespace BDSM
 
         private void OnGUI()
         {
-            if (_isMainWindowOpened)
+            if (!_isMainWindowOpened)
                 return;
 
             if (_mainWindowMoveMode)
