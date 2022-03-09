@@ -95,6 +95,7 @@ namespace BDSM
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemotePlayerChangedBus>(OnRemotePlayerChangedBus);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.UpdateRemotePlayers>(OnUpdateRemotePlayers);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.ReceiveBusState>(OnReceiveBusState);
+            _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.ReceiveRemotePlayerBusAction>(OnReceiveRemotePlayerBusAction);
 
             ReloadSettings();
             Debug.Log("CLIENT: Initialized!");
@@ -538,6 +539,11 @@ namespace BDSM
         public void OnReceiveBusState(Network.ClientPackets.ReceiveBusState l_newState)
         {
 
+        }
+
+        public void OnReceiveRemotePlayerBusAction(Network.ClientPackets.ReceiveRemotePlayerBusAction l_packet)
+        {
+            _remotePlayers[l_packet.pid].remotePlayerController.OnTriggerToggleAction(l_packet.actionName);
         }
 
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()
