@@ -34,8 +34,9 @@ namespace BDSM
         private Network.NestedTypes.ServerState _serverState;
         private Dictionary<uint, Network.ClientPackets.RemotePlayer> _remotePlayers;
 
-        public bool isSceneLoaded = false;
-        private bool _isBusesForRemoteClientsWasCreated = false;
+        public bool isTimeSynced = false;
+        public bool isPlayerOnMap = false;
+
         private bool _hidePlayerNicknames = false;
         private const float _maxDistanceForNicknames = 60.0f;
         public GameObject localPlayerBus;
@@ -111,68 +112,32 @@ namespace BDSM
                 _usePassword = true;
                 _password = "bdsmIsCool";
             }
-
-            foreach(Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
-            {
-                if (!_hidePlayerNicknames)
-                {
-                    if (Vector3.Distance(l_player.remotePlayerController.gameObject.transform.position, _localPlayerState.position) > _maxDistanceForNicknames)
-                    {
-                        if (l_player.remotePlayerController.GetFlyingNicknameVisibility())
-                            l_player.remotePlayerController.SetFlyingNicknameVisibility();
-                    }
-                    else
-                    {
-                        if (!l_player.remotePlayerController.GetFlyingNicknameVisibility())
-                            l_player.remotePlayerController.SetFlyingNicknameVisibility();
-                    }
-                }
-            }
         }
 
         private void FixedUpdate()
         {
             _client.PollEvents();
-            
-            /* Example how to send commands to bus controllers.
-            if (Input.GetKeyDown(KeyCode.Keypad9))
+
+            if (_isConnected && _isAuthorized && isPlayerOnMap && localPlayerBus != null)
             {
-                Network.ClientPackets.RemotePlayer l_player;
-                _remotePlayers.TryGetValue(1, out l_player);
-                if (l_player != null)
-                {
-                    Debug.Log("CLIENT: Calling...");
-                    l_player.remotePlayerController.OnTriggerToggleAction("Fucking test");
-                }
-                else
-                    Debug.LogError("CLIENT:Cannot find player!");
-            }*/
+                _localPlayerState.position = localPlayerBus.transform.position;
+                _localPlayerState.rotation = localPlayerBus.transform.rotation;
+                SendPacket(new Network.ServerPackets.UpdatePlayerState { pid = _localPlayerState.pid, state = _localPlayerState }, DeliveryMethod.Unreliable);
+            }
+            else if (_isConnected && _isAuthorized && !isPlayerOnMap)
+            {
+                _localPlayerState.position = new Vector3(-999.0f, -999.0f, -999.0f);
+                SendPacket(new Network.ServerPackets.UpdatePlayerState { pid = _localPlayerState.pid, state = _localPlayerState }, DeliveryMethod.Unreliable);
+            }
 
-            if (_isConnected && _isAuthorized && isSceneLoaded && !_isBusesForRemoteClientsWasCreated)
-                CreateBusesForRemotePlayers();
-
-            if (_isConnected && _isAuthorized && isSceneLoaded && _isBusesForRemoteClientsWasCreated)
+            if (_isConnected && _isAuthorized && isPlayerOnMap)
             {
                 foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
                 {
-                    if (l_player.remotePlayerBus != null && l_player.remotePlayerController != null)
-                        l_player.remotePlayerController.UpdatePosition(l_player);
+                    l_player.remotePlayerController.UpdatePosition(l_player);
                 }
-
-                if (localPlayerBus == null)
-                {
-                    _localPlayerState.position = new Vector3(-999.0f, -999.0f, -999.0f);
-                    _localPlayerState.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-                }
-                else
-                {
-                    _localPlayerState.position = localPlayerBus.transform.position;
-                    _localPlayerState.rotation = localPlayerBus.transform.rotation;
-                }
-
-                SendPacket( new Network.ServerPackets.UpdatePlayerState { pid = _localPlayerState.pid, state = _localPlayerState }, DeliveryMethod.Unreliable);
             }
-        }
+        }       
 
         private void OnGUI()
         {
@@ -254,14 +219,14 @@ namespace BDSM
             {
                 if (_usePassword)
                 {
-                    isSceneLoaded = false;
+                    isPlayerOnMap = false;
                     _client.Start();
                     _client.Connect(_serverIp, _serverPort, _password);
                     Debug.Log($"CLIENT: Connecting to {_serverIp}:{_serverPort} with password...");
                 }
                 else
                 {
-                    isSceneLoaded = false;
+                    isPlayerOnMap = false;
                     _client.Start();
                     _client.Connect(_serverIp, _serverPort, "ass");
                     Debug.Log($"CLIENT: Connecting to {_serverIp}:{_serverPort} without password.");
@@ -279,17 +244,18 @@ namespace BDSM
                         GameObject.Destroy(l_player.remotePlayerBus);
                 }
 
-                isSceneLoaded = false;
-                _isBusesForRemoteClientsWasCreated = false;
-                UnityEngine.SceneManagement.SceneManager.LoadScene("menu");
-
                 _isConnected = false;
                 _isAuthorized = false;
+                isPlayerOnMap = false;
+                isTimeSynced = false;
                 _client.DisconnectAll();
                 _client.Stop();
                 _server = null;
                 _remotePlayers.Clear();
+                _serverState.currentAmountOfPlayers = 0;
                 Debug.Log("CLIENT: Disconnected!");
+
+                UnityEngine.SceneManagement.SceneManager.LoadScene("menu");
             }
         }
 
@@ -414,28 +380,22 @@ namespace BDSM
             }
         }
 
-        private void CreateBusesForRemotePlayers()
-        {
-            if (!_isBusesForRemoteClientsWasCreated)
-            {
-                foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
-                {
-                    if (l_player.remotePlayerBus == null)
-                    {
-                        l_player.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_player.state.selectedBusShortName, true));
-                        CreateAssociatedControolerForBus(l_player);
-                        if (_hidePlayerNicknames)
-                            l_player.remotePlayerController.SetFlyingNicknameVisibility();
-                    }
-                }
-                _isBusesForRemoteClientsWasCreated = true;
-            }
-        }
-
         public void RequestTimeUpdate()
         {
             SendPacket(new Network.ServerPackets.RequestServerDateAndTime { pid = _localPlayerState.pid }, DeliveryMethod.ReliableOrdered);
             Debug.Log("CLIENT: Server date and time requested...");
+        }
+
+        public void CreateRemotePlayersModels()
+        {
+            foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
+            {
+                if (l_player.remotePlayerBus == null)
+                {
+                    _remotePlayers[l_player.state.pid].remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_player.state.selectedBusShortName, true));
+                    CreateAssociatedControolerForBus(l_player.state.pid);
+                }
+            }
         }
 
         private void SwitchFlyingNicknameVisibilityForRemotePlayers()
@@ -447,18 +407,20 @@ namespace BDSM
             }
         }
 
-        private void CreateAssociatedControolerForBus(Network.ClientPackets.RemotePlayer l_player)
+        private void CreateAssociatedControolerForBus(uint pid)
         {
-            switch (l_player.state.selectedBusShortName)
+            switch (_remotePlayers[pid].state.selectedBusShortName)
             {
                 case "SPR":
-                    l_player.remotePlayerController = l_player.remotePlayerBus.AddComponent<RemotePlayerControllers.RemotePlayerController_Sprinter>();
-                    l_player.remotePlayerController.SetNickname(l_player.nickname, l_player.state.pid);
+                    _remotePlayers[pid].remotePlayerController = _remotePlayers[pid].remotePlayerBus.AddComponent<RemotePlayerControllers.RemotePlayerController_Sprinter>();
+                    _remotePlayers[pid].remotePlayerController.SetNickname(_remotePlayers[pid].nickname, pid);
+                    Debug.Log($"CLIENT: Created SPR controller for {_remotePlayers[pid].nickname}[{_remotePlayers[pid].state.pid}].");
                     break;
                 default:
-                    Debug.LogError($"CLIENT: Controller for \"{l_player.state.selectedBusShortName}\" nor found! Base class will be used..."); break;
-                    l_player.remotePlayerController = l_player.remotePlayerBus.AddComponent<RemotePlayerControllers.RemotePlayerControllerBase>();
-                    l_player.remotePlayerController.SetNickname(l_player.nickname, l_player.state.pid);
+                    Debug.LogError($"CLIENT: Controller for \"{_remotePlayers[pid].state.selectedBusShortName}\" not found! Generic class will be used...");
+                    _remotePlayers[pid].remotePlayerController = _remotePlayers[pid].remotePlayerBus.AddComponent<RemotePlayerControllers.RemotePlayerController_Generic>();
+                    _remotePlayers[pid].remotePlayerController.SetNickname(_remotePlayers[pid].nickname, pid);
+                    break;
             }
         }
 
@@ -498,6 +460,7 @@ namespace BDSM
                 StaticData.timeKeeper.Minute = (int)l_packet.currentServerDateAndTime.minutes;
                 StaticData.timeKeeper.Second = (int)l_packet.currentServerDateAndTime.seconds;
                 StaticData.timeKeeper.UpdateSky();
+                isTimeSynced = true;
                 Debug.Log($"CLIENT: Time was set to day {l_packet.currentServerDateAndTime.day}, {l_packet.currentServerDateAndTime.hours}:{l_packet.currentServerDateAndTime.minutes}:{l_packet.currentServerDateAndTime.seconds}!");
             }
             else
@@ -507,86 +470,60 @@ namespace BDSM
         public void OnAddRemotePlayer(Network.ClientPackets.AddRemotePlayer l_packet)
         {
             Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, selectedBusShortName = l_packet.state.selectedBusShortName, position = l_packet.state.position, rotation = l_packet.state.rotation };
-            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, state = l_newPlayerState };
-            
-            if (isSceneLoaded && _isBusesForRemoteClientsWasCreated)
-            {
-                l_newPlayer.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_newPlayer.state.selectedBusShortName, true));
-                CreateAssociatedControolerForBus(l_newPlayer);
-                if (_hidePlayerNicknames)
-                    l_newPlayer.remotePlayerController.SetFlyingNicknameVisibility();
-            }
-
+            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, remotePlayerController = null, state = l_newPlayerState };
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
             _serverState.currentAmountOfPlayers++;
 
-            Debug.Log($"CLIENT: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was created. His bus is {l_newPlayer.state.selectedBusShortName}.");
+            if (isPlayerOnMap)
+            {
+                _remotePlayers[l_newPlayer.state.pid].remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_newPlayer.state.selectedBusShortName, true));
+                CreateAssociatedControolerForBus(l_newPlayer.state.pid);
+            }
+
+            Debug.Log($"CLIENT: Remote player with bus \"{l_newPlayer.state.selectedBusShortName}\" was created for {l_newPlayer.nickname}[{l_newPlayer.state.pid}]!");
         }
 
         public void OnRemoveRemotePlayer(Network.ClientPackets.RemoveRemotePlayer l_packet)
         {
-            Debug.Log($"CLIENT: Searching remote player with PID {l_packet.pid} for removing...");
-            Network.ClientPackets.RemotePlayer l_playerToRemove;
-            _remotePlayers.TryGetValue(l_packet.pid, out l_playerToRemove);
+            if (_remotePlayers[l_packet.pid].remotePlayerBus != null)
+                GameObject.Destroy(_remotePlayers[l_packet.pid].remotePlayerBus);
 
-            if (l_playerToRemove != null)
-            {
-                if (l_playerToRemove.remotePlayerBus != null)
-                    GameObject.Destroy(l_playerToRemove.remotePlayerBus);
-
-                _remotePlayers.Remove(l_packet.pid);
-                _serverState.currentAmountOfPlayers--;
-
-                Debug.Log($"CLIENT: Remote player {l_playerToRemove.nickname}[{l_playerToRemove.state.pid}] was removed.");
-            }
-            else
-                Debug.LogError($"CLIENT: Cannot find remote player with PID {l_packet.pid}!");
+            _remotePlayers.Remove(l_packet.pid);
+            _serverState.currentAmountOfPlayers--;
+            Debug.Log($"CLIENT: Remote player with PID {l_packet.pid} was removed.");
         }
 
         public void OnRemotePlayerChangedBus(Network.ClientPackets.RemotePlayerChangedBus l_packet)
         {
-            Debug.Log($"CLIENT: Player with PID {l_packet.pid} changed bus. Searching...");
-            Network.ClientPackets.RemotePlayer l_playerForEdit;
-            _remotePlayers.TryGetValue(l_packet.pid, out l_playerForEdit);
-            if (l_playerForEdit != null)
+            if (isPlayerOnMap)
             {
-                Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_playerForEdit.state.pid, selectedBusShortName = l_packet.busShortName, position = l_playerForEdit.state.position, rotation = l_playerForEdit.state.rotation };
-                l_playerForEdit.state = l_newPlayerState;
+                GameObject.Destroy(_remotePlayers[l_packet.pid].remotePlayerBus);
+                Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = _remotePlayers[l_packet.pid].state.pid, selectedBusShortName = l_packet.busShortName, position = _remotePlayers[l_packet.pid].state.position, rotation = _remotePlayers[l_packet.pid].state.rotation };
 
-                if (l_playerForEdit.remotePlayerBus != null)
-                    GameObject.Destroy(l_playerForEdit.remotePlayerBus);
-
-                l_playerForEdit.remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_playerForEdit.state.selectedBusShortName, true));
-                CreateAssociatedControolerForBus(l_playerForEdit);
-                if (_hidePlayerNicknames)
-                    l_playerForEdit.remotePlayerController.SetFlyingNicknameVisibility();
-
-
-                _remotePlayers.Remove(l_packet.pid);
-                _remotePlayers.Add(l_packet.pid, l_playerForEdit);
-                Debug.Log($"CLIENT: Bus for {l_playerForEdit.nickname}[{l_playerForEdit.state.pid}] was changed to {l_playerForEdit.state.selectedBusShortName}.");
+                _remotePlayers[l_packet.pid].state = l_newPlayerState;
+                _remotePlayers[l_packet.pid].remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_packet.busShortName, true));
+                CreateAssociatedControolerForBus(l_packet.pid);
+                Debug.Log($"CLIENT: Bus for {_remotePlayers[l_packet.pid].nickname}[{l_packet.pid}] was changed to \"{l_packet.busShortName}\".");
             }
             else
-                Debug.LogError($"CLIENT: Cannot find remote player for {l_packet.pid}!");
+            {
+                Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = _remotePlayers[l_packet.pid].state.pid, selectedBusShortName = l_packet.busShortName, position = _remotePlayers[l_packet.pid].state.position, rotation = _remotePlayers[l_packet.pid].state.rotation };
+                _remotePlayers[l_packet.pid].state = l_newPlayerState;
+
+                Debug.Log($"CLIENT: Bus for {_remotePlayers[l_packet.pid].nickname}[{l_packet.pid}] was changed to \"{l_packet.busShortName}\".");
+            }
         }
 
         public void OnUpdateRemotePlayers(Network.ClientPackets.UpdateRemotePlayers l_packet)
         {
-            foreach(Network.NestedTypes.PlayerState l_newState in l_packet.states)
+            foreach (Network.NestedTypes.PlayerState l_receivedState in l_packet.states)
             {
-                Network.ClientPackets.RemotePlayer l_playerToEdit;
-
-                if (l_newState.selectedBusShortName != null)
+                if (l_receivedState.selectedBusShortName != null)
                 {
-                    if (l_newState.pid != _localPlayerState.pid)
+                    if (l_receivedState.pid != _localPlayerState.pid)
                     {
-                        _remotePlayers.TryGetValue(l_newState.pid, out l_playerToEdit);
-                        if (l_playerToEdit != null)
-                        {
-                            l_playerToEdit.state = l_newState;
-                            _remotePlayers.Remove(l_newState.pid);
-                            _remotePlayers.Add(l_newState.pid, l_playerToEdit);
-                        }
+                        Network.NestedTypes.PlayerState l_newState = new Network.NestedTypes.PlayerState { pid = l_receivedState.pid, selectedBusShortName = l_receivedState.selectedBusShortName, position = l_receivedState.position, rotation = l_receivedState.rotation };
+                        _remotePlayers[l_receivedState.pid].state = l_newState;
                     }
                 }
             }
@@ -596,7 +533,6 @@ namespace BDSM
         {
             _localPlayerState.selectedBusShortName = FreeMode.PlayerData.GetCurrentData().boughtBuses[FreeMode.PlayerData.GetCurrentData().selectedBus].ShortName;
             SendPacket( new Network.ServerPackets.ChangeBus { pid = _localPlayerState.pid, busShortName = _localPlayerState.selectedBusShortName }, DeliveryMethod.ReliableOrdered);
-            Debug.Log($"CLIENT: Bus was changed to {_localPlayerState.selectedBusShortName}.");
         }
 
         public void OnReceiveBusState(Network.ClientPackets.ReceiveBusState l_newState)
@@ -649,15 +585,15 @@ namespace BDSM
             {
                 _isAuthorized = false;
                 _isConnected = false;
-                isSceneLoaded = false;
-                _isBusesForRemoteClientsWasCreated = false;
+                isPlayerOnMap = false;
+                isTimeSynced = false;
                 _server = null;
                 _client.Stop();
                 _remotePlayers.Clear();
+                _serverState.currentAmountOfPlayers = 0;
                 UnityEngine.SceneManagement.SceneManager.LoadScene("menu");
                 Debug.Log($"CLIENT: Server disconnected!");
             }
         }
-
     }
 }
