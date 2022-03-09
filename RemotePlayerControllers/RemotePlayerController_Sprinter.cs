@@ -207,7 +207,7 @@ namespace BDSM.RemotePlayerControllers
             _headLightsHighBeam.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
 
             GameObject _headLightsHighNeam_LeftLight = new GameObject("Headlights_HighBeam_Left");
-            _headLightsHighNeam_LeftLight.transform.parent = _headLightsRootObject.transform;
+            _headLightsHighNeam_LeftLight.transform.parent = _headLightsHighBeam.transform;
             _headLightsHighNeam_LeftLight.transform.localPosition = new Vector3(-0.7f, 0.0f, 0.07f);
             Light _headLightsHighBeam_LeftSpotlight = _headLightsHighNeam_LeftLight.AddComponent<Light>();
             _headLightsHighBeam_LeftSpotlight.color = _headLightColor;
@@ -229,7 +229,7 @@ namespace BDSM.RemotePlayerControllers
             _headLightsHighBeam_LeftFakeLight_LC.range = 0.3f;
 
             GameObject _headLightsHighNeam_RightLight = new GameObject("Headlights_HighBeam_Right");
-            _headLightsHighNeam_RightLight.transform.parent = _headLightsRootObject.transform;
+            _headLightsHighNeam_RightLight.transform.parent = _headLightsHighBeam.transform;
             _headLightsHighNeam_RightLight.transform.localPosition = new Vector3(0.7f, 0.0f, 0.07f);
             Light _headLightsHighBeam_RightSpotlight = _headLightsHighNeam_RightLight.AddComponent<Light>();
             _headLightsHighBeam_RightSpotlight.color = _headLightColor;
