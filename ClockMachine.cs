@@ -49,23 +49,25 @@ namespace BDSM
         private static void OnClockMachineTimerElapsed(object source, ElapsedEventArgs e)
         {
             if (_currentSecond < 59)
+            {
                 _currentSecond++;
+                return;
+            }
+
+            _currentSecond = 0;
+            if (_currentMinute < 59)
+            {
+                _currentMinute++;
+                return;
+            }
+
+            _currentMinute = 0;
+            if (_currentHour < 23)
+                _currentHour++;
             else
             {
-                _currentSecond = 0;
-                if (_currentMinute < 59)
-                    _currentMinute++;
-                else
-                {
-                    _currentMinute = 0;
-                    if (_currentHour < 23)
-                        _currentHour++;
-                    else
-                    {
-                        _currentHour = 0;
-                        _currentDay++;
-                    }
-                }
+                _currentHour = 0;
+                _currentDay++;
             }
         }
 
