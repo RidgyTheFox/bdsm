@@ -547,7 +547,7 @@ namespace BDSM
         }
         private void DEBUG_TriggerRemotePlayerBusAction(uint l_pid, string l_actionName)
         {
-            _remotePlayers[l_pid].remotePlayerController.OnTriggerToggleAction(l_actionName);
+            _remotePlayers[l_pid].remotePlayerController.TriggerStandartAction(l_actionName);
         }
 
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()
