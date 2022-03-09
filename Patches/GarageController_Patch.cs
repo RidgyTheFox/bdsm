@@ -2,7 +2,7 @@
 
 namespace BDSM.Patches
 {
-    class GarageController_Pach
+    class GarageController_Patch
     {
         [HarmonyPatch(typeof(FreeMode.Garage.GarageController), "OpenGarage")]
         [HarmonyPostfix]

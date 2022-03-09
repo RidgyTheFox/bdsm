@@ -19,7 +19,7 @@ namespace BDSM
             _harmony.PatchAll(typeof(Patches.MainMenu_Patch));
             _harmony.PatchAll(typeof(Patches.PauseMenu_Patch));
             _harmony.PatchAll(typeof(Patches.BusShopController_Patch));
-            _harmony.PatchAll(typeof(Patches.GarageController_Pach));
+            _harmony.PatchAll(typeof(Patches.GarageController_Patch));
             _harmony.PatchAll(typeof(Patches.AISpawner_Patch));
             _harmony.PatchAll(typeof(Patches.TimeKeeper_Patch));
             _harmony.PatchAll(typeof(Patches.GameTime_Patch));
