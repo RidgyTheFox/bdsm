@@ -60,4 +60,10 @@ namespace BDSM.Network.ClientPackets
         public uint pid { get; set; }
         public NestedTypes.BusState newBusState { get; set; }
     }
+
+    public class ReceiveRemotePlayerBusAction
+    {
+        public uint pid { get; set; }
+        public string actionName { get; set; }
+    }
 }
