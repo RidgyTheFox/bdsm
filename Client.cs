@@ -58,11 +58,19 @@ namespace BDSM
             _netStatsTextStyle = new GUIStyle();
             _netStatsTextStyle.normal.textColor = Color.green;
             _netStatsTextStyle.fontStyle = FontStyle.Bold;
-
             _client = new NetManager(this) { AutoRecycle = true };
             _writer = new NetDataWriter();
 
-            _localPlayerState = new Network.NestedTypes.PlayerState { selectedBusShortName = FreeMode.PlayerData.GetCurrentData().boughtBuses[FreeMode.PlayerData.GetCurrentData().selectedBus].ShortName, position = new Vector3(1.0f, 2.0f, 3.0f), rotation = new Quaternion(4.0f, 3.0f, 2.0f, 1.0f) };
+            try
+            {
+                _localPlayerState = new Network.NestedTypes.PlayerState { selectedBusShortName = FreeMode.PlayerData.GetCurrentData().boughtBuses[FreeMode.PlayerData.GetCurrentData().selectedBus].ShortName, position = new Vector3(1.0f, 2.0f, 3.0f), rotation = new Quaternion(4.0f, 3.0f, 2.0f, 1.0f) };
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                Debug.LogError($"CLIENT: Exception on creaing local player state. Cannot load save data! Default one will be used...");
+                _localPlayerState = new Network.NestedTypes.PlayerState { selectedBusShortName = "SPR", position = new Vector3(0.0f, 0.0f, 0.0f), rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f) };
+            }
+            
             _remotePlayers = new Dictionary<uint, Network.ClientPackets.RemotePlayer>();
 
             Debug.Log("CLIENT: Registering nested types...");
