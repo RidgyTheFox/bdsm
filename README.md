@@ -27,6 +27,7 @@ Just install the mod, set up the server and client configs, and you're ready to 
 |Synchronizing sounds produced by other players' buses|🟥Planned|
 |Synchronizing weather|🟥Planned|
 |Synchronizing plates with routes on buses|🟥Planned|
+
 *[See current features status](https://github.com/RidgyTheFox/bdsm/blob/indev/FeaturesImplementationStatus.md)*
 
 ## Installing
