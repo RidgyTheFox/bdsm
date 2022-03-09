@@ -95,6 +95,7 @@ namespace BDSM.RemotePlayerControllers
 
         public void AssignBuState(Network.NestedTypes.BusState l_busState)
         {
+            _currentBusState = new BusState();
             _currentBusState = l_busState;
 
             if (l_busState.isEngineTurnedOn)
