@@ -27,6 +27,7 @@ Just install the mod, set up the server and client configs, and you're ready to 
 |Synchronizing sounds produced by other players' buses|🟥Planned|
 |Synchronizing weather|🟥Planned|
 |Synchronizing plates with routes on buses|🟥Planned|
+*[See current features status](https://github.com/RidgyTheFox/bdsm/blob/indev/FeaturesImplementationStatus.md)*
 
 ## Installing
 The first thing you'll need to do is to download the package from Releases. After that, extract contents of the archive into game directory so that ServerConfig.json and ClientConfig.json are next to the game's .exe file (Bus Driver Simulator.exe).
