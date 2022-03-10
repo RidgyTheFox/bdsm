@@ -501,7 +501,7 @@ namespace BDSM
                 case "triggerInsideLights":
                     l_newBusState.isInsideLightsTurnedOn = !l_newBusState.isInsideLightsTurnedOn;
                     break;
-                case "triggerDrirverLights":
+                case "triggerDriverLights":
                     l_newBusState.isDriverLightsTurnedOn = !l_newBusState.isDriverLightsTurnedOn;
                     break;
                 case "triggerFrontDoor":
