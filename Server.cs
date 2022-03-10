@@ -83,7 +83,7 @@ namespace BDSM
             if (_players.Count > 1)
             {
                 int i = 0;
-                Network.NestedTypes.PlayerState[] states = new Network.NestedTypes.PlayerState[_playersLimit];
+                Network.NestedTypes.PlayerState[] states = new Network.NestedTypes.PlayerState[_players.Count];
                 foreach(Network.ServerPackets.ServerPlayer l_player in _players.Values)
                 {
                     states[i] = l_player.state;
