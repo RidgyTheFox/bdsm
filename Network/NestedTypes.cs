@@ -124,4 +124,21 @@ namespace BDSM.Network.NestedTypes
             isRearDoorOpened = l_reader.GetBool();
         }
     }
+
+    public struct WheelState : INetSerializable
+    {
+        public float wheelAngle { get; set; }
+        public float wheelRotation { get; set; }
+
+        public void Serialize(NetDataWriter l_writer)
+        {
+            l_writer.Put(wheelAngle);
+            l_writer.Put(wheelRotation);
+        }
+        public void Deserialize(NetDataReader l_reader)
+        {
+            wheelAngle = l_reader.GetFloat();
+            wheelRotation = l_reader.GetFloat();
+        }
+    }
 }
