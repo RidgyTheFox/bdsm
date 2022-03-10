@@ -10,8 +10,9 @@ Everything that I would like to do in this fashion is described here. The lower 
 | Automatic loading\unloading map. | ✅ Implemented | N\A |
 | Time syncing. | ✅ Implemented | N\A |
 | Basic bus sync. | ✅ Implemented | When you enter the garage you should disappear to other players. Changing the bus in the garage. |
-| Advanced bus sync. | 🟨 Work in progress | Required classes and functions, network packets. |
-| Advanced bus sync. II | 🟥 Planned | Bus classes, lighting layouts, wheels and so on. |
+| Advanced bus sync. | ✅ Implemented | (Lights) Required classes and functions, network packets. |
+| All buses sync. | 🟨 Work in progress | Bus classes, lighting layouts, wheels and so on. |
+| Advanced bus sync. II | 🟥 Planned | Upgrades and liveries sync. |
 | Routes numbers on bus plates | 🟥 Planned | N\A |
 | Finish offset, lights wheels sync and upgrades for buses. | 🟥 Planned | N\A |
 
@@ -41,7 +42,7 @@ Here you will find a table with all the buses from the game. Each bus is control
 | Citaro L |✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned |
 | Icarus |✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned |
 | LAZ 695 |✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned |
-| Sprinter |✅ Implemented | ✅ Implemented | 🟨 Work in progress | 🟥 Planned |  🟥 Planned | 🟥 Planned |  🟥 Planned |  🟥 Planned |
+| Sprinter |✅ Implemented | ✅ Implemented | ✅ Implementedprogress | 🟨 Work in progress |  🟥 Planned | 🟥 Planned |  🟥 Planned |  🟥 Planned |
 | PAZ 672 | ✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned|
 | LAZ 699 |✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned |
 | LIAZ 5292 | ✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned
