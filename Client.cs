@@ -28,7 +28,6 @@ namespace BDSM
         private bool _usePassword = true;
         private string _password = "bdsmIsCool";
 
-        public Network.NestedTypes.BusState _localBusState;
         private Network.NestedTypes.PlayerState _localPlayerState;
         private Network.NestedTypes.ServerState _serverState;
         private Dictionary<uint, Network.ClientPackets.RemotePlayer> _remotePlayers;
@@ -36,6 +35,8 @@ namespace BDSM
         public bool isTimeSynced = false;
         public bool isPlayerOnMap = false;
 
+        public bool isEngineTurnedOn = false;
+        private bool _oldIsEngineOnState = false;
         private bool _hidePlayerNicknames = false;
         private const float _maxDistanceForNicknames = 60.0f;
         public GameObject localPlayerBus;
@@ -60,20 +61,6 @@ namespace BDSM
             _netStatsTextStyle.fontStyle = FontStyle.Bold;
             _client = new NetManager(this) { AutoRecycle = true };
             _writer = new NetDataWriter();
-
-            _localBusState = new Network.NestedTypes.BusState {
-                isEngineTurnedOn = false,
-                isBothBlinkersBlinking = false,
-                isBraking = false,
-                isDriverLightsTurnedOn = false,
-                isFrontDoorOpened = false,
-                isHighBeamTurnedOn = false,
-                isInsideLightsTurnedOn = false,
-                isLeftBlinkerBlinking = false,
-                isMiddleDoorOpened = false,
-                isRearDoorOpened = false,
-                isReverseGear = false,
-                isRightBlinkerBlinking = false };
 
             try
             {
@@ -126,6 +113,32 @@ namespace BDSM
                 _usePassword = true;
                 _password = "bdsmIsCool";
             }
+
+            if (isEngineTurnedOn != _oldIsEngineOnState)
+            {
+                _oldIsEngineOnState = isEngineTurnedOn;
+                TriggerBusAction("triggerEngine");
+            }
+
+            if (Input.GetKeyDown(KeyCode.S))
+                TriggerBusAction("triggerBraking");
+            if (Input.GetKeyUp(KeyCode.S))
+                TriggerBusAction("triggerBraking");
+
+            if (Input.GetKeyDown(KeyCode.Q))
+                TriggerBusAction("triggerLeftBlinker");
+
+            if (Input.GetKeyDown(KeyCode.E))
+                TriggerBusAction("triggerRightBlinker");
+
+            if (Input.GetKeyDown(KeyCode.LeftControl))
+                TriggerBusAction("triggerBothBlinkers");
+
+            if (Input.GetKeyDown(KeyCode.L))
+                TriggerBusAction("triggerHighBeamLights");
+
+            if (Input.GetKeyDown(KeyCode.X))
+                TriggerBusAction("triggerReverse");
         }
 
         private void FixedUpdate()
@@ -411,6 +424,7 @@ namespace BDSM
                 {
                     _remotePlayers[l_player.state.pid].remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_player.state.selectedBusShortName, true));
                     CreateAssociatedControolerForBus(l_player.state.pid);
+                    _remotePlayers[l_player.state.pid].remotePlayerController.AssignBuState(_remotePlayers[l_player.state.pid].busState);
                 }
             }
         }
@@ -437,6 +451,51 @@ namespace BDSM
                     Debug.LogError($"CLIENT: Controller for \"{_remotePlayers[pid].state.selectedBusShortName}\" not found! Generic class will be used...");
                     _remotePlayers[pid].remotePlayerController = _remotePlayers[pid].remotePlayerBus.AddComponent<RemotePlayerControllers.RemotePlayerController_Generic>();
                     _remotePlayers[pid].remotePlayerController.SetNickname(_remotePlayers[pid].nickname, pid);
+                    break;
+            }
+        }
+
+        private void TriggerBusAction(string l_actionName)
+        {
+            SendPacket(new Network.ServerPackets.DispatchBusAction { pid = _localPlayerState.pid, actionName = l_actionName }, DeliveryMethod.ReliableOrdered);
+        }
+
+        private void RecordActionAtBusStateInClinet(uint l_pid, string l_actionName)
+        {
+            Network.NestedTypes.BusState l_newBusState = _remotePlayers[l_pid].busState;
+
+            switch(l_actionName)
+            {
+                case "triggerEngine":
+                    l_newBusState.isEngineTurnedOn = !l_newBusState.isEngineTurnedOn;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
+                    break;
+                case "triggerHighBeamLights":
+                    l_newBusState.isHighBeamTurnedOn = !l_newBusState.isHighBeamTurnedOn;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
+                    break;
+                case "triggerBraking":
+                    l_newBusState.isBraking = !l_newBusState.isBraking;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
+                    break;
+                case "triggerReverse":
+                    l_newBusState.isReverseGear = !l_newBusState.isReverseGear;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
+                    break;
+                case "triggerLeftBlinker":
+                    l_newBusState.isLeftBlinkerBlinking = !l_newBusState.isLeftBlinkerBlinking;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
+                    break;
+                case "triggerRightBlinker":
+                    l_newBusState.isRightBlinkerBlinking = !l_newBusState.isRightBlinkerBlinking;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
+                    break;
+                case "triggerBothBlinkers":
+                    l_newBusState.isBothBlinkersBlinking = !l_newBusState.isBothBlinkersBlinking;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
+                    break;
+                default:
+                    Debug.LogWarning($"CLIENT: ({_remotePlayers[l_pid].nickname}): Cannot find standart action \"{l_actionName}\"!");
                     break;
             }
         }
@@ -486,8 +545,9 @@ namespace BDSM
 
         public void OnAddRemotePlayer(Network.ClientPackets.AddRemotePlayer l_packet)
         {
+            Network.NestedTypes.BusState l_newBusState = l_packet.busState;
             Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, selectedBusShortName = l_packet.state.selectedBusShortName, position = l_packet.state.position, rotation = l_packet.state.rotation };
-            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, remotePlayerController = null, state = l_newPlayerState };
+            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, remotePlayerController = null, busState = l_newBusState, state = l_newPlayerState };
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
             _serverState.currentAmountOfPlayers++;
 
@@ -495,6 +555,7 @@ namespace BDSM
             {
                 _remotePlayers[l_newPlayer.state.pid].remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_newPlayer.state.selectedBusShortName, true));
                 CreateAssociatedControolerForBus(l_newPlayer.state.pid);
+                _remotePlayers[l_newPlayer.state.pid].remotePlayerController.AssignBuState(l_newBusState);
             }
 
             Debug.Log($"CLIENT: Remote player with bus \"{l_newPlayer.state.selectedBusShortName}\" was created for {l_newPlayer.nickname}[{l_newPlayer.state.pid}]!");
@@ -512,14 +573,31 @@ namespace BDSM
 
         public void OnRemotePlayerChangedBus(Network.ClientPackets.RemotePlayerChangedBus l_packet)
         {
+            Network.NestedTypes.BusState l_newBusState = new Network.NestedTypes.BusState {
+                isBothBlinkersBlinking = false,
+                isBraking = false,
+                isDriverLightsTurnedOn = false,
+                isEngineTurnedOn = false,
+                isFrontDoorOpened = false,
+                isHighBeamTurnedOn = false,
+                isInsideLightsTurnedOn = false,
+                isLeftBlinkerBlinking = false,
+                isMiddleDoorOpened = false,
+                isRearDoorOpened = false,
+                isReverseGear = false,
+                isRightBlinkerBlinking = false };
+
             if (isPlayerOnMap)
             {
                 GameObject.Destroy(_remotePlayers[l_packet.pid].remotePlayerBus);
                 Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = _remotePlayers[l_packet.pid].state.pid, selectedBusShortName = l_packet.busShortName, position = _remotePlayers[l_packet.pid].state.position, rotation = _remotePlayers[l_packet.pid].state.rotation };
 
+                _remotePlayers[l_packet.pid].busState = l_newBusState;
                 _remotePlayers[l_packet.pid].state = l_newPlayerState;
                 _remotePlayers[l_packet.pid].remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_packet.busShortName, true));
                 CreateAssociatedControolerForBus(l_packet.pid);
+                _remotePlayers[l_packet.pid].remotePlayerController.AssignBuState(l_newBusState);
+
                 Debug.Log($"CLIENT: Bus for {_remotePlayers[l_packet.pid].nickname}[{l_packet.pid}] was changed to \"{l_packet.busShortName}\".");
             }
             else
@@ -552,6 +630,7 @@ namespace BDSM
                 return;
 
             _localPlayerState.selectedBusShortName = FreeMode.PlayerData.GetCurrentData().boughtBuses[FreeMode.PlayerData.GetCurrentData().selectedBus].ShortName;
+
             SendPacket( new Network.ServerPackets.ChangeBus { pid = _localPlayerState.pid, busShortName = _localPlayerState.selectedBusShortName }, DeliveryMethod.ReliableOrdered);
         }
 
@@ -562,11 +641,17 @@ namespace BDSM
 
         public void OnReceiveRemotePlayerBusAction(Network.ClientPackets.ReceiveRemotePlayerBusAction l_packet)
         {
-            _remotePlayers[l_packet.pid].remotePlayerController.TriggerStandartAction(l_packet.actionName);
-        }
-        private void DEBUG_TriggerRemotePlayerBusAction(uint l_pid, string l_actionName)
-        {
-            _remotePlayers[l_pid].remotePlayerController.TriggerStandartAction(l_actionName);
+            if (l_packet.pid != _localPlayerState.pid)
+            {
+                if (_remotePlayers[l_packet.pid].remotePlayerController == null)
+                    RecordActionAtBusStateInClinet(l_packet.pid, l_packet.actionName);
+                else
+                {
+                    _remotePlayers[l_packet.pid].remotePlayerController.TriggerStandartAction(l_packet.actionName);
+                    RecordActionAtBusStateInClinet(l_packet.pid, l_packet.actionName);
+                    Debug.Log($"CLIENT: Recieved trigger \"{l_packet.actionName}\" for {_remotePlayers[l_packet.pid].nickname}[{_remotePlayers[l_packet.pid].state.pid}] remote player.");
+                }
+            }
         }
 
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()

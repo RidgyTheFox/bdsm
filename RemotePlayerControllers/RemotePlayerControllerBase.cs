@@ -58,89 +58,122 @@ namespace BDSM.RemotePlayerControllers
         {
             if (_currentBusState.isEngineTurnedOn)
             {
-                if (_headlightsLowBeam != null)
-                    _headlightsLowBeam.SetActive(_currentBusState.isEngineTurnedOn);
-
-                if (_sideLights != null)
-                    _sideLights.SetActive(_currentBusState.isEngineTurnedOn);
-
-                if (_rearLightsRoot != null)
-                    _rearLightsRoot.SetActive(_currentBusState.isEngineTurnedOn);
-
-                if (_brakingLightsRoot != null)
-                    _brakingLightsRoot.SetActive(_currentBusState.isBraking);
-
-                if (_backwardLightsRoot != null)
-                    _backwardLightsRoot.SetActive(_currentBusState.isReverseGear);
-
-                if (_headLightsHighBeam != null)
-                    _headLightsHighBeam.SetActive(_currentBusState.isHighBeamTurnedOn);
-
-                if (_frontLeftBlinker == null || _middleLeftBlinker == null || _rearLeftBlinker == null)
-                    return;
-
-                if (_frontRightBlinker == null || _middleRightBlinker == null || _rearRightBlinker == null)
-                    return;
-
-                if (_currentBusState.isLeftBlinkerBlinking)
+                if (_headlightsLowBeam != null && _sideLights != null && _rearLightsRoot != null)
                 {
-                    _frontLeftBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
-                    _middleLeftBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
-                    _rearLeftBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
-                }
-                else if (!_currentBusState.isLeftBlinkerBlinking && !_currentBusState.isBothBlinkersBlinking)
-                {
-                    _frontLeftBlinker.SetActive(false);
-                    _middleLeftBlinker.SetActive(false);
-                    _rearLeftBlinker.SetActive(false);
+                    _headlightsLowBeam.SetActive(true);
+                    _sideLights.SetActive(true);
+                    _rearLightsRoot.SetActive(true);
                 }
 
-                if (_currentBusState.isRightBlinkerBlinking)
+                if (_currentBusState.isBraking && _brakingLightsRoot != null)
                 {
-                    _frontRightBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
-                    _middleRightBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
-                    _rearRightBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
+                    _brakingLightsRoot.SetActive(true);
                 }
-                else if (!_currentBusState.isBothBlinkersBlinking && !_currentBusState.isBothBlinkersBlinking)
+                else if (!_currentBusState.isBraking && _brakingLightsRoot != null)
                 {
-                    _frontRightBlinker.SetActive(false);
-                    _middleRightBlinker.SetActive(false);
-                    _rearRightBlinker.SetActive(false);
+                    _brakingLightsRoot.SetActive(false);
                 }
 
-                if (_currentBusState.isBothBlinkersBlinking)
+                if (_currentBusState.isReverseGear && _backwardLightsRoot != null)
                 {
-                    _frontLeftBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
-                    _middleLeftBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
-                    _rearLeftBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
-                    _frontRightBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
-                    _middleRightBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
-                    _rearRightBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
+                    _backwardLightsRoot.SetActive(true);
                 }
-                else if (!_currentBusState.isBothBlinkersBlinking && !_currentBusState.isLeftBlinkerBlinking && !_currentBusState.isRightBlinkerBlinking)
+                else if (!_currentBusState.isReverseGear && _backwardLightsRoot != null)
                 {
-                    _frontLeftBlinker.SetActive(false);
-                    _middleLeftBlinker.SetActive(false);
-                    _rearLeftBlinker.SetActive(false);
-                    _frontRightBlinker.SetActive(false);
-                    _middleRightBlinker.SetActive(false);
-                    _rearRightBlinker.SetActive(false);
+                    _backwardLightsRoot.SetActive(false);
+                }
+
+                if (_currentBusState.isHighBeamTurnedOn && _headLightsHighBeam != null)
+                {
+                    _headLightsHighBeam.SetActive(true);
+                }
+                else if (!_currentBusState.isHighBeamTurnedOn && _headLightsHighBeam != null)
+                {
+                    _headLightsHighBeam.SetActive(false);
+                }
+
+                if (_frontLeftBlinker != null && _middleLeftBlinker != null && _rearLeftBlinker != null)
+                {
+                    if (_currentBusState.isLeftBlinkerBlinking && !_currentBusState.isRightBlinkerBlinking && !_currentBusState.isBothBlinkersBlinking)
+                    {
+                        _frontLeftBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
+                        _middleLeftBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
+                        _rearLeftBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
+                    }
+                    else if (!_currentBusState.isLeftBlinkerBlinking && !_currentBusState.isRightBlinkerBlinking && !_currentBusState.isBothBlinkersBlinking)
+                    {
+                        _frontLeftBlinker.SetActive(false);
+                        _middleLeftBlinker.SetActive(false);
+                        _rearLeftBlinker.SetActive(false);
+                    }
+                }
+
+                if (_frontRightBlinker !=null && _middleRightBlinker != null && _rearRightBlinker)
+                {
+                    if (_currentBusState.isRightBlinkerBlinking && !_currentBusState.isLeftBlinkerBlinking && !_currentBusState.isBothBlinkersBlinking)
+                    {
+                        _frontRightBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
+                        _middleRightBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
+                        _rearRightBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
+                    }
+                    else if (!_currentBusState.isRightBlinkerBlinking &&!_currentBusState.isRightBlinkerBlinking && !_currentBusState.isBothBlinkersBlinking)
+                    {
+                        _frontRightBlinker.SetActive(false);
+                        _middleRightBlinker.SetActive(false);
+                        _rearRightBlinker.SetActive(false);
+                    }
+                }
+
+                if (_frontLeftBlinker != null && _middleLeftBlinker != null && _rearLeftBlinker != null && _frontRightBlinker != null && _middleRightBlinker != null && _rearRightBlinker)
+                {
+                    if (_currentBusState.isBothBlinkersBlinking && !_currentBusState.isLeftBlinkerBlinking && !_currentBusState.isRightBlinkerBlinking)
+                    {
+                        _frontLeftBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
+                        _middleLeftBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
+                        _rearLeftBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
+                        _frontRightBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
+                        _middleRightBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
+                        _rearRightBlinker.SetActive(Convert.ToBoolean(Mathf.FloorToInt(Mathf.PingPong(Time.time * _blinkersBlinkingPeriod, 2.0f))));
+                    }
+                    else if (!_currentBusState.isBothBlinkersBlinking && !_currentBusState.isLeftBlinkerBlinking && _currentBusState.isLeftBlinkerBlinking)
+                    {
+                        _frontLeftBlinker.SetActive(false);
+                        _middleLeftBlinker.SetActive(false);
+                        _rearLeftBlinker.SetActive(false);
+                        _frontRightBlinker.SetActive(false);
+                        _middleRightBlinker.SetActive(false);
+                        _rearRightBlinker.SetActive(false);
+                    }
                 }
             }
             else
             {
-                _brakingLightsRoot.SetActive(false);
-                _rearLightsRoot.SetActive(false);
-                _backwardLightsRoot.SetActive(false);
-                _sideLights.SetActive(false);
-                _headlightsLowBeam.SetActive(false);
-                _headLightsHighBeam.SetActive(false);
-                _rearLeftBlinker.SetActive(false);
-                _rearRightBlinker.SetActive(false);
-                _middleLeftBlinker.SetActive(false);
-                _middleRightBlinker.SetActive(false);
-                _frontLeftBlinker.SetActive(false);
-                _frontRightBlinker.SetActive(false);
+                if (_headlightsLowBeam != null && _sideLights != null && _rearLightsRoot != null && _headLightsHighBeam != null)
+                {
+                    _headLightsHighBeam.SetActive(false);
+                    _headlightsLowBeam.SetActive(false);
+                    _sideLights.SetActive(false);
+                    _rearLightsRoot.SetActive(false);
+                }
+
+                if (_brakingLightsRoot != null && _backwardLightsRoot != null)
+                {
+                    _brakingLightsRoot.SetActive(false);
+                    _backwardLightsRoot.SetActive(false);
+                }
+
+                if (_frontLeftBlinker != null && _middleLeftBlinker != null && _rearLeftBlinker != null)
+                {
+                    _frontLeftBlinker.SetActive(false);
+                    _middleLeftBlinker.SetActive(false);
+                    _rearLeftBlinker.SetActive(false);
+                }
+                if (_frontRightBlinker != null && _middleRightBlinker != null && _rearRightBlinker != null)
+                {
+                    _frontRightBlinker.SetActive(false);
+                    _middleRightBlinker.SetActive(false);
+                    _rearRightBlinker.SetActive(false);
+                }
             }
         }
 
@@ -204,19 +237,6 @@ namespace BDSM.RemotePlayerControllers
         {
             _currentBusState = new BusState();
             _currentBusState = l_busState;
-
-            if (l_busState.isEngineTurnedOn)
-            {
-                _headlightsLowBeam.SetActive(true);
-                _sideLights.SetActive(true);
-                _rearLightsRoot.SetActive(true);
-            }
-            else
-            {
-                _headlightsLowBeam.SetActive(false);
-                _sideLights.SetActive(false);
-                _rearLightsRoot.SetActive(false);
-            }
         }
 
         public void TriggerStandartAction(string l_actionName)
@@ -225,30 +245,37 @@ namespace BDSM.RemotePlayerControllers
             {
                 case "triggerEngine":
                     _currentBusState.isEngineTurnedOn = !_currentBusState.isEngineTurnedOn;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
                 case "triggerHighBeamLights":
                     _currentBusState.isHighBeamTurnedOn = !_currentBusState.isHighBeamTurnedOn;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
-                case "triggerBracking":
+                case "triggerBraking":
                     _currentBusState.isBraking = !_currentBusState.isBraking;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
-                case "triggerReverseGear":
+                case "triggerReverse":
                     _currentBusState.isReverseGear = !_currentBusState.isReverseGear;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
                 case "triggerLeftBlinker":
                     _currentBusState.isRightBlinkerBlinking = false;
                     _currentBusState.isBothBlinkersBlinking = false;
                     _currentBusState.isLeftBlinkerBlinking = !_currentBusState.isLeftBlinkerBlinking;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
                 case "triggerRightBlinker":
                     _currentBusState.isLeftBlinkerBlinking = false;
                     _currentBusState.isBothBlinkersBlinking = false;
                     _currentBusState.isRightBlinkerBlinking = !_currentBusState.isRightBlinkerBlinking;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
                 case "triggerBothBlinkers":
                     _currentBusState.isRightBlinkerBlinking = false;
                     _currentBusState.isLeftBlinkerBlinking = false;
                     _currentBusState.isBothBlinkersBlinking = !_currentBusState.isBothBlinkersBlinking;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
                 default:
                     Debug.LogWarning($"REMOTE_PLAYER_CONTROLLER ({_playerNickname}): Cannot find standart action \"{l_actionName}\"! Dispatching trigger to child class...");
