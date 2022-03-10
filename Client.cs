@@ -39,6 +39,7 @@ namespace BDSM
         private bool _oldIsEngineOnState = false;
         private bool _hidePlayerNicknames = false;
         private const float _maxDistanceForNicknames = 60.0f;
+        public GameObject localPlayerFrontWheel;
         public GameObject localPlayerBus;
 
         #region Client GUI data;
