@@ -11,7 +11,7 @@ Everything that I would like to do in this fashion is described here. The lower 
 | Time syncing. | ✅ Implemented | N\A |
 | Basic bus sync. | ✅ Implemented | When you enter the garage you should disappear to other players. Changing the bus in the garage. |
 | Advanced bus sync. | 🟨 Work in progress | Required classes and functions, network packets. |
-| Advanced bys sync. II | 🟥 Planned | Bus classes, lighting layouts, wheels and so on. |
+| Advanced bus sync. II | 🟥 Planned | Bus classes, lighting layouts, wheels and so on. |
 | Routes numbers on bus plates | 🟥 Planned | N\A |
 | Finish offset, lights wheels sync and upgrades for buses. | 🟥 Planned | N\A |
 
