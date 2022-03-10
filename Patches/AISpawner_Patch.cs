@@ -8,7 +8,10 @@ namespace BDSM.Patches
         [HarmonyPrefix]
         public static bool Awake()
         {
-            return false;
+            if (StaticData.clientInstance._isConnected)
+                return false;
+            else
+                return true;
         }
     }
 }
