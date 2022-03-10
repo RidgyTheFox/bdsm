@@ -63,6 +63,7 @@ namespace BDSM
             _packetProcessor.SubscribeReusable<BDSM.Network.ServerPackets.ChangeBus>(OnPlayerChangedBus);
             _packetProcessor.SubscribeReusable<Network.ServerPackets.UpdatePlayerState>(OnUpdatePlayerState);
             _packetProcessor.SubscribeReusable<Network.ServerPackets.SetBusState>(OnSetBusState);
+            _packetProcessor.SubscribeReusable<Network.ServerPackets.DispatchBusAction>(OnDispatchBusAction);
 
             ReloadSettings();
 
@@ -468,6 +469,61 @@ namespace BDSM
             }
             else
                 Debug.LogError($"SERVER: New bus state was received from player with PID {l_packet.pid}, but server cannot find him in players list!");
+        }
+
+        public void OnDispatchBusAction(Network.ServerPackets.DispatchBusAction l_packet)
+        {
+            Network.NestedTypes.BusState l_newBusState = _players[l_packet.pid].busState;
+
+            switch (l_packet.actionName)
+            {
+                case "triggerEngine":
+                    l_newBusState.isEngineTurnedOn = !l_newBusState.isEngineTurnedOn;
+                    break;
+                case "triggerLeftBlinker":
+                    l_newBusState.isLeftBlinkerBlinking = !l_newBusState.isLeftBlinkerBlinking;
+                    break;
+                case "triggerRightBlinker":
+                    l_newBusState.isRightBlinkerBlinking = !l_newBusState.isRightBlinkerBlinking;
+                    break;
+                case "triggerBothBlinkers":
+                    l_newBusState.isBothBlinkersBlinking = !l_newBusState.isBothBlinkersBlinking;
+                    break;
+                case "triggerHighBeamLights":
+                    l_newBusState.isHighBeamTurnedOn = !l_newBusState.isHighBeamTurnedOn;
+                    break;
+                case "triggerBraking":
+                    l_newBusState.isBraking = !l_newBusState.isBraking;
+                    break;
+                case "triggerReverse":
+                    l_newBusState.isReverseGear = !l_newBusState.isReverseGear;
+                    break;
+                case "triggerInsideLights":
+                    l_newBusState.isInsideLightsTurnedOn = !l_newBusState.isInsideLightsTurnedOn;
+                    break;
+                case "triggerDrirverLights":
+                    l_newBusState.isDriverLightsTurnedOn = !l_newBusState.isDriverLightsTurnedOn;
+                    break;
+                case "triggerFrontDoor":
+                    l_newBusState.isFrontDoorOpened = !l_newBusState.isFrontDoorOpened;
+                    break;
+                case "triggerMiddleDoor":
+                    l_newBusState.isMiddleDoorOpened = l_newBusState.isMiddleDoorOpened;
+                    break;
+                case "triggerRearDoor":
+                    l_newBusState.isRearDoorOpened = !l_newBusState.isRearDoorOpened;
+                    break;
+                default:
+                    Debug.LogError($"SERVER: Unknown trigger: \"{l_packet.actionName}\"! Aborting...");
+                    return;
+            }
+
+            _players[l_packet.pid].busState = l_newBusState;
+            foreach(Network.ServerPackets.ServerPlayer l_player in _players.Values)
+            {
+                SendPacket(new Network.ClientPackets.ReceiveRemotePlayerBusAction { pid = l_packet.pid, actionName = l_packet.actionName }, l_player.peer, DeliveryMethod.ReliableOrdered);
+            }
+            Debug.Log($"SERVER: Action \"{l_packet.actionName}\" from {_players[l_packet.pid].nickname}[{_players[l_packet.pid]}] was dispatched to other players!");
         }
 
         public void OnConnectionRequest(ConnectionRequest l_request)
