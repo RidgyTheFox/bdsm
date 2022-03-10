@@ -533,6 +533,9 @@ namespace BDSM
 
         public void OnPlayerChangedBusInGarage()
         {
+            if (!_isConnected || !_isAuthorized)
+                return;
+
             _localPlayerState.selectedBusShortName = FreeMode.PlayerData.GetCurrentData().boughtBuses[FreeMode.PlayerData.GetCurrentData().selectedBus].ShortName;
             SendPacket( new Network.ServerPackets.ChangeBus { pid = _localPlayerState.pid, busShortName = _localPlayerState.selectedBusShortName }, DeliveryMethod.ReliableOrdered);
         }
