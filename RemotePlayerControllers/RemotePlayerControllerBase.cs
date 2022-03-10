@@ -35,6 +35,8 @@ namespace BDSM.RemotePlayerControllers
         public GameObject _headLightsHighBeam;
         public GameObject _frontLeftBlinker;
         public GameObject _frontRightBlinker;
+        public GameObject _insideLightRoot;
+        public GameObject _driverLightRoot;
 
         private void Awake()
         {
