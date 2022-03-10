@@ -6,9 +6,9 @@ namespace BDSM.Patches
     {
         [HarmonyPatch(typeof(BusControl), "Update")]
         [HarmonyPostfix]
-        public static void Update()
+        public static void Update(BusControl __instance)
         {
-
+            StaticData.clientInstance._localBusState.isEngineTurnedOn = !__instance.DvigVukl;
         }
     }
 }
