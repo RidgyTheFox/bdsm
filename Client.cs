@@ -185,7 +185,7 @@ namespace BDSM
         private void OnGUI()
         {
             if (_isConnected && _isAuthorized)
-                GUI.Label(new Rect(5, Screen.currentResolution.height-20, 300, 20), $"Connected to {_serverIp}:{_serverPort} | Ping: {_server.Ping}", _netStatsTextStyle);
+                GUI.Label(new Rect(5, Screen.currentResolution.height-20, 300, 20), $"Connected to {_serverIp}:{_serverPort} | Ping: {_server.Ping * 2}", _netStatsTextStyle);
 
             if (!_isMainWindowOpened)
                 return;
