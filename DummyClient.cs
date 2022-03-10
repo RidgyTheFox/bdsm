@@ -32,7 +32,7 @@ namespace BDSM
             _client = new NetManager(this) { AutoRecycle = true };
             _writer = new NetDataWriter();
             
-            _localPlayerState = new Network.NestedTypes.PlayerState { selectedBusShortName = "SPR", position = new Vector3(-207.7788f, 12.4482f, -492.7207f), rotation = new Quaternion(0.0f, 180.0f, 0.0f, 1.0f)};
+            _localPlayerState = new Network.NestedTypes.PlayerState { selectedBusShortName = "LZ", position = new Vector3(-207.7788f, 12.4482f, -492.7207f), rotation = new Quaternion(0.0f, 180.0f, 0.0f, 1.0f)};
             _remotePlayers = new Dictionary<uint, Network.ClientPackets.RemotePlayer>();
 
             Debug.Log("DUMMY: Registering nested types...");
