@@ -139,6 +139,12 @@ namespace BDSM
 
             if (Input.GetKeyDown(KeyCode.X))
                 TriggerBusAction("triggerReverse");
+
+            if (Input.GetKeyDown(KeyCode.K))
+                TriggerBusAction("triggerInsideLights");
+
+            if (Input.GetKeyDown(KeyCode.J))
+                TriggerBusAction("triggerDriverLights");
         }
 
         private void FixedUpdate()
@@ -492,6 +498,14 @@ namespace BDSM
                     break;
                 case "triggerBothBlinkers":
                     l_newBusState.isBothBlinkersBlinking = !l_newBusState.isBothBlinkersBlinking;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
+                    break;
+                case "triggerInsideLights":
+                    l_newBusState.isInsideLightsTurnedOn = !l_newBusState.isInsideLightsTurnedOn;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
+                    break;
+                case "triggerDriverLights":
+                    l_newBusState.isDriverLightsTurnedOn = !l_newBusState.isDriverLightsTurnedOn;
                     Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
                     break;
                 default:

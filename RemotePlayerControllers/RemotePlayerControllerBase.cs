@@ -94,6 +94,24 @@ namespace BDSM.RemotePlayerControllers
                     _headLightsHighBeam.SetActive(false);
                 }
 
+                if (_currentBusState.isInsideLightsTurnedOn && _insideLightRoot != null)
+                {
+                    _insideLightRoot.SetActive(true);
+                }
+                else if (!_currentBusState.isInsideLightsTurnedOn && _insideLightRoot != null)
+                {
+                    _insideLightRoot.SetActive(false);
+                }
+
+                if (_currentBusState.isDriverLightsTurnedOn && _driverLightRoot != null)
+                {
+                    _driverLightRoot.SetActive(true);
+                }
+                else if (!_currentBusState.isDriverLightsTurnedOn && _driverLightRoot != null)
+                {
+                    _driverLightRoot.SetActive(false);
+                }
+
                 if (_frontLeftBlinker != null && _middleLeftBlinker != null && _rearLeftBlinker != null)
                 {
                     if (_currentBusState.isLeftBlinkerBlinking && !_currentBusState.isRightBlinkerBlinking && !_currentBusState.isBothBlinkersBlinking)
@@ -156,6 +174,12 @@ namespace BDSM.RemotePlayerControllers
                     _headlightsLowBeam.SetActive(false);
                     _sideLights.SetActive(false);
                     _rearLightsRoot.SetActive(false);
+                }
+
+                if (_insideLightRoot != null && _driverLightRoot != null)
+                {
+                    _insideLightRoot.SetActive(false);
+                    _driverLightRoot.SetActive(false);
                 }
 
                 if (_brakingLightsRoot != null && _backwardLightsRoot != null)
@@ -277,6 +301,14 @@ namespace BDSM.RemotePlayerControllers
                     _currentBusState.isRightBlinkerBlinking = false;
                     _currentBusState.isLeftBlinkerBlinking = false;
                     _currentBusState.isBothBlinkersBlinking = !_currentBusState.isBothBlinkersBlinking;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_playerNickname} controller.");
+                    break;
+                case "triggerInsideLights":
+                    _currentBusState.isInsideLightsTurnedOn = !_currentBusState.isInsideLightsTurnedOn;
+                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_playerNickname} controller.");
+                    break;
+                case "triggerDriverLights":
+                    _currentBusState.isDriverLightsTurnedOn = !_currentBusState.isDriverLightsTurnedOn;
                     Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
                 default:
