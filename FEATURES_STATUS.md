@@ -34,8 +34,8 @@ Here you will find a table with all the buses from the game. Each bus is control
 | Bus name      | Basic movement| Offset      | Lights        | Wheels Sync   | Upgrades      | Animations    | Sounds         | Passengers |
 | ------------- |---------------|-------------|---------------|---------------|---------------|---------------|----------------|-----------:|
 | Vector Next | ✅ Implemented |  🟥 Planned |  🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned |
-| PAZ 3205 | ✅ Implemented | 🟨 Work in progress | 🟨 Work in progress | 🟨 Work in progress | 🟥 Planned | 🟥 Planned | 🟥Planned| 🟥 Planned |
-| LIAZ 677 | ✅ Implemented | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned |  🟥 Planned |
+| PAZ 3205 | ✅ Implemented | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥Planned| 🟥 Planned |
+| LIAZ 677 | ✅ Implemented | 🟨 Work in progress | 🟨 Work in progress | 🟨 Work in progress | 🟥 Planned | 🟥 Planned | 🟥 Planned |  🟥 Planned |
 | Citaro   |✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned |
 | MAN |✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned |
 | MAN 15 |✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned |
