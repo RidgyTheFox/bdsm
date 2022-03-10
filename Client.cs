@@ -28,6 +28,7 @@ namespace BDSM
         private bool _usePassword = true;
         private string _password = "bdsmIsCool";
 
+        public Network.NestedTypes.BusState _localBusState;
         private Network.NestedTypes.PlayerState _localPlayerState;
         private Network.NestedTypes.ServerState _serverState;
         private Dictionary<uint, Network.ClientPackets.RemotePlayer> _remotePlayers;
@@ -59,6 +60,20 @@ namespace BDSM
             _netStatsTextStyle.fontStyle = FontStyle.Bold;
             _client = new NetManager(this) { AutoRecycle = true };
             _writer = new NetDataWriter();
+
+            _localBusState = new Network.NestedTypes.BusState {
+                isEngineTurnedOn = false,
+                isBothBlinkersBlinking = false,
+                isBraking = false,
+                isDriverLightsTurnedOn = false,
+                isFrontDoorOpened = false,
+                isHighBeamTurnedOn = false,
+                isInsideLightsTurnedOn = false,
+                isLeftBlinkerBlinking = false,
+                isMiddleDoorOpened = false,
+                isRearDoorOpened = false,
+                isReverseGear = false,
+                isRightBlinkerBlinking = false };
 
             try
             {
