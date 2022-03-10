@@ -460,7 +460,7 @@ namespace BDSM
             SendPacket(new Network.ServerPackets.DispatchBusAction { pid = _localPlayerState.pid, actionName = l_actionName }, DeliveryMethod.ReliableOrdered);
         }
 
-        private void RecordActionAtBusStateInClinet(uint l_pid, string l_actionName)
+        private void RecordActionAtBusStateInClient(uint l_pid, string l_actionName)
         {
             Network.NestedTypes.BusState l_newBusState = _remotePlayers[l_pid].busState;
 
@@ -646,11 +646,11 @@ namespace BDSM
             if (l_packet.pid != _localPlayerState.pid)
             {
                 if (_remotePlayers[l_packet.pid].remotePlayerController == null)
-                    RecordActionAtBusStateInClinet(l_packet.pid, l_packet.actionName);
+                    RecordActionAtBusStateInClient(l_packet.pid, l_packet.actionName);
                 else
                 {
                     _remotePlayers[l_packet.pid].remotePlayerController.TriggerStandartAction(l_packet.actionName);
-                    RecordActionAtBusStateInClinet(l_packet.pid, l_packet.actionName);
+                    RecordActionAtBusStateInClient(l_packet.pid, l_packet.actionName);
                     Debug.Log($"CLIENT: Recieved trigger \"{l_packet.actionName}\" for {_remotePlayers[l_packet.pid].nickname}[{_remotePlayers[l_packet.pid].state.pid}] remote player.");
                 }
             }
