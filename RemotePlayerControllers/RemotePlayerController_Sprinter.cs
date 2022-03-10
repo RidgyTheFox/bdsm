@@ -4,6 +4,11 @@ namespace BDSM.RemotePlayerControllers
 {
     class RemotePlayerController_Sprinter : RemotePlayerControllerBase
     {
+        private GameObject _wheelFL;
+        private GameObject _wheelFR;
+        private GameObject _wheelRL;
+        private GameObject _wheelRR;
+
         void Awake()
         {
             Color _tailLightsColor = new Color(0.8f, 0.0f, 0.0f, 1.0f);
@@ -15,6 +20,21 @@ namespace BDSM.RemotePlayerControllers
 
             SetFlyingNicknameYOffset(2.8f);
             _vehicleGroundOffset = new Vector3(0.0f, -0.4f, 0.0f);
+
+            GameObject l_modelRoot = gameObject.transform.Find("Model").gameObject;
+            _wheelFL = l_modelRoot.transform.Find("wheel1").gameObject;
+
+            GameObject l_wheelFRRoot = l_modelRoot.transform.Find("FR").gameObject;
+            _wheelFR = l_wheelFRRoot.transform.Find("wheel2").gameObject;
+
+            GameObject l_wheelRLRoot = l_modelRoot.transform.Find("RL").gameObject;
+            _wheelRL = l_wheelRLRoot.transform.Find("wheel4").gameObject;
+
+            GameObject l_wheelRRRoot = l_modelRoot.transform.Find("RR").gameObject;
+            _wheelRR = l_wheelRRRoot.transform.Find("wheel3").gameObject;
+
+            //_wheelRR = this.gameObject.transform.Find("wheel3").gameObject;
+            //_wheelRL = this.gameObject.transform.Find("wheel4").gameObject;
 
             #region Taillights.
 
@@ -337,6 +357,21 @@ namespace BDSM.RemotePlayerControllers
             _driverLightLC.intensity = 1.0f;
             _driverLightLC.range = 1.0f;
             #endregion
+        }
+
+        protected override void OnWheelUpdate(Quaternion l_wheelFL, Quaternion l_wheelFR, Quaternion l_wheelRL, Quaternion l_wheelRR)
+        {
+            if (_wheelFL == null || _wheelFR == null)
+                return;
+
+            _wheelFL.transform.rotation = l_wheelFL;
+            _wheelFR.transform.rotation = l_wheelFR;
+
+            if (_wheelRL == null || _wheelRR == null)
+                return;
+
+            _wheelRL.transform.rotation = l_wheelRL;
+            _wheelRR.transform.rotation = l_wheelRR;
         }
 
         protected override void OnTriggerToggleAction(string l_actionName)

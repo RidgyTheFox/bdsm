@@ -8,6 +8,7 @@ namespace BDSM.RemotePlayerControllers
     public interface RemotePlayerControllerInterface
     {
         public void TriggerToggleAction(string l_actionName);
+        public void UpdateWheels(Quaternion l_wheelFL, Quaternion l_wheelFR, Quaternion l_wheelRL, Quaternion l_wheelRR);
     }
 
     public abstract class RemotePlayerControllerBase : MonoBehaviour, RemotePlayerControllerInterface
@@ -208,11 +209,18 @@ namespace BDSM.RemotePlayerControllers
             OnTriggerToggleAction(l_actionName);
         }
 
+        void RemotePlayerControllerInterface.UpdateWheels(Quaternion l_wheelFL, Quaternion l_wheelFR, Quaternion l_wheelRL, Quaternion l_wheelRR)
+        {
+            OnWheelUpdate(l_wheelFL, l_wheelFR, l_wheelRL, l_wheelRR);
+        }
+
         public void UpdatePosition(Network.ClientPackets.RemotePlayer l_player)
         {
             gameObject.transform.position = l_player.state.position + _vehicleGroundOffset;
             gameObject.transform.rotation = l_player.state.rotation;
+            OnWheelUpdate(l_player.state.wheelFL, l_player.state.wheelFR, l_player.state.wheelRL, l_player.state.wheelRR);
         }
+
         private void CreateFlyingNicknameIfNull()
         {
             if (_flyingNickname == null)
@@ -319,5 +327,7 @@ namespace BDSM.RemotePlayerControllers
         }
 
         protected abstract void OnTriggerToggleAction(string l_actionName);
+
+        protected abstract void OnWheelUpdate(Quaternion l_wheelFL, Quaternion l_wheelFR, Quaternion l_wheelRL, Quaternion l_wheelRR);
     }
 }

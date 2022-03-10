@@ -13,5 +13,10 @@ namespace BDSM.RemotePlayerControllers
         {
 
         }
+
+        protected override void OnWheelUpdate(Quaternion l_wheelFL, Quaternion l_wheelFR, Quaternion l_wheelRL, Quaternion l_wheelRR)
+        {
+
+        }
     }
 }
