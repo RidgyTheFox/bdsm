@@ -339,7 +339,7 @@ namespace BDSM
                 isHighBeamTurnedOn = false, isInsideLightsTurnedOn = false, 
                 isLeftBlinkerBlinking = false, isMiddleDoorOpened = false, 
                 isReverseGear = false, isRightBlinkerBlinking = false, };
-            Network.ServerPackets.ServerPlayer l_newPlayer = new Network.ServerPackets.ServerPlayer { nickname = l_packet.nickname, currentBusState = l_newPlayerBusState, peer = l_peer, state = l_newPlayerState };
+            Network.ServerPackets.ServerPlayer l_newPlayer = new Network.ServerPackets.ServerPlayer { nickname = l_packet.nickname, busState = l_newPlayerBusState, peer = l_peer, state = l_newPlayerState };
             _players.Add(l_newPlayer.state.pid, l_newPlayer);
             SendPacket(new Network.ClientPackets.OnJoinAccepted { pid = l_newPlayer.state.pid }, l_peer, DeliveryMethod.ReliableOrdered);
 
@@ -348,7 +348,7 @@ namespace BDSM
                 if (l_player.state.pid != l_newPlayer.state.pid)
                 {
                     SendPacket(new Network.ClientPackets.AddRemotePlayer { nickname = l_newPlayer.nickname, busState = l_newPlayerBusState, state = l_newPlayerState }, l_player.peer, DeliveryMethod.ReliableOrdered);
-                    SendPacket(new Network.ClientPackets.AddRemotePlayer { nickname = l_player.nickname, busState = l_player.currentBusState, state = l_player.state }, l_newPlayer.peer, DeliveryMethod.ReliableOrdered);
+                    SendPacket(new Network.ClientPackets.AddRemotePlayer { nickname = l_player.nickname, busState = l_player.busState, state = l_player.state }, l_newPlayer.peer, DeliveryMethod.ReliableOrdered);
                 }
             }
 
@@ -436,7 +436,7 @@ namespace BDSM
             _players.TryGetValue(l_packet.pid, out l_player);
             if (l_player != null)
             {
-                l_player.currentBusState = l_packet.newBusState;
+                l_player.busState = l_packet.newBusState;
                 foreach(Network.ServerPackets.ServerPlayer l_playerToSend in _players.Values)
                 {
                     if (l_playerToSend.state.pid != l_packet.pid)
