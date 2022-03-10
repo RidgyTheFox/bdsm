@@ -211,17 +211,20 @@ namespace BDSM.RemotePlayerControllers
                 _sideLights.SetActive(true);
                 _rearLightsRoot.SetActive(true);
             }
+            else
+            {
+                _headlightsLowBeam.SetActive(false);
+                _sideLights.SetActive(false);
+                _rearLightsRoot.SetActive(false);
+            }
         }
 
         public void TriggerStandartAction(string l_actionName)
         {
             switch (l_actionName)
             {
-                case "triggerEngineOn":
-                    _currentBusState.isEngineTurnedOn = true;
-                    break;
-                case "triggerEngineOff":
-                    _currentBusState.isEngineTurnedOn = false;
+                case "triggerEngine":
+                    _currentBusState.isEngineTurnedOn = !_currentBusState.isEngineTurnedOn;
                     break;
                 case "triggerHighBeamLights":
                     _currentBusState.isHighBeamTurnedOn = !_currentBusState.isHighBeamTurnedOn;
