@@ -381,6 +381,9 @@ namespace BDSM
 
         public void RequestTimeUpdate()
         {
+            if (!_isConnected || !_isAuthorized)
+                return;
+            
             SendPacket(new Network.ServerPackets.RequestServerDateAndTime { pid = _localPlayerState.pid }, DeliveryMethod.ReliableOrdered);
             Debug.Log("CLIENT: Server date and time requested...");
         }
