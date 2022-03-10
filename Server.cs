@@ -333,12 +333,19 @@ namespace BDSM
 
             Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = (uint)l_peer.Id, selectedBusShortName = l_packet.state.selectedBusShortName, position = l_packet.state.position, rotation = l_packet.state.rotation };
             Network.NestedTypes.BusState l_newPlayerBusState = new Network.NestedTypes.BusState { 
-                isRearDoorOpened = false, isBothBlinkersBlinking = false, 
-                isBraking = false, isDriverLightsTurnedOn = false, 
-                isEngineTurnedOn = false, isFrontDoorOpened = false, 
-                isHighBeamTurnedOn = false, isInsideLightsTurnedOn = false, 
-                isLeftBlinkerBlinking = false, isMiddleDoorOpened = false, 
-                isReverseGear = false, isRightBlinkerBlinking = false, };
+                isRearDoorOpened = l_packet.busState.isRearDoorOpened,
+                isBothBlinkersBlinking = l_packet.busState.isBothBlinkersBlinking,
+                isBraking = l_packet.busState.isBraking,
+                isDriverLightsTurnedOn = l_packet.busState.isDriverLightsTurnedOn,
+                isEngineTurnedOn = l_packet.busState.isEngineTurnedOn,
+                isFrontDoorOpened = l_packet.busState.isFrontDoorOpened,
+                isHighBeamTurnedOn = l_packet.busState.isHighBeamTurnedOn,
+                isInsideLightsTurnedOn = l_packet.busState.isInsideLightsTurnedOn,
+                isLeftBlinkerBlinking = l_packet.busState.isLeftBlinkerBlinking,
+                isMiddleDoorOpened = l_packet.busState.isMiddleDoorOpened,
+                isReverseGear = l_packet.busState.isReverseGear,
+                isRightBlinkerBlinking = l_packet.busState.isRightBlinkerBlinking};
+
             Network.ServerPackets.ServerPlayer l_newPlayer = new Network.ServerPackets.ServerPlayer { nickname = l_packet.nickname, busState = l_newPlayerBusState, peer = l_peer, state = l_newPlayerState };
             _players.Add(l_newPlayer.state.pid, l_newPlayer);
             SendPacket(new Network.ClientPackets.OnJoinAccepted { pid = l_newPlayer.state.pid }, l_peer, DeliveryMethod.ReliableOrdered);
@@ -400,7 +407,22 @@ namespace BDSM
                     Debug.LogWarning($"SERVER: {l_playerForEdit.nickname}[{l_playerForEdit.state.pid}] changed bus to \"{l_packet.busShortName}\" but already driving this bus...");
                     return;
                 }
+                Network.NestedTypes.BusState l_newBusState = new Network.NestedTypes.BusState {
+                    isRightBlinkerBlinking = false,
+                    isReverseGear = false,
+                    isMiddleDoorOpened = false,
+                    isLeftBlinkerBlinking = false,
+                    isInsideLightsTurnedOn = false,
+                    isBothBlinkersBlinking = false,
+                    isBraking = false,
+                    isDriverLightsTurnedOn = false,
+                    isEngineTurnedOn = false,
+                    isFrontDoorOpened = false,
+                    isHighBeamTurnedOn = false,
+                    isRearDoorOpened = false};
+
                 Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_playerForEdit.state.pid, selectedBusShortName = l_packet.busShortName, position = l_playerForEdit.state.position, rotation = l_playerForEdit.state.rotation };
+                l_playerForEdit.busState = l_newBusState;
                 l_playerForEdit.state = l_newPlayerState;
                 _players.Remove(l_packet.pid);
                 _players.Add(l_packet.pid, l_playerForEdit);
@@ -408,7 +430,7 @@ namespace BDSM
                 foreach(Network.ServerPackets.ServerPlayer l_player in _players.Values)
                 {
                     if (l_player.state.pid != l_packet.pid)
-                        SendPacket( new Network.ClientPackets.RemotePlayerChangedBus { pid = l_packet.pid, busShortName = l_packet.busShortName }, l_player.peer, DeliveryMethod.ReliableOrdered);
+                        SendPacket( new Network.ClientPackets.RemotePlayerChangedBus { pid = l_packet.pid, busState = l_newBusState, busShortName = l_packet.busShortName }, l_player.peer, DeliveryMethod.ReliableOrdered);
                 }
 
                 Debug.Log($"SERVER: Bus for {l_playerForEdit.nickname}[{l_playerForEdit.state.pid}] was changed to {l_packet.busShortName} and synced with other players.");
