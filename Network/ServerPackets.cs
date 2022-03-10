@@ -19,6 +19,7 @@ namespace BDSM.Network.ServerPackets
     public class RequestJoin
     {
         public string nickname { get; set; }
+        public NestedTypes.BusState busState { get; set; }
         public NestedTypes.PlayerState state { get; set; }
     }
 
