@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using UnityEngine;
+using HarmonyLib;
 
 namespace BDSM.Patches.Buses
 {
