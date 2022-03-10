@@ -10,6 +10,12 @@ namespace BDSM.Network.NestedTypes
         public string selectedBusShortName { get; set; }
         public Vector3 position { get; set; }
         public Quaternion rotation { get; set; }
+        public Quaternion wheelFL { get; set; }
+
+        public Quaternion wheelFR { get; set; }
+
+        public Quaternion wheelRL { get; set; }
+        public Quaternion wheelRR { get; set; }
 
         public void Serialize(NetDataWriter l_writer)
         {
@@ -17,6 +23,10 @@ namespace BDSM.Network.NestedTypes
             l_writer.Put(selectedBusShortName);
             l_writer.Put(position);
             l_writer.Put(rotation);
+            l_writer.Put(wheelFL);
+            l_writer.Put(wheelFR);
+            l_writer.Put(wheelRL);
+            l_writer.Put(wheelRR);
         }
         public void Deserialize(NetDataReader l_reader)
         {
@@ -24,6 +34,10 @@ namespace BDSM.Network.NestedTypes
             selectedBusShortName = l_reader.GetString();
             position = l_reader.GetVector3();
             rotation = l_reader.GetQuaternion();
+            wheelFL = l_reader.GetQuaternion();
+            wheelFR = l_reader.GetQuaternion();
+            wheelRL = l_reader.GetQuaternion();
+            wheelRR = l_reader.GetQuaternion();
         }
 
     }
