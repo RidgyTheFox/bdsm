@@ -23,20 +23,20 @@ namespace BDSM.RemotePlayerControllers
 
         protected Network.NestedTypes.BusState _currentBusState;
 
-        public GameObject _brakingLightsRoot;
-        public GameObject _rearLightsRoot;
-        public GameObject _backwardLightsRoot;
-        public GameObject _rearLeftBlinker;
-        public GameObject _rearRightBlinker;
-        public GameObject _middleLeftBlinker;
-        public GameObject _middleRightBlinker;
-        public GameObject _sideLights;
-        public GameObject _headlightsLowBeam;
-        public GameObject _headLightsHighBeam;
-        public GameObject _frontLeftBlinker;
-        public GameObject _frontRightBlinker;
-        public GameObject _insideLightRoot;
-        public GameObject _driverLightRoot;
+        protected GameObject _brakingLightsRoot;
+        protected GameObject _rearLightsRoot;
+        protected GameObject _backwardLightsRoot;
+        protected GameObject _rearLeftBlinker;
+        protected GameObject _rearRightBlinker;
+        protected GameObject _middleLeftBlinker;
+        protected GameObject _middleRightBlinker;
+        protected GameObject _sideLights;
+        protected GameObject _headlightsLowBeam;
+        protected GameObject _headLightsHighBeam;
+        protected GameObject _frontLeftBlinker;
+        protected GameObject _frontRightBlinker;
+        protected GameObject _insideLightRoot;
+        protected GameObject _driverLightRoot;
 
         private void Awake()
         {
