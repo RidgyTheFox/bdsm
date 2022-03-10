@@ -32,6 +32,11 @@ namespace BDSM
         private Network.NestedTypes.ServerState _serverState;
         private Dictionary<uint, Network.ClientPackets.RemotePlayer> _remotePlayers;
 
+        public Quaternion localWheelFLRotation;
+        public Quaternion localWheelFRRotation;
+        public Quaternion localWheelRLRotation;
+        public Quaternion localWheelRRRotation;
+
         public bool isTimeSynced = false;
         public bool isPlayerOnMap = false;
 
