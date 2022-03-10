@@ -460,15 +460,7 @@ namespace BDSM
 
         public void OnUpdatePlayerState(Network.ServerPackets.UpdatePlayerState l_packet)
         {
-            Network.ServerPackets.ServerPlayer l_playerForEdit;
-            _players.TryGetValue(l_packet.pid, out l_playerForEdit);
-
-            if (l_playerForEdit != null)
-            {
-                l_playerForEdit.state = l_packet.state;
-                _players.Remove(l_packet.pid);
-                _players.Add(l_packet.pid, l_playerForEdit);
-            }
+            _players[l_packet.pid].state = l_packet.state;
         }
 
         public void OnSetBusState(Network.ServerPackets.SetBusState l_packet)
