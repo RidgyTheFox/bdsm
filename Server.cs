@@ -332,7 +332,16 @@ namespace BDSM
                 }
             }
 
-            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = (uint)l_peer.Id, selectedBusShortName = l_packet.state.selectedBusShortName, position = l_packet.state.position, rotation = l_packet.state.rotation };
+            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState {
+                pid = (uint)l_peer.Id,
+                selectedBusShortName = l_packet.state.selectedBusShortName,
+                position = l_packet.state.position,
+                rotation = l_packet.state.rotation,
+                wheelFL = l_packet.state.wheelFL,
+                wheelFR = l_packet.state.wheelFR,
+                wheelRL = l_packet.state.wheelRL,
+                wheelRR = l_packet.state.wheelRR };
+
             Network.NestedTypes.BusState l_newPlayerBusState = new Network.NestedTypes.BusState { 
                 isRearDoorOpened = l_packet.busState.isRearDoorOpened,
                 isBothBlinkersBlinking = l_packet.busState.isBothBlinkersBlinking,
@@ -422,7 +431,16 @@ namespace BDSM
                     isHighBeamTurnedOn = false,
                     isRearDoorOpened = false};
 
-                Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_playerForEdit.state.pid, selectedBusShortName = l_packet.busShortName, position = l_playerForEdit.state.position, rotation = l_playerForEdit.state.rotation };
+                Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState {
+                    pid = l_playerForEdit.state.pid,
+                    selectedBusShortName = l_packet.busShortName,
+                    position = l_playerForEdit.state.position,
+                    rotation = l_playerForEdit.state.rotation,
+                    wheelFL = l_playerForEdit.state.wheelFL,
+                    wheelFR = l_playerForEdit.state.wheelFR,
+                    wheelRL = l_playerForEdit.state.wheelRL,
+                    wheelRR = l_playerForEdit.state.wheelRR};
+
                 l_playerForEdit.busState = l_newBusState;
                 l_playerForEdit.state = l_newPlayerState;
                 _players.Remove(l_packet.pid);
