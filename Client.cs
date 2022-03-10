@@ -161,6 +161,10 @@ namespace BDSM
             {
                 _localPlayerState.position = localPlayerBus.transform.position;
                 _localPlayerState.rotation = localPlayerBus.transform.rotation;
+                _localPlayerState.wheelFL = localWheelFLRotation;
+                _localPlayerState.wheelFR = localWheelFRRotation;
+                _localPlayerState.wheelRL = localWheelRLRotation;
+                _localPlayerState.wheelRR = localWheelRRRotation;
                 SendPacket(new Network.ServerPackets.UpdatePlayerState { pid = _localPlayerState.pid, state = _localPlayerState }, DeliveryMethod.Unreliable);
             }
             else if (_isConnected && _isAuthorized && !isPlayerOnMap)
@@ -568,7 +572,16 @@ namespace BDSM
         public void OnAddRemotePlayer(Network.ClientPackets.AddRemotePlayer l_packet)
         {
             Network.NestedTypes.BusState l_newBusState = l_packet.busState;
-            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, selectedBusShortName = l_packet.state.selectedBusShortName, position = l_packet.state.position, rotation = l_packet.state.rotation };
+            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState {
+                pid = l_packet.state.pid,
+                selectedBusShortName = l_packet.state.selectedBusShortName,
+                position = l_packet.state.position,
+                rotation = l_packet.state.rotation,
+                wheelFL = l_packet.state.wheelFL,
+                wheelFR = l_packet.state.wheelFR,
+                wheelRL = l_packet.state.wheelRL,
+                wheelRR = l_packet.state.wheelRR};
+
             Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, remotePlayerController = null, busState = l_newBusState, state = l_newPlayerState };
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
             _serverState.currentAmountOfPlayers++;
@@ -639,7 +652,16 @@ namespace BDSM
                 {
                     if (l_receivedState.pid != _localPlayerState.pid)
                     {
-                        Network.NestedTypes.PlayerState l_newState = new Network.NestedTypes.PlayerState { pid = l_receivedState.pid, selectedBusShortName = l_receivedState.selectedBusShortName, position = l_receivedState.position, rotation = l_receivedState.rotation };
+                        Network.NestedTypes.PlayerState l_newState = new Network.NestedTypes.PlayerState {
+                            pid = l_receivedState.pid,
+                            selectedBusShortName = l_receivedState.selectedBusShortName,
+                            position = l_receivedState.position,
+                            rotation = l_receivedState.rotation,
+                            wheelFL = l_receivedState.wheelFL,
+                            wheelFR = l_receivedState .wheelFR,
+                            wheelRL = l_receivedState.wheelRL,
+                            wheelRR = l_receivedState.wheelRR};
+
                         _remotePlayers[l_receivedState.pid].state = l_newState;
                     }
                 }

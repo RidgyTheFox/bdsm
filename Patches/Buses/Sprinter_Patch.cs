@@ -16,16 +16,19 @@ namespace BDSM.Patches.Buses
         {
             StaticData.clientInstance.localPlayerBus = __instance.gameObject;
 
-            GameObject l_modelRoot = __instance.gameObject.transform.Find("Model").gameObject;
-            _wheelFL = l_modelRoot.transform.Find("wheel1").gameObject;
+            GameObject l_modelRoot = __instance.gameObject.transform.Find("Mesh").gameObject;
+            GameObject l_modelRootChild = l_modelRoot.transform.Find("sprinter").gameObject;
 
-            GameObject l_wheelFRRoot = l_modelRoot.transform.Find("FR").gameObject;
+            GameObject l_wheelFLRoot = l_modelRootChild.transform.Find("FL").gameObject;
+            _wheelFL = l_wheelFLRoot.transform.Find("wheel1").gameObject;
+
+            GameObject l_wheelFRRoot = l_modelRootChild.transform.Find("FR").gameObject;
             _wheelFR = l_wheelFRRoot.transform.Find("wheel2").gameObject;
 
-            GameObject l_wheelRLRoot = l_modelRoot.transform.Find("RL").gameObject;
+            GameObject l_wheelRLRoot = l_modelRootChild.transform.Find("RL").gameObject;
             _wheelRL = l_wheelRLRoot.transform.Find("wheel4").gameObject;
 
-            GameObject l_wheelRRRoot = l_modelRoot.transform.Find("RR").gameObject;
+            GameObject l_wheelRRRoot = l_modelRootChild.transform.Find("RR").gameObject;
             _wheelRR = l_wheelRRRoot.transform.Find("wheel3").gameObject;
         }
 
