@@ -496,8 +496,10 @@ namespace BDSM
                     break;
                 default:
                     Debug.LogWarning($"CLIENT: ({_remotePlayers[l_pid].nickname}): Cannot find standart action \"{l_actionName}\"!");
-                    break;
+                    return;
             }
+
+            _remotePlayers[l_pid].busState = l_newBusState;
         }
 
         public void OnJoinRequestAccepted(Network.ClientPackets.OnJoinAccepted l_packet)
