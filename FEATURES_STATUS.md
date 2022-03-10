@@ -34,7 +34,7 @@ Here you will find a table with all the buses from the game. Each bus is control
 | Bus name      | Basic movement| Offset      | Lights        | Wheels Sync   | Upgrades      | Animations    | Sounds         | Passengers |
 | ------------- |---------------|-------------|---------------|---------------|---------------|---------------|----------------|-----------:|
 | Vector Next | ✅ Implemented |  🟥 Planned |  🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned |
-| PAZ 3205 | ✅ Implemented | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥Planned| 🟥 Planned |
+| PAZ 3205 | ✅ Implemented | 🟨 Work in progress | 🟨 Work in progress | 🟨 Work in progress | 🟥 Planned | 🟥 Planned | 🟥Planned| 🟥 Planned |
 | LIAZ 677 | ✅ Implemented | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned | 🟥 Planned |  🟥 Planned |
 | Citaro   |✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned |
 | MAN |✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned |
@@ -42,7 +42,7 @@ Here you will find a table with all the buses from the game. Each bus is control
 | Citaro L |✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned |
 | Icarus |✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned |
 | LAZ 695 |✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned |
-| Sprinter |✅ Implemented | ✅ Implemented | ✅ Implementedprogress | 🟨 Work in progress |  🟥 Planned | 🟥 Planned |  🟥 Planned |  🟥 Planned |
+| Sprinter |✅ Implemented | ✅ Implemented | ✅ Implemented | ✅ Implemented |  🟥 Planned | 🟥 Planned |  🟥 Planned |  🟥 Planned |
 | PAZ 672 | ✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned|
 | LAZ 699 |✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned |
 | LIAZ 5292 | ✅ Implemented |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned |  🟥 Planned | 🟥 Planned
