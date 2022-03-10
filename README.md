@@ -22,7 +22,7 @@ Just install the mod, set up the server and client configs, and you're ready to 
 |Interface|✅Functional, but design may be improved in the future|
 |Synchronizing lights on buses between players|🟨In progress|
 |Displaying nicknames above the buses|🟨In progress|
-|Synchronizing rotation and state of wheels on buses|🟥Planned|
+|Synchronizing rotation and state of wheels on buses|🟨In progress|
 |Synchronizing installed upgrades for buses|🟥Planned|
 |Synchronizing sounds produced by other players' buses|🟥Planned|
 |Synchronizing weather|🟥Planned|
