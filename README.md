@@ -53,7 +53,7 @@ There are two files for configuring server and client part of this mod: ClientCo
 
 ## Compiling from source (for developers)
 ### Cloning repository
-First off, clone this repository using your tool of choice (Visual Studio's git plugin, GitHub Desktop, Sourcetree etc.)
+First off, clone this repository using your tool of choice (Visual Studio's git plugin, GitHub Desktop, Sourcetree etc.) If you want to get the latest features, you can switch to the indev branch. But be careful, the indev branch is essentially my workflow, so there are a lot of bugs, typos, and the project may not compile at all.
 ### Preparing your IDE
 1. Make sure you have VS 2019 or 2022 with **.NET desktop development workload installed.**
 2. Install .NET 6.0 SDK from [here](https://dotnet.microsoft.com/en-us/download) and install it. After rebooting, you can enter ``dotnet --list-sdks`` into you terminal to check that .NET SDK is sucessfuly installed.
