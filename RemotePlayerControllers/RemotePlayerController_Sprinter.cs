@@ -10,6 +10,8 @@ namespace BDSM.RemotePlayerControllers
             Color _blinkerColor = new Color(1.0f, 0.5f, 0.0f);
             Color _sideLightColor = new Color(0.6549f, 0.3804f, 0.1569f);
             Color _headLightColor = new Color(0.9854f, 1.0f, 0.8443f, 1.0f);
+            Color _insideLightColor = new Color(0.8469f, 0.9811f, 0.9619f, 1.0f);
+            Color _driverLightColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
             SetFlyingNicknameYOffset(2.8f);
             _vehicleGroundOffset = new Vector3(0.0f, -0.4f, 0.0f);
@@ -295,6 +297,45 @@ namespace BDSM.RemotePlayerControllers
             _frontRightBlinker_LC.intensity = 8;
             #endregion
 
+            #endregion
+
+            #region Inside lights.
+            _insideLightRoot = new GameObject("InsideLightsRoot");
+            _insideLightRoot.transform.parent = this.gameObject.transform;
+            _insideLightRoot.transform.localPosition = new Vector3(0.0f, 2.0f, 0.0f);
+
+            GameObject _insideLightFront = new GameObject("InsideLight_Front");
+            _insideLightFront.transform.parent = _insideLightRoot.transform;
+            _insideLightFront.transform.localPosition = new Vector3(0.0f, 0.0f, 0.25f);
+            Light _insideLightFrontLC = _insideLightFront.AddComponent<Light>();
+            _insideLightFrontLC.color = _insideLightColor;
+            _insideLightFrontLC.intensity = 0.8f;
+            _insideLightFrontLC.range = 5.0f;
+
+            GameObject _insideLightMiddle = new GameObject("InsideLight_Middle");
+            _insideLightMiddle.transform.parent = _insideLightRoot.transform;
+            _insideLightMiddle.transform.localPosition = new Vector3(0.0f, 0.0f, -1.1f);
+            Light _insideLightMiddleLC = _insideLightMiddle.AddComponent<Light>();
+            _insideLightMiddleLC.color = _insideLightColor;
+            _insideLightMiddleLC.intensity = 0.8f;
+            _insideLightMiddleLC.range = 5.0f;
+
+            GameObject _insideLightRear = new GameObject("InsideLight_Rear");
+            _insideLightRear.transform.parent = _insideLightRoot.transform;
+            _insideLightRear.transform.localPosition = new Vector3(0.0f, 0.0f, -2.6f);
+            Light _insideLightRearLC = _insideLightRear.AddComponent<Light>();
+            _insideLightRearLC.color = _insideLightColor;
+            _insideLightRearLC.intensity = 0.8f;
+            _insideLightRearLC.range = 5.0f;
+
+
+            _driverLightRoot = new GameObject("DriverLightsRoot");
+            _driverLightRoot.transform.parent = this.gameObject.transform;
+            _driverLightRoot.transform.localPosition = new Vector3(-0.22f, 2.14f, 1.6f);
+            Light _driverLightLC = _driverLightRoot.AddComponent<Light>();
+            _driverLightLC.color = _driverLightColor;
+            _driverLightLC.intensity = 1.0f;
+            _driverLightLC.range = 1.0f;
             #endregion
         }
 
