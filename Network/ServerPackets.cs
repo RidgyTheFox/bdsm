@@ -49,4 +49,10 @@ namespace BDSM.Network.ServerPackets
         public uint pid;
         public NestedTypes.BusState newBusState { get; set; }
     }
+
+    public class DispatchBusAction
+    {
+        public uint pid { get; set; }
+        public string actionName { get; set; }
+    }
 }
