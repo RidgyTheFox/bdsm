@@ -521,7 +521,8 @@ namespace BDSM
             _players[l_packet.pid].busState = l_newBusState;
             foreach(Network.ServerPackets.ServerPlayer l_player in _players.Values)
             {
-                SendPacket(new Network.ClientPackets.ReceiveRemotePlayerBusAction { pid = l_packet.pid, actionName = l_packet.actionName }, l_player.peer, DeliveryMethod.ReliableOrdered);
+                if (l_player.state.pid!= l_packet.pid)
+                    SendPacket(new Network.ClientPackets.ReceiveRemotePlayerBusAction { pid = l_packet.pid, actionName = l_packet.actionName }, l_player.peer, DeliveryMethod.ReliableOrdered);
             }
             Debug.Log($"SERVER: Action \"{l_packet.actionName}\" from {_players[l_packet.pid].nickname}[{_players[l_packet.pid]}] was dispatched to other players!");
         }
