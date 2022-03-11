@@ -590,8 +590,10 @@ namespace BDSM
             if (l_playerToRemove == null)
                 Debug.LogError($"SERVER: Cannot find player with PID {l_peer.Id}!");
             else
+            {
+                _players.Remove((uint)l_peer.Id);
                 Debug.Log($"SERVER: Player was found and removed!");
-            _players.Remove((uint)l_peer.Id);
+            }
 
             foreach (Network.ServerPackets.ServerPlayer l_player in _players.Values)
             {
