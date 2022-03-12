@@ -3,10 +3,20 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>BDSM</AssemblyName>
-    <Description>My first plugin</Description>
-    <Version>1.0.0</Version>
+    <Description>This is a modification for Bus Driver Simulator. This thingy allows you to play with you friends through internet.</Description>
+    <Version>0.0.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
+    <Authors>RidgyTheFox</Authors>
+    <Product>Bus Driver Simulator Multiplayer</Product>
+    <Copyright>RidgyTheFox 2022</Copyright>
+    <PackageProjectUrl>https://github.com/RidgyTheFox/bdsm</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/RidgyTheFox/bdsm</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <NeutralLanguage>en</NeutralLanguage>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>BDSM_MainKey.pfx</AssemblyOriginatorKeyFile>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
   </PropertyGroup>
 
   <ItemGroup>
