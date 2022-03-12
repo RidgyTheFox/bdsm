@@ -18,32 +18,37 @@ namespace BDSM
         private NetDataWriter _writer;
         private NetPacketProcessor _packetProcessor;
 
-        private NetPeer _server;
-        public bool _isConnected = false;
-        private bool _isAuthorized = false;
-
+        #region Client connection info.
         private string _nickname = "test";
         private string _serverIp = "127.0.0.1";
         private int _serverPort = 2022;
         private bool _usePassword = true;
         private string _password = "bdsmIsCool";
+        #endregion
 
-        private Network.NestedTypes.PlayerState _localPlayerState;
-        private Network.NestedTypes.ServerState _serverState;
-        private Dictionary<uint, Network.ClientPackets.RemotePlayer> _remotePlayers;
-
+        #region Player bus data.
         public Quaternion localWheelFLRotation;
         public Quaternion localWheelFRRotation;
         public Quaternion localWheelRLRotation;
         public Quaternion localWheelRRRotation;
-
-        public bool isTimeSynced = false;
-        public bool isPlayerOnMap = false;
-
-        private bool _hidePlayerNicknames = false;
-        private const float _maxDistanceForNicknames = 60.0f;
         public GameObject localPlayerFrontWheel;
         public GameObject localPlayerBus;
+        #endregion
+
+        #region Player data.
+        private NetPeer _server;
+        private Network.NestedTypes.PlayerState _localPlayerState;
+        private Network.NestedTypes.ServerState _serverState;
+        private Dictionary<uint, Network.ClientPackets.RemotePlayer> _remotePlayers;
+        #endregion
+
+        #region Current client state.
+        public bool _isConnected = false;
+        private bool _isAuthorized = false;
+        public bool isTimeSynced = false;
+        public bool isPlayerOnMap = false;
+        private bool _hidePlayerNicknames = false;
+        #endregion
 
         #region Client GUI data;
         private bool _isMainWindowOpened = true;
@@ -54,6 +59,8 @@ namespace BDSM
 
         private GUIStyle _netStatsTextStyle;
         #endregion
+
+        private const float _maxDistanceForNicknames = 60.0f;
 
         private void Awake()
         {
@@ -357,6 +364,45 @@ namespace BDSM
             Debug.Log("CLIENT: Settings loaded!");
         }
 
+        public void CreateRemotePlayersModels()
+        {
+            foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
+            {
+                if (l_player.remotePlayerBus == null)
+                {
+                    _remotePlayers[l_player.state.pid].remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_player.state.selectedBusShortName, true));
+                    CreateAssociatedControolerForBus(l_player.state.pid);
+                    _remotePlayers[l_player.state.pid].remotePlayerController.AssignBuState(_remotePlayers[l_player.state.pid].busState);
+                }
+            }
+        }
+
+        private void SwitchFlyingNicknameVisibilityForRemotePlayers()
+        {
+            foreach(Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
+            {
+                if (l_player.remotePlayerController != null)
+                    l_player.remotePlayerController.SetFlyingNicknameVisibility();
+            }
+        }
+
+        private void CreateAssociatedControolerForBus(uint pid)
+        {
+            switch (_remotePlayers[pid].state.selectedBusShortName)
+            {
+                case "SPR":
+                    _remotePlayers[pid].remotePlayerController = _remotePlayers[pid].remotePlayerBus.AddComponent<RemotePlayerControllers.RemotePlayerController_Sprinter>();
+                    _remotePlayers[pid].remotePlayerController.SetNickname(_remotePlayers[pid].nickname, pid);
+                    Debug.Log($"CLIENT: Created SPR controller for {_remotePlayers[pid].nickname}[{_remotePlayers[pid].state.pid}].");
+                    break;
+                default:
+                    Debug.LogError($"CLIENT: Controller for \"{_remotePlayers[pid].state.selectedBusShortName}\" not found! Generic class will be used...");
+                    _remotePlayers[pid].remotePlayerController = _remotePlayers[pid].remotePlayerBus.AddComponent<RemotePlayerControllers.RemotePlayerController_Generic>();
+                    _remotePlayers[pid].remotePlayerController.SetNickname(_remotePlayers[pid].nickname, pid);
+                    break;
+            }
+        }
+
         private void ProceedMapLoading()
         {
             switch (_serverState.currentMap)
@@ -394,6 +440,7 @@ namespace BDSM
             }
         }
 
+        #region Public functions for other parts of mod.
         public void RequestTimeUpdate()
         {
             if (!_isConnected || !_isAuthorized)
@@ -401,19 +448,6 @@ namespace BDSM
             
             SendPacket(new Network.ServerPackets.RequestServerDateAndTime { pid = _localPlayerState.pid }, DeliveryMethod.ReliableOrdered);
             Debug.Log("CLIENT: Server date and time requested...");
-        }
-
-        public void CreateRemotePlayersModels()
-        {
-            foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
-            {
-                if (l_player.remotePlayerBus == null)
-                {
-                    _remotePlayers[l_player.state.pid].remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_player.state.selectedBusShortName, true));
-                    CreateAssociatedControolerForBus(l_player.state.pid);
-                    _remotePlayers[l_player.state.pid].remotePlayerController.AssignBuState(_remotePlayers[l_player.state.pid].busState);
-                }
-            }
         }
 
         public void TriggerBlinkers(int l_blinkerSelect)
@@ -464,33 +498,9 @@ namespace BDSM
 
             SendPacket(new Network.ServerPackets.DispatchBusAction { pid = _localPlayerState.pid, actionName = l_actionName, actionState = l_actionState }, DeliveryMethod.ReliableOrdered);
         }
+        #endregion
 
-        private void SwitchFlyingNicknameVisibilityForRemotePlayers()
-        {
-            foreach(Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
-            {
-                if (l_player.remotePlayerController != null)
-                    l_player.remotePlayerController.SetFlyingNicknameVisibility();
-            }
-        }
-
-        private void CreateAssociatedControolerForBus(uint pid)
-        {
-            switch (_remotePlayers[pid].state.selectedBusShortName)
-            {
-                case "SPR":
-                    _remotePlayers[pid].remotePlayerController = _remotePlayers[pid].remotePlayerBus.AddComponent<RemotePlayerControllers.RemotePlayerController_Sprinter>();
-                    _remotePlayers[pid].remotePlayerController.SetNickname(_remotePlayers[pid].nickname, pid);
-                    Debug.Log($"CLIENT: Created SPR controller for {_remotePlayers[pid].nickname}[{_remotePlayers[pid].state.pid}].");
-                    break;
-                default:
-                    Debug.LogError($"CLIENT: Controller for \"{_remotePlayers[pid].state.selectedBusShortName}\" not found! Generic class will be used...");
-                    _remotePlayers[pid].remotePlayerController = _remotePlayers[pid].remotePlayerBus.AddComponent<RemotePlayerControllers.RemotePlayerController_Generic>();
-                    _remotePlayers[pid].remotePlayerController.SetNickname(_remotePlayers[pid].nickname, pid);
-                    break;
-            }
-        }
-
+        #region Callbacks.
         public void OnJoinRequestAccepted(Network.ClientPackets.OnJoinAccepted l_packet)
         {
             _localPlayerState.pid = l_packet.pid;
@@ -652,6 +662,7 @@ namespace BDSM
         {
             _remotePlayers[l_packet.pid].remotePlayerController.TriggerStandartAction(l_packet.actionName, l_packet.actionState);
         }
+        #endregion
 
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()
         {
@@ -663,12 +674,14 @@ namespace BDSM
             }
         }
 
+        #region INetListener Interface.
         public void OnConnectionRequest(ConnectionRequest request)
         {
         }
 
         public void OnNetworkError(IPEndPoint l_endPoint, SocketError l_socketError)
         {
+            Debug.LogError($"CLIENT: Netwrk error occured! {l_socketError.ToString()}.");
         }
 
         public void OnNetworkLatencyUpdate(NetPeer l_peer, int l_latency)
@@ -708,5 +721,6 @@ namespace BDSM
                 Debug.Log($"CLIENT: Server disconnected!");
             }
         }
+        #endregion
     }
 }
