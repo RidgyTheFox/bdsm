@@ -487,41 +487,52 @@ namespace BDSM
 
             switch (l_packet.actionName)
             {
-                case "triggerEngine":
-                    l_newBusState.isEngineTurnedOn = !l_newBusState.isEngineTurnedOn;
+                case "engine":
+                    l_newBusState.isEngineTurnedOn = l_packet.actionState;
                     break;
-                case "triggerLeftBlinker":
-                    l_newBusState.isLeftBlinkerBlinking = !l_newBusState.isLeftBlinkerBlinking;
+                case "blinkersOff":
+                    l_newBusState.isLeftBlinkerBlinking = false;
+                    l_newBusState.isRightBlinkerBlinking = false;
+                    l_newBusState.isBothBlinkersBlinking = false;
                     break;
-                case "triggerRightBlinker":
-                    l_newBusState.isRightBlinkerBlinking = !l_newBusState.isRightBlinkerBlinking;
+                case "blinkerLeft":
+                    l_newBusState.isLeftBlinkerBlinking = true;
+                    l_newBusState.isRightBlinkerBlinking = false;
+                    l_newBusState.isBothBlinkersBlinking = false;
                     break;
-                case "triggerBothBlinkers":
-                    l_newBusState.isBothBlinkersBlinking = !l_newBusState.isBothBlinkersBlinking;
+                case "blinkerRight":
+                    l_newBusState.isLeftBlinkerBlinking = false;
+                    l_newBusState.isRightBlinkerBlinking = true;
+                    l_newBusState.isBothBlinkersBlinking = false;
                     break;
-                case "triggerHighBeamLights":
-                    l_newBusState.isHighBeamTurnedOn = !l_newBusState.isHighBeamTurnedOn;
+                case "blinkersBoth":
+                    l_newBusState.isLeftBlinkerBlinking = false;
+                    l_newBusState.isRightBlinkerBlinking = false;
+                    l_newBusState.isBothBlinkersBlinking = true;
                     break;
-                case "triggerBraking":
-                    l_newBusState.isBraking = !l_newBusState.isBraking;
+                case "highBeamLights":
+                    l_newBusState.isHighBeamTurnedOn = l_packet.actionState;
                     break;
-                case "triggerReverse":
-                    l_newBusState.isReverseGear = !l_newBusState.isReverseGear;
+                case "braking":
+                    l_newBusState.isBraking = l_packet.actionState;
                     break;
-                case "triggerInsideLights":
-                    l_newBusState.isInsideLightsTurnedOn = !l_newBusState.isInsideLightsTurnedOn;
+                case "reverseGear":
+                    l_newBusState.isReverseGear = l_packet.actionState;
                     break;
-                case "triggerDriverLights":
-                    l_newBusState.isDriverLightsTurnedOn = !l_newBusState.isDriverLightsTurnedOn;
+                case "insideLights":
+                    l_newBusState.isInsideLightsTurnedOn = l_packet.actionState;
                     break;
-                case "triggerFrontDoor":
-                    l_newBusState.isFrontDoorOpened = !l_newBusState.isFrontDoorOpened;
+                case "driverLights":
+                    l_newBusState.isDriverLightsTurnedOn = l_packet.actionState;
                     break;
-                case "triggerMiddleDoor":
-                    l_newBusState.isMiddleDoorOpened = l_newBusState.isMiddleDoorOpened;
+                case "frontDoor":
+                    l_newBusState.isFrontDoorOpened = l_packet.actionState;
                     break;
-                case "triggerRearDoor":
-                    l_newBusState.isRearDoorOpened = !l_newBusState.isRearDoorOpened;
+                case "middleDoor":
+                    l_newBusState.isMiddleDoorOpened = l_packet.actionState;
+                    break;
+                case "rearDoor":
+                    l_newBusState.isRearDoorOpened = l_packet.actionState;
                     break;
                 default:
                     Debug.LogError($"SERVER: Unknown trigger: \"{l_packet.actionName}\"! Aborting...");
@@ -532,7 +543,7 @@ namespace BDSM
             foreach(Network.ServerPackets.ServerPlayer l_player in _players.Values)
             {
                 if (l_player.state.pid!= l_packet.pid)
-                    SendPacket(new Network.ClientPackets.ReceiveRemotePlayerBusAction { pid = l_packet.pid, actionName = l_packet.actionName }, l_player.peer, DeliveryMethod.ReliableOrdered);
+                    SendPacket(new Network.ClientPackets.ReceiveRemotePlayerBusAction { pid = l_packet.pid, actionName = l_packet.actionName, actionState = l_packet.actionState }, l_player.peer, DeliveryMethod.ReliableOrdered);
             }
             Debug.Log($"SERVER: Action \"{l_packet.actionName}\" from {_players[l_packet.pid].nickname}[{_players[l_packet.pid]}] was dispatched to other players!");
         }

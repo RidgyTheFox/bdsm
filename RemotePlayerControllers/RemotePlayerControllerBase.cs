@@ -273,49 +273,55 @@ namespace BDSM.RemotePlayerControllers
             _currentBusState = l_busState;
         }
 
-        public void TriggerStandartAction(string l_actionName)
+        public void TriggerStandartAction(string l_actionName, bool l_actionState)
         {
             switch (l_actionName)
             {
-                case "triggerEngine":
-                    _currentBusState.isEngineTurnedOn = !_currentBusState.isEngineTurnedOn;
+                case "engine":
+                    _currentBusState.isEngineTurnedOn = l_actionState;
                     Debug.Log($"BASE_CONTROLLER: Action \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
-                case "triggerHighBeamLights":
-                    _currentBusState.isHighBeamTurnedOn = !_currentBusState.isHighBeamTurnedOn;
+                case "highBeamLights":
+                    _currentBusState.isHighBeamTurnedOn = l_actionState;
                     Debug.Log($"BASE_CONTROLLER: Action \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
-                case "triggerBraking":
-                    _currentBusState.isBraking = !_currentBusState.isBraking;
+                case "braking":
+                    _currentBusState.isBraking = l_actionState;
                     Debug.Log($"BASE_CONTROLLER: Action \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
-                case "triggerReverse":
-                    _currentBusState.isReverseGear = !_currentBusState.isReverseGear;
+                case "reverseGear":
+                    _currentBusState.isReverseGear = l_actionState;
                     Debug.Log($"BASE_CONTROLLER: Action \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
-                case "triggerLeftBlinker":
+                case "blinkersOff":
                     _currentBusState.isRightBlinkerBlinking = false;
                     _currentBusState.isBothBlinkersBlinking = false;
-                    _currentBusState.isLeftBlinkerBlinking = !_currentBusState.isLeftBlinkerBlinking;
+                    _currentBusState.isLeftBlinkerBlinking = false;
                     Debug.Log($"BASE_CONTROLLER: Action \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
-                case "triggerRightBlinker":
+                case "blinkerLeft":
+                    _currentBusState.isRightBlinkerBlinking = false;
+                    _currentBusState.isBothBlinkersBlinking = false;
+                    _currentBusState.isLeftBlinkerBlinking = l_actionState;
+                    Debug.Log($"BASE_CONTROLLER: Action \"{l_actionName}\" was processed by {_playerNickname} controller.");
+                    break;
+                case "blinkerRight":
                     _currentBusState.isLeftBlinkerBlinking = false;
                     _currentBusState.isBothBlinkersBlinking = false;
-                    _currentBusState.isRightBlinkerBlinking = !_currentBusState.isRightBlinkerBlinking;
+                    _currentBusState.isRightBlinkerBlinking = l_actionState;
                     Debug.Log($"BASE_CONTROLLER: Action \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
-                case "triggerBothBlinkers":
+                case "blinkersBoth":
                     _currentBusState.isRightBlinkerBlinking = false;
                     _currentBusState.isLeftBlinkerBlinking = false;
-                    _currentBusState.isBothBlinkersBlinking = !_currentBusState.isBothBlinkersBlinking;
+                    _currentBusState.isBothBlinkersBlinking = l_actionState;
                     Debug.Log($"BASE_CONTROLLER: Action \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
-                case "triggerInsideLights":
+                case "insideLights":
                     _currentBusState.isInsideLightsTurnedOn = !_currentBusState.isInsideLightsTurnedOn;
                     Debug.Log($"BASE_CONTROLLER: Action \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
-                case "triggerDriverLights":
+                case "driverLights":
                     _currentBusState.isDriverLightsTurnedOn = !_currentBusState.isDriverLightsTurnedOn;
                     Debug.Log($"BASE_CONTROLLER: Action \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;

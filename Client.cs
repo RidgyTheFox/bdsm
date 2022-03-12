@@ -40,8 +40,6 @@ namespace BDSM
         public bool isTimeSynced = false;
         public bool isPlayerOnMap = false;
 
-        public bool isEngineTurnedOn = false;
-        private bool _oldIsEngineOnState = false;
         private bool _hidePlayerNicknames = false;
         private const float _maxDistanceForNicknames = 60.0f;
         public GameObject localPlayerFrontWheel;
@@ -120,37 +118,10 @@ namespace BDSM
                 _password = "bdsmIsCool";
             }
 
-            if (isEngineTurnedOn != _oldIsEngineOnState)
-            {
-                _oldIsEngineOnState = isEngineTurnedOn;
-                TriggerBusAction("triggerEngine");
-            }
-
             if (Input.GetKeyDown(KeyCode.S))
-                TriggerBusAction("triggerBraking");
+                SendPacket(new Network.ServerPackets.DispatchBusAction { pid = _localPlayerState.pid, actionName = "braking", actionState = true }, DeliveryMethod.ReliableOrdered);
             if (Input.GetKeyUp(KeyCode.S))
-                TriggerBusAction("triggerBraking");
-
-            if (Input.GetKeyDown(KeyCode.Q))
-                TriggerBusAction("triggerLeftBlinker");
-
-            if (Input.GetKeyDown(KeyCode.E))
-                TriggerBusAction("triggerRightBlinker");
-
-            if (Input.GetKeyDown(KeyCode.LeftControl))
-                TriggerBusAction("triggerBothBlinkers");
-
-            if (Input.GetKeyDown(KeyCode.L))
-                TriggerBusAction("triggerHighBeamLights");
-
-            if (Input.GetKeyDown(KeyCode.X))
-                TriggerBusAction("triggerReverse");
-
-            if (Input.GetKeyDown(KeyCode.K))
-                TriggerBusAction("triggerInsideLights");
-
-            if (Input.GetKeyDown(KeyCode.J))
-                TriggerBusAction("triggerDriverLights");
+                SendPacket(new Network.ServerPackets.DispatchBusAction { pid = _localPlayerState.pid, actionName = "braking", actionState = false }, DeliveryMethod.ReliableOrdered);
         }
 
         private void FixedUpdate()
@@ -445,6 +416,55 @@ namespace BDSM
             }
         }
 
+        public void TriggerBlinkers(int l_blinkerSelect)
+        {
+            switch (l_blinkerSelect)
+            {
+                case 0: // All blinkers are disabled.
+                    SendPacket(new Network.ServerPackets.DispatchBusAction { pid = _localPlayerState.pid, actionName = "blinkersOff", actionState = false }, DeliveryMethod.ReliableOrdered);
+                    break;
+                case -1: // Left blinker.
+                    SendPacket(new Network.ServerPackets.DispatchBusAction { pid = _localPlayerState.pid, actionName = "blinkerLeft", actionState = true }, DeliveryMethod.ReliableOrdered);
+                    break;
+                case 1: // Right blinker.
+                    SendPacket(new Network.ServerPackets.DispatchBusAction { pid = _localPlayerState.pid, actionName = "blinkerRight", actionState = true }, DeliveryMethod.ReliableOrdered);
+                    break;
+                case 2: // Both blinkers.
+                    SendPacket(new Network.ServerPackets.DispatchBusAction { pid = _localPlayerState.pid, actionName = "blinkersBoth", actionState = true }, DeliveryMethod.ReliableOrdered);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void TriggerBusAction(string l_actionName, bool l_actionState)
+        {
+            switch(l_actionName)
+            {
+                case "engine":
+                    break;
+                case "highBeamLights":
+                    break;
+                case "reverseGear":
+                    break;
+                case "insideLights":
+                    break;
+                case "driverLights":
+                    break;
+                case "frontDoor":
+                    break;
+                case "middleDoor":
+                    break;
+                case "rearDoor":
+                    break;
+                default:
+                    Debug.LogError($"CLIENT: Unknown action \"{l_actionName}\"! Aborting...");
+                    return;
+            }
+
+            SendPacket(new Network.ServerPackets.DispatchBusAction { pid = _localPlayerState.pid, actionName = l_actionName, actionState = l_actionState }, DeliveryMethod.ReliableOrdered);
+        }
+
         private void SwitchFlyingNicknameVisibilityForRemotePlayers()
         {
             foreach(Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
@@ -469,61 +489,6 @@ namespace BDSM
                     _remotePlayers[pid].remotePlayerController.SetNickname(_remotePlayers[pid].nickname, pid);
                     break;
             }
-        }
-
-        private void TriggerBusAction(string l_actionName)
-        {
-            SendPacket(new Network.ServerPackets.DispatchBusAction { pid = _localPlayerState.pid, actionName = l_actionName }, DeliveryMethod.ReliableOrdered);
-        }
-
-        private void RecordActionAtBusStateInClient(uint l_pid, string l_actionName)
-        {
-            Network.NestedTypes.BusState l_newBusState = _remotePlayers[l_pid].busState;
-
-            switch(l_actionName)
-            {
-                case "triggerEngine":
-                    l_newBusState.isEngineTurnedOn = !l_newBusState.isEngineTurnedOn;
-                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
-                    break;
-                case "triggerHighBeamLights":
-                    l_newBusState.isHighBeamTurnedOn = !l_newBusState.isHighBeamTurnedOn;
-                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
-                    break;
-                case "triggerBraking":
-                    l_newBusState.isBraking = !l_newBusState.isBraking;
-                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
-                    break;
-                case "triggerReverse":
-                    l_newBusState.isReverseGear = !l_newBusState.isReverseGear;
-                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
-                    break;
-                case "triggerLeftBlinker":
-                    l_newBusState.isLeftBlinkerBlinking = !l_newBusState.isLeftBlinkerBlinking;
-                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
-                    break;
-                case "triggerRightBlinker":
-                    l_newBusState.isRightBlinkerBlinking = !l_newBusState.isRightBlinkerBlinking;
-                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
-                    break;
-                case "triggerBothBlinkers":
-                    l_newBusState.isBothBlinkersBlinking = !l_newBusState.isBothBlinkersBlinking;
-                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
-                    break;
-                case "triggerInsideLights":
-                    l_newBusState.isInsideLightsTurnedOn = !l_newBusState.isInsideLightsTurnedOn;
-                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
-                    break;
-                case "triggerDriverLights":
-                    l_newBusState.isDriverLightsTurnedOn = !l_newBusState.isDriverLightsTurnedOn;
-                    Debug.Log($"BASE_CONTROLLER: Actoin \"{l_actionName}\" was processed by {_remotePlayers[l_pid].nickname} controller.");
-                    break;
-                default:
-                    Debug.LogWarning($"CLIENT: ({_remotePlayers[l_pid].nickname}): Cannot find standart action \"{l_actionName}\"!");
-                    return;
-            }
-
-            _remotePlayers[l_pid].busState = l_newBusState;
         }
 
         public void OnJoinRequestAccepted(Network.ClientPackets.OnJoinAccepted l_packet)
@@ -685,17 +650,7 @@ namespace BDSM
 
         public void OnReceiveRemotePlayerBusAction(Network.ClientPackets.ReceiveRemotePlayerBusAction l_packet)
         {
-            if (l_packet.pid != _localPlayerState.pid)
-            {
-                if (_remotePlayers[l_packet.pid].remotePlayerController == null)
-                    RecordActionAtBusStateInClient(l_packet.pid, l_packet.actionName);
-                else
-                {
-                    _remotePlayers[l_packet.pid].remotePlayerController.TriggerStandartAction(l_packet.actionName);
-                    RecordActionAtBusStateInClient(l_packet.pid, l_packet.actionName);
-                    Debug.Log($"CLIENT: Recieved trigger \"{l_packet.actionName}\" for {_remotePlayers[l_packet.pid].nickname}[{_remotePlayers[l_packet.pid].state.pid}] remote player.");
-                }
-            }
+            _remotePlayers[l_packet.pid].remotePlayerController.TriggerStandartAction(l_packet.actionName, l_packet.actionState);
         }
 
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()
