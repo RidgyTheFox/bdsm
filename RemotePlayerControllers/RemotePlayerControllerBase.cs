@@ -318,11 +318,11 @@ namespace BDSM.RemotePlayerControllers
                     Debug.Log($"BASE_CONTROLLER: Action \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
                 case "insideLights":
-                    _currentBusState.isInsideLightsTurnedOn = !_currentBusState.isInsideLightsTurnedOn;
+                    _currentBusState.isInsideLightsTurnedOn = l_actionState;
                     Debug.Log($"BASE_CONTROLLER: Action \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
                 case "driverLights":
-                    _currentBusState.isDriverLightsTurnedOn = !_currentBusState.isDriverLightsTurnedOn;
+                    _currentBusState.isDriverLightsTurnedOn = l_actionState;
                     Debug.Log($"BASE_CONTROLLER: Action \"{l_actionName}\" was processed by {_playerNickname} controller.");
                     break;
                 default:
