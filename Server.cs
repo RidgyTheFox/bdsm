@@ -319,6 +319,7 @@ namespace BDSM
             }
         }
 
+        #region Callbacks.
         public void OnJoinRequest(Network.ServerPackets.RequestJoin l_packet, NetPeer l_peer)
         {
             foreach(Network.ServerPackets.ServerPlayer player in _players.Values)
@@ -551,7 +552,9 @@ namespace BDSM
             }
             Debug.Log($"SERVER: Action \"{l_packet.actionName}\" from {_players[l_packet.pid].nickname}[{_players[l_packet.pid]}] was dispatched to other players!");
         }
+        #endregion
 
+        #region INetListener Interface.
         public void OnConnectionRequest(ConnectionRequest l_request)
         {
             if (_players.Count == _playersLimit)
@@ -615,5 +618,6 @@ namespace BDSM
                 SendPacket(new Network.ClientPackets.RemoveRemotePlayer { pid = (uint)l_peer.Id }, l_player.peer, DeliveryMethod.ReliableOrdered);
             }
         }
+        #endregion
     }
 }
