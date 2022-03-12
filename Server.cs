@@ -374,20 +374,19 @@ namespace BDSM
 
         public void OnServerStateRequest(Network.ServerPackets.RequestServerState l_packet)
         {
-            Network.ServerPackets.ServerPlayer l_player;
-            _players.TryGetValue(l_packet.pid, out l_player);
-
-            if (l_player == null)
+            if (_players[l_packet.pid] == null)
             {
-                Debug.LogError($"SERVER: Player with PID {l_packet.pid} requested player state, but he doesn't exist on the server!");
+                Debug.LogError($"SERVER: User with PID {l_packet.pid} not exist!");
                 return;
             }
-            else
-            {
-                Network.ClientPackets.ReceiveServerState l_serverState = new Network.ClientPackets.ReceiveServerState { currentAmountOfPlayers = (uint)_players.Count, currentMap = EnumUtils.MapEnumToUint(_selectedMap), playersLimit = (uint)_playersLimit, serverName = _serverName};
-                SendPacket(l_serverState, l_player.peer, DeliveryMethod.ReliableOrdered);
-                Debug.Log($"SERVER: Server state was sent to {l_player.nickname}[{l_player.state.pid}].");
-            }
+
+            Network.ClientPackets.ReceiveServerState l_newServerState = new Network.ClientPackets.ReceiveServerState {
+                serverName = _serverName,
+                     currentAmountOfPlayers = (uint)_players.Count,
+                     currentMap = (uint)_selectedMap,
+                     playersLimit = (uint)_playersLimit
+            };
+            SendPacket(l_newServerState, _players[l_packet.pid].peer, DeliveryMethod.ReliableOrdered);
         }
 
         public void OnRequestServerDateAndTime(Network.ServerPackets.RequestServerDateAndTime l_packet)
