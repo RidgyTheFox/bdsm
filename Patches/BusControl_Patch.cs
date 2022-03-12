@@ -52,7 +52,7 @@ namespace BDSM.Patches
             if (__instance.LightSpeedometer.activeSelf != _oldDriverLightsState)
             {
                 _oldDriverLightsState = __instance.LightSpeedometer.activeSelf;
-                StaticData.clientInstance.TriggerBusAction("driverLights", false);
+                StaticData.clientInstance.TriggerBusAction("driverLights", _oldDriverLightsState);
             }
             if (__instance.gear == -1 && !_isReverseGearWasEnabledAndSynced)
             {
