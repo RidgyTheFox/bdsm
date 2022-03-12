@@ -391,16 +391,21 @@ namespace BDSM
 
         public void OnRequestServerDateAndTime(Network.ServerPackets.RequestServerDateAndTime l_packet)
         {
-            Debug.Log($"SERVER: Requst date and time was received from player with PID {l_packet.pid}. Searching for player...");
-            Network.ServerPackets.ServerPlayer l_player;
-            _players.TryGetValue(l_packet.pid, out l_player);
-            if (l_player != null)
+            if (_players[l_packet.pid] == null)
             {
-                SendPacket( new Network.ClientPackets.ReceiveServerDateAndTime { currentServerDateAndTime = new Network.NestedTypes.NetDateAndTime { day = StaticData.clockMachine.currentDay, hours = StaticData.clockMachine.currentHour, minutes = StaticData.clockMachine.currentMinute, seconds = StaticData.clockMachine.currentSecond } }, l_player.peer, DeliveryMethod.ReliableOrdered);
-                Debug.Log($"SERVER: Server date and time was sent to {l_player.nickname}[{l_player.state.pid}].");
+                Debug.LogError($"SERVER: Players with PID {l_packet.pid} requested a server date and time, but server cannot find him in players!");
+                return;
             }
-            else
-                Debug.LogError($"SERVER: Cannot find player with PID {l_packet.pid}!");
+
+            Network.ClientPackets.ReceiveServerDateAndTime l_newPacket = new Network.ClientPackets.ReceiveServerDateAndTime {
+                currentServerDateAndTime = new Network.NestedTypes.NetDateAndTime {
+                    day = StaticData.clockMachine.currentDay,
+                    hours = StaticData.clockMachine.currentHour,
+                    minutes = StaticData.clockMachine.currentMinute,
+                    seconds = StaticData.clockMachine.currentSecond
+                 }};
+
+            SendPacket(l_newPacket, _players[l_packet.pid].peer, DeliveryMethod.ReliableOrdered);
         }
 
         public void OnPlayerChangedBus(Network.ServerPackets.ChangeBus l_packet)
