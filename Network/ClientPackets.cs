@@ -67,5 +67,6 @@ namespace BDSM.Network.ClientPackets
     {
         public uint pid { get; set; }
         public string actionName { get; set; }
+        public bool actionState { get; set; }
     }
 }
