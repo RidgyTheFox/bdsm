@@ -33,9 +33,6 @@ namespace BDSM.RemotePlayerControllers
             GameObject l_wheelRRRoot = l_modelRoot.transform.Find("RR").gameObject;
             _wheelRR = l_wheelRRRoot.transform.Find("wheel3").gameObject;
 
-            //_wheelRR = this.gameObject.transform.Find("wheel3").gameObject;
-            //_wheelRL = this.gameObject.transform.Find("wheel4").gameObject;
-
             #region Taillights.
 
             #region Rear lights.
