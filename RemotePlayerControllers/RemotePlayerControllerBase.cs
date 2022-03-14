@@ -31,7 +31,7 @@ namespace BDSM.RemotePlayerControllers
         protected GameObject _rearRightBlinker;
         protected GameObject _middleLeftBlinker;
         protected GameObject _middleRightBlinker;
-        protected GameObject _sideLights;
+        protected GameObject _sideLightsRoot;
         protected GameObject _headlightsLowBeam;
         protected GameObject _headLightsHighBeam;
         protected GameObject _frontLeftBlinker;
@@ -61,12 +61,13 @@ namespace BDSM.RemotePlayerControllers
         {
             if (_currentBusState.isEngineTurnedOn)
             {
-                if (_headlightsLowBeam != null && _sideLights != null && _rearLightsRoot != null)
+                if (_headlightsLowBeam != null && _sideLightsRoot != null && _rearLightsRoot != null)
                 {
-                    _headlightsLowBeam.SetActive(true);
-                    _sideLights.SetActive(true);
+                    _sideLightsRoot.SetActive(true);
                     _rearLightsRoot.SetActive(true);
                 }
+                if (_headlightsLowBeam != null)
+                    _headlightsLowBeam.SetActive(true);
 
                 if (_currentBusState.isBraking && _brakingLightsRoot != null)
                 {
@@ -169,13 +170,14 @@ namespace BDSM.RemotePlayerControllers
             }
             else
             {
-                if (_headlightsLowBeam != null && _sideLights != null && _rearLightsRoot != null && _headLightsHighBeam != null)
+                if (_headlightsLowBeam != null && _sideLightsRoot != null && _rearLightsRoot != null && _headLightsHighBeam != null)
                 {
                     _headLightsHighBeam.SetActive(false);
-                    _headlightsLowBeam.SetActive(false);
-                    _sideLights.SetActive(false);
+                    _sideLightsRoot.SetActive(false);
                     _rearLightsRoot.SetActive(false);
                 }
+                if (_headlightsLowBeam != null)
+                    _headlightsLowBeam.SetActive(false);
 
                 if (_insideLightRoot != null && _driverLightRoot != null)
                 {

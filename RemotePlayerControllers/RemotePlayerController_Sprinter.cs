@@ -159,27 +159,27 @@ namespace BDSM.RemotePlayerControllers
             #endregion
 
             #region Lights.
-            this._sideLights = new GameObject("SideLights");
-            this._sideLights.transform.parent = _sideLightsRoot.transform;
-            this._sideLights.transform.localPosition = new Vector3(0.0f, -0.46f, 0.0f);
+            this._sideLightsRoot = new GameObject("SideLights");
+            this._sideLightsRoot.transform.parent = _sideLightsRoot.transform;
+            this._sideLightsRoot.transform.localPosition = new Vector3(0.0f, -0.46f, 0.0f);
 
             GameObject _sideLight_FrontLeft = new GameObject("SL_FrontLeft");
-            _sideLight_FrontLeft.transform.parent = this._sideLights.transform;
+            _sideLight_FrontLeft.transform.parent = this._sideLightsRoot.transform;
             _sideLight_FrontLeft.transform.localPosition = new Vector3(-0.93f, 0.0f, 1.14f);
             GameObject _sideLight_FrontRight = new GameObject("SL_FrontRight");
-            _sideLight_FrontRight.transform.parent = this._sideLights.transform;
+            _sideLight_FrontRight.transform.parent = this._sideLightsRoot.transform;
             _sideLight_FrontRight.transform.localPosition = new Vector3(0.93f, 0.0f, 1.14f);
             GameObject _sideLight_MiddleLeft = new GameObject("SL_MiddleLeft");
-            _sideLight_MiddleLeft.transform.parent = this._sideLights.transform;
+            _sideLight_MiddleLeft.transform.parent = this._sideLightsRoot.transform;
             _sideLight_MiddleLeft.transform.localPosition = new Vector3(-0.94f, 0.025f, -0.9f);
             GameObject _sideLight_MiddleRight = new GameObject("SL_MiddleRight");
-            _sideLight_MiddleRight.transform.parent = this._sideLights.transform;
+            _sideLight_MiddleRight.transform.parent = this._sideLightsRoot.transform;
             _sideLight_MiddleRight.transform.localPosition = new Vector3(0.94f, 0.025f, -0.9f);
             GameObject _sideLight_RearLeft = new GameObject("SL_RearLeft");
-            _sideLight_RearLeft.transform.parent = this._sideLights.transform;
+            _sideLight_RearLeft.transform.parent = this._sideLightsRoot.transform;
             _sideLight_RearLeft.transform.localPosition = new Vector3(-0.94f, 0.055f, -2.82f);
             GameObject _sideLight_RearRight = new GameObject("SL_RearRight");
-            _sideLight_RearRight.transform.parent = this._sideLights.transform;
+            _sideLight_RearRight.transform.parent = this._sideLightsRoot.transform;
             _sideLight_RearRight.transform.localPosition = new Vector3(0.94f, 0.055f, -2.82f);
 
             Light _sideLight_FrontLeft_LC = _sideLight_FrontLeft.AddComponent<Light>();
