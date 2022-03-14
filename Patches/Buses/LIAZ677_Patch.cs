@@ -11,5 +11,12 @@ namespace BDSM.Patches.Buses
         {
             StaticData.clientInstance.localPlayerBus = __instance.gameObject;
         }
+
+        [HarmonyPatch(typeof(liaz5292), "Update")]
+        [HarmonyPostfix]
+        public static void Update(liaz5292 __instance)
+        {
+
+        }
     }
 }
