@@ -28,7 +28,6 @@ namespace BDSM
             _harmony.PatchAll(typeof(Patches.Buses.CitaroK_Patch));
             _harmony.PatchAll(typeof(Patches.Buses.Icarus260_Patch));
             _harmony.PatchAll(typeof(Patches.Buses.LAZ695_Patch));
-            _harmony.PatchAll(typeof(Patches.Buses.liaz_5292_Patch));
             _harmony.PatchAll(typeof(Patches.Buses.LIAZ677_Patch));
             _harmony.PatchAll(typeof(Patches.Buses.MANLionsCoach_Patch));
             _harmony.PatchAll(typeof(Patches.Buses.PAZ3205_Patch));
