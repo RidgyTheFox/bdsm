@@ -79,7 +79,7 @@ namespace BDSM.RemotePlayerControllers
             _rightBackwardLightComponent.range = 0.12f;
             #endregion
 
-            #region Rear blienkers.
+            #region Rear blinkers.
             GameObject _rearBlinkersRoot = new GameObject("RearBlinkers");
             _rearBlinkersRoot.transform.parent = this.gameObject.transform;
             _rearBlinkersRoot.transform.localPosition = new Vector3(0.0f, 1.0f, -3.28f);
