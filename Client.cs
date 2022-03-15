@@ -395,6 +395,11 @@ namespace BDSM
                     _remotePlayers[pid].remotePlayerController.SetNickname(_remotePlayers[pid].nickname, pid);
                     Debug.Log($"CLIENT: Created SPR controller for {_remotePlayers[pid].nickname}[{_remotePlayers[pid].state.pid}].");
                     break;
+                case "LZ":
+                    _remotePlayers[pid].remotePlayerController = _remotePlayers[pid].remotePlayerBus.AddComponent<RemotePlayerControllers.RemotePlayerController_LIAZ677>();
+                    _remotePlayers[pid].remotePlayerController.SetNickname(_remotePlayers[pid].nickname, pid);
+                    Debug.Log($"CLIENT: Created LZ controller for {_remotePlayers[pid].nickname}[{_remotePlayers[pid].state.pid}].");
+                    break;
                 default:
                     Debug.LogError($"CLIENT: Controller for \"{_remotePlayers[pid].state.selectedBusShortName}\" not found! Generic class will be used...");
                     _remotePlayers[pid].remotePlayerController = _remotePlayers[pid].remotePlayerBus.AddComponent<RemotePlayerControllers.RemotePlayerController_Generic>();
