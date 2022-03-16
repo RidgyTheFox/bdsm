@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BDSM
 {
-    [BepInPlugin("org.bepinex.plugins.ridgythefox.busdriversimulatormultiplayer", "Bus Driver SimulatorMultiplayer", "0.0.1")]
+    [BepInPlugin("org.bepinex.plugins.ridgythefox.busdriversimulatormultiplayer", "Bus Driver SimulatorMultiplayer", "0.1.0")]
     public class Plugin : BaseUnityPlugin
     {
         private static Harmony _harmony;
