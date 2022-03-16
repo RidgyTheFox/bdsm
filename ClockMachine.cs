@@ -49,6 +49,12 @@ namespace BDSM
             StaticData.clockMachine = this;
         }
 
+        private void Update()
+        {
+            if (Time.timeScale == 0.0f && StaticData.clientInstance._isConnected)
+                Time.timeScale = 1.0f;
+        }
+
         private static void OnClockMachineTimerElapsed(object source, ElapsedEventArgs e)
         {
             if (_currentSecond < 59)
