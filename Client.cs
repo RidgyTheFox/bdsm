@@ -667,6 +667,9 @@ namespace BDSM
 
         public void OnReceiveRemotePlayerBusAction(Network.ClientPackets.ReceiveRemotePlayerBusAction l_packet)
         {
+            if (_remotePlayers[l_packet.pid].remotePlayerController == null)
+                return;
+
             _remotePlayers[l_packet.pid].remotePlayerController.TriggerStandartAction(l_packet.actionName, l_packet.actionState);
         }
         #endregion
