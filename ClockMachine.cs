@@ -14,6 +14,9 @@ namespace BDSM
             public uint seconds;
         }
 
+        private DateAndTime _savedDateAndTime;
+        private bool _isDateAndTimeWasSaved = false;
+
         private static System.Timers.Timer _mainTimer;
 
         private static uint _currentDay;
@@ -98,6 +101,48 @@ namespace BDSM
             _mainTimer.Stop();
             _isClockStopped = true;
             Debug.Log("CLOCK_MACHINE: Clock machine stopped!");
+        }
+
+        public void SaveCurrentDateAndTime()
+        {
+            if (StaticData.timeKeeper == null)
+            {
+                Debug.LogError("CLOCK_MACHINE: timeKeeper is null! Cannot save time!");
+                _isDateAndTimeWasSaved = false;
+                return;
+            }
+
+            _savedDateAndTime = new DateAndTime {
+                days = (uint)StaticData.timeKeeper.Day,
+                hours = (uint)StaticData.timeKeeper.Hour,
+                minutes = (uint)StaticData.timeKeeper.Minute,
+                seconds = (uint)StaticData.timeKeeper.Second
+            };
+            _isDateAndTimeWasSaved = true;
+            Debug.Log($"CLOCK_MACHINE: Time {_savedDateAndTime.days}:{_savedDateAndTime.hours}:{_savedDateAndTime.minutes}:{_savedDateAndTime.seconds} was saved.");
+        }
+
+        public void RestoreSavedDateAndTime()
+        {
+            if (!_isDateAndTimeWasSaved)
+            {
+                Debug.LogError("CLOCK_MACHINE: Cannot restore time because that was`nt saved!");
+                return;
+            }
+            if (StaticData.timeKeeper == null)
+            {
+                Debug.LogError("CLOCK_MACHINE: timeKeeper is null! Cannot restore time!");
+                _isDateAndTimeWasSaved = false;
+                return;
+            }
+
+            StaticData.timeKeeper.Day = (int)_savedDateAndTime.days;
+            StaticData.timeKeeper.Hour = (int)_savedDateAndTime.hours;
+            StaticData.timeKeeper.Minute = (int)_savedDateAndTime.minutes;
+            StaticData.timeKeeper.Second = (int)_savedDateAndTime.seconds;
+
+            _isDateAndTimeWasSaved = false;
+            Debug.Log($"CLOCK_MACHINE: Time {_savedDateAndTime.days}:{_savedDateAndTime.hours}:{_savedDateAndTime.minutes}:{_savedDateAndTime.seconds} was restored.");
         }
     }
 }
