@@ -662,7 +662,7 @@ namespace BDSM
 
         public void OnReceiveBusState(Network.ClientPackets.ReceiveBusState l_newState)
         {
-
+            _remotePlayers[l_newState.pid].remotePlayerController.AssignBuState(l_newState.newBusState);
         }
 
         public void OnReceiveRemotePlayerBusAction(Network.ClientPackets.ReceiveRemotePlayerBusAction l_packet)
