@@ -75,7 +75,7 @@ namespace BDSM
 
             try
             {
-                _localPlayerState = new Network.NestedTypes.PlayerState { selectedBusShortName = FreeMode.PlayerData.GetCurrentData().SelectedBusData.ShortName, position = new Vector3(1.0f, 2.0f, 3.0f), rotation = new Quaternion(4.0f, 3.0f, 2.0f, 1.0f) };
+                _localPlayerState = new Network.NestedTypes.PlayerState { pid = 0, selectedBusShortName = FreeMode.PlayerData.GetCurrentData().SelectedBusData.ShortName, position = new Vector3(1.0f, 2.0f, 3.0f), rotation = new Quaternion(4.0f, 3.0f, 2.0f, 1.0f), wheelFL = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), wheelFR = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), wheelRL = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), wheelRR = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f) };
             }
             catch (ArgumentOutOfRangeException e)
             {
