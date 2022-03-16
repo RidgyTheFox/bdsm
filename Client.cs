@@ -259,6 +259,7 @@ namespace BDSM
         {
             if (_isConnected)
             {
+                StaticData.clockMachine.RestoreSavedDateAndTime();
                 foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
                 {
                     if (l_player.remotePlayerBus != null)
@@ -537,6 +538,7 @@ namespace BDSM
         {
             if (StaticData.timeKeeper != null)
             {
+                StaticData.clockMachine.SaveCurrentDateAndTime();
                 StaticData.timeKeeper.Day = (int)l_packet.currentServerDateAndTime.day;
                 StaticData.timeKeeper.Hour = (int)l_packet.currentServerDateAndTime.hours;
                 StaticData.timeKeeper.Minute = (int)l_packet.currentServerDateAndTime.minutes;
@@ -714,6 +716,7 @@ namespace BDSM
         {
             if (l_peer == _server)
             {
+                StaticData.clockMachine.RestoreSavedDateAndTime();
                 _isAuthorized = false;
                 _isConnected = false;
                 isPlayerOnMap = false;
