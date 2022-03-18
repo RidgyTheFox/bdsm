@@ -1,4 +1,5 @@
 # Bus Driver Simulator Multiplayer
+[Русская версия](README_RUS.md)
 
 ## Enjoy the game - now with other players all around the globe!
 ![bds](https://i.imgur.com/fP6gvsm.jpg)
@@ -20,9 +21,9 @@ Just install the mod, set up the server and client configs, and you're ready to 
 |Synchronizing buses selected by players|✅Works|
 |Synchronizing time on the location for everyone in session|✅Works|
 |Interface|✅Functional, but design may be improved in the future|
-|Synchronizing lights on buses between players|🟨In progress|
-|Displaying nicknames above the buses|🟨In progress|
-|Synchronizing rotation and state of wheels on buses|🟨In progress|
+|Displaying nicknames above the buses|✅Works|
+|Synchronizing lights on buses between players|🟨Works, but not on all buses. Work in progress.|
+|Synchronizing rotation and state of wheels on buses|🟨Works, but not on all buses. Work in progress.|
 |Synchronizing installed upgrades for buses|🟥Planned|
 |Synchronizing sounds produced by other players' buses|🟥Planned|
 |Synchronizing weather|🟥Planned|
