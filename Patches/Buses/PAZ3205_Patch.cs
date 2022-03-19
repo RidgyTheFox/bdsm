@@ -16,7 +16,7 @@ namespace BDSM.Patches.Buses
             GameObject l_modelRootChild = l_modelRoot.transform.Find("Liaz-677").gameObject;
             if (l_modelRootChild == null)
             {
-                Debug.LogError("PAZ3205_PATCH: Cannot find model root game object! The wheels will not be synchronized!");
+                Debug.LogError("PAZ3205_PATCH: Cannot find model's root game object! Wheels will not be synchronized!");
                 return;
             }
 

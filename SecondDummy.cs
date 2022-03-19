@@ -96,7 +96,7 @@ namespace BDSM
         {
             _localPlayerState.pid = l_packet.pid;
             _isAuthorized = true;
-            Debug.Log($"SECOND_DUMMY: Join request was accepted! Given PID is {l_packet.pid}. Requesting server state...");
+            Debug.Log($"SECOND_DUMMY: Join request has been accepted! Assigned PID is {l_packet.pid}. Requesting server state...");
             _localPlayerState.pid = l_packet.pid;
             SendPacket(new Network.ServerPackets.RequestServerState { pid = l_packet.pid }, DeliveryMethod.ReliableOrdered);
         }
@@ -109,12 +109,12 @@ namespace BDSM
             _client.Stop();
             _server = null;
             _remotePlayers.Clear();
-            Debug.LogError($"SECOND_DUMMY: Cannot join on server! Reason: {l_packet.message}.");
+            Debug.LogError($"SECOND_DUMMY: Cannot join server! Reason: {l_packet.message}.");
         }
 
         public void OnReceiveServerState(Network.ClientPackets.ReceiveServerState l_packet)
         {
-            Debug.Log($"SECOND_DUMMY: Server state was received! Server name: {l_packet.serverName}. Current map: {EnumUtils.MapUintToEnum(l_packet.currentMap)}. Players limit: {l_packet.playersLimit}. Amount of players: {l_packet.currentAmountOfPlayers}.");
+            Debug.Log($"SECOND_DUMMY: Server state has been received! Server name: {l_packet.serverName}. Current map: {EnumUtils.MapUintToEnum(l_packet.currentMap)}. Players limit: {l_packet.playersLimit}. Amount of players: {l_packet.currentAmountOfPlayers}.");
             _serverState = new Network.NestedTypes.ServerState { serverName = l_packet.serverName, currentMap = EnumUtils.MapUintToEnum(l_packet.currentMap), playersLimit = l_packet.playersLimit, currentAmountOfPlayers = l_packet.currentAmountOfPlayers };
         }
 
@@ -127,7 +127,7 @@ namespace BDSM
 
             // Add bus creation code here according to l_newPlayer.state.busId.
 
-            Debug.Log($"SECOND_DUMMY: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was created.");
+            Debug.Log($"SECOND_DUMMY: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] has been created.");
         }
 
         public void OnRemoveRemotePlayer(Network.ClientPackets.RemoveRemotePlayer l_packet)
@@ -141,7 +141,7 @@ namespace BDSM
             }
             else
             {
-                Debug.Log($"SECOND_DUMMY: Remote player for {l_playerToRemove.nickname}[{l_playerToRemove.state.pid}] was removed.");
+                Debug.Log($"SECOND_DUMMY: Remote player for {l_playerToRemove.nickname}[{l_playerToRemove.state.pid}] has been removed.");
                 _remotePlayers.Remove(l_packet.pid);
             }
         }

@@ -85,7 +85,7 @@ namespace BDSM
             _currentMinute = l_minute;
             _currentSecond = l_second;
 
-            Debug.Log($"CLOCK_MACHINE: Time was set to {_currentDay} Day, {_currentHour}:{_currentMinute}:{_currentSecond} (HH:MM:SS).");
+            Debug.Log($"CLOCK_MACHINE: Time has been set to {_currentDay} Day, {_currentHour}:{_currentMinute}:{_currentSecond} (HH:MM:SS).");
         }
 
         public DateAndTime GetTime()
@@ -123,14 +123,14 @@ namespace BDSM
                 seconds = (uint)StaticData.timeKeeper.Second
             };
             _isDateAndTimeWasSaved = true;
-            Debug.Log($"CLOCK_MACHINE: Time {_savedDateAndTime.days}:{_savedDateAndTime.hours}:{_savedDateAndTime.minutes}:{_savedDateAndTime.seconds} was saved.");
+            Debug.Log($"CLOCK_MACHINE: Time {_savedDateAndTime.days}:{_savedDateAndTime.hours}:{_savedDateAndTime.minutes}:{_savedDateAndTime.seconds} has been saved.");
         }
 
         public void RestoreSavedDateAndTime()
         {
             if (!_isDateAndTimeWasSaved)
             {
-                Debug.LogError("CLOCK_MACHINE: Cannot restore time because that was`nt saved!");
+                Debug.LogError("CLOCK_MACHINE: Cannot restore time because it wasn't saved!");
                 return;
             }
             if (StaticData.timeKeeper == null)
@@ -146,7 +146,7 @@ namespace BDSM
             StaticData.timeKeeper.Second = (int)_savedDateAndTime.seconds;
 
             _isDateAndTimeWasSaved = false;
-            Debug.Log($"CLOCK_MACHINE: Time {_savedDateAndTime.days}:{_savedDateAndTime.hours}:{_savedDateAndTime.minutes}:{_savedDateAndTime.seconds} was restored.");
+            Debug.Log($"CLOCK_MACHINE: Time {_savedDateAndTime.days}:{_savedDateAndTime.hours}:{_savedDateAndTime.minutes}:{_savedDateAndTime.seconds} has been restored.");
         }
     }
 }

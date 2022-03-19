@@ -79,7 +79,7 @@ namespace BDSM
             }
             catch (ArgumentOutOfRangeException e)
             {
-                Debug.LogError($"CLIENT: Exception on creaing local player state. Cannot load save data! Default one will be used...");
+                Debug.LogError($"CLIENT: Exception while creaing local player state. Cannot load save data! Falling back to default...");
                 _localPlayerState = new Network.NestedTypes.PlayerState { selectedBusShortName = "SPR", position = new Vector3(0.0f, 0.0f, 0.0f), rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f) };
             }
             
@@ -227,7 +227,7 @@ namespace BDSM
                     if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "menu")
                         Connect();
                     else
-                        Debug.LogError("CLIENT: Cannot connect! First you need to exit to the main menu.");
+                        Debug.LogError("CLIENT: Cannot connect! You need to exit to the main menu first.");
                 }
                 if (GUI.Button(new Rect(_mainWindowPosX + 5, _mainWindowPosY + 130, 200, 20), "Reload settings"))
                     ReloadSettings();
@@ -298,7 +298,7 @@ namespace BDSM
             if (l_valueToken != null)
             {
                 _nickname = l_valueToken.ToString();
-                Debug.Log($"CLIENT: Nickname was set to \"{_nickname}\".");
+                Debug.Log($"CLIENT: Nickname has been set to \"{_nickname}\".");
             }
             else
             {
@@ -352,7 +352,7 @@ namespace BDSM
                 if (l_valueToken != null)
                 {
                     _password = l_valueToken.ToString();
-                    Debug.Log("CLIENT: Password was set..");
+                    Debug.Log("CLIENT: Password has been set.");
                 }
                 else
                 {
@@ -511,7 +511,7 @@ namespace BDSM
         {
             _localPlayerState.pid = l_packet.pid;
             _isAuthorized = true;
-            Debug.Log($"CLIENT: Join request was accepted! Given PID is {l_packet.pid}. Requesting server state...");
+            Debug.Log($"CLIENT: Join request was accepted! Assigned PID is {l_packet.pid}. Requesting server state...");
             _localPlayerState.pid = l_packet.pid;
             SendPacket(new Network.ServerPackets.RequestServerState { pid = l_packet.pid }, DeliveryMethod.ReliableOrdered);
         }
@@ -524,12 +524,12 @@ namespace BDSM
             _client.Stop();
             _server = null;
             _remotePlayers.Clear();
-            Debug.LogError($"CLIENT: Cannot join on server! Reason: {l_packet.message}.");
+            Debug.LogError($"CLIENT: Cannot join server! Reason: {l_packet.message}.");
         }
         
         public void OnReceiveServerState(Network.ClientPackets.ReceiveServerState l_packet)
         {
-            Debug.Log($"CLIENT: Server state was received! Server name: {l_packet.serverName}. Current map: {EnumUtils.MapUintToEnum(l_packet.currentMap)}. Players limit: {l_packet.playersLimit}. Amount of players: {l_packet.currentAmountOfPlayers}.");
+            Debug.Log($"CLIENT: Server state has been received! Server name: {l_packet.serverName}. Current map: {EnumUtils.MapUintToEnum(l_packet.currentMap)}. Players limit: {l_packet.playersLimit}. Amount of players: {l_packet.currentAmountOfPlayers}.");
             _serverState = new Network.NestedTypes.ServerState { serverName = l_packet.serverName, currentMap = EnumUtils.MapUintToEnum(l_packet.currentMap), playersLimit = l_packet.playersLimit, currentAmountOfPlayers = l_packet.currentAmountOfPlayers };
             ProceedMapLoading();
         }
@@ -545,7 +545,7 @@ namespace BDSM
                 StaticData.timeKeeper.Second = (int)l_packet.currentServerDateAndTime.seconds;
                 StaticData.timeKeeper.UpdateSky();
                 isTimeSynced = true;
-                Debug.Log($"CLIENT: Time was set to day {l_packet.currentServerDateAndTime.day}, {l_packet.currentServerDateAndTime.hours}:{l_packet.currentServerDateAndTime.minutes}:{l_packet.currentServerDateAndTime.seconds}!");
+                Debug.Log($"CLIENT: Time has been set to day {l_packet.currentServerDateAndTime.day}, {l_packet.currentServerDateAndTime.hours}:{l_packet.currentServerDateAndTime.minutes}:{l_packet.currentServerDateAndTime.seconds}!");
             }
             else
                 Debug.LogError("CLIENT: Cannot find FreeMode.TimeKeeper!");
@@ -575,7 +575,7 @@ namespace BDSM
                 _remotePlayers[l_newPlayer.state.pid].remotePlayerController.AssignBuState(l_newBusState);
             }
 
-            Debug.Log($"CLIENT: Remote player with bus \"{l_newPlayer.state.selectedBusShortName}\" was created for {l_newPlayer.nickname}[{l_newPlayer.state.pid}]!");
+            Debug.Log($"CLIENT: Remote player with bus \"{l_newPlayer.state.selectedBusShortName}\" has been created for {l_newPlayer.nickname}[{l_newPlayer.state.pid}]!");
         }
 
         public void OnRemoveRemotePlayer(Network.ClientPackets.RemoveRemotePlayer l_packet)
@@ -585,7 +585,7 @@ namespace BDSM
 
             _remotePlayers.Remove(l_packet.pid);
             _serverState.currentAmountOfPlayers--;
-            Debug.Log($"CLIENT: Remote player with PID {l_packet.pid} was removed.");
+            Debug.Log($"CLIENT: Remote player with PID {l_packet.pid} has been removed.");
         }
 
         public void OnRemotePlayerChangedBus(Network.ClientPackets.RemotePlayerChangedBus l_packet)
@@ -615,14 +615,14 @@ namespace BDSM
                 CreateAssociatedControolerForBus(l_packet.pid);
                 _remotePlayers[l_packet.pid].remotePlayerController.AssignBuState(l_newBusState);
 
-                Debug.Log($"CLIENT: Bus for {_remotePlayers[l_packet.pid].nickname}[{l_packet.pid}] was changed to \"{l_packet.busShortName}\".");
+                Debug.Log($"CLIENT: Bus for {_remotePlayers[l_packet.pid].nickname}[{l_packet.pid}] has been changed to \"{l_packet.busShortName}\".");
             }
             else
             {
                 Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = _remotePlayers[l_packet.pid].state.pid, selectedBusShortName = l_packet.busShortName, position = _remotePlayers[l_packet.pid].state.position, rotation = _remotePlayers[l_packet.pid].state.rotation };
                 _remotePlayers[l_packet.pid].state = l_newPlayerState;
 
-                Debug.Log($"CLIENT: Bus for {_remotePlayers[l_packet.pid].nickname}[{l_packet.pid}] was changed to \"{l_packet.busShortName}\".");
+                Debug.Log($"CLIENT: Bus for {_remotePlayers[l_packet.pid].nickname}[{l_packet.pid}] has been changed to \"{l_packet.busShortName}\".");
             }
         }
 
@@ -691,7 +691,7 @@ namespace BDSM
 
         public void OnNetworkError(IPEndPoint l_endPoint, SocketError l_socketError)
         {
-            Debug.LogError($"CLIENT: Netwrk error occured! {l_socketError.ToString()}.");
+            Debug.LogError($"CLIENT: Network error has occured! {l_socketError.ToString()}.");
         }
 
         public void OnNetworkLatencyUpdate(NetPeer l_peer, int l_latency)
