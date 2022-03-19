@@ -170,14 +170,17 @@ namespace BDSM.RemotePlayerControllers
             }
             else
             {
-                if (_headlightsLowBeam != null && _sideLightsRoot != null && _rearLightsRoot != null && _headLightsHighBeam != null)
-                {
-                    _headLightsHighBeam.SetActive(false);
-                    _sideLightsRoot.SetActive(false);
+                if (_rearLightsRoot != null)
                     _rearLightsRoot.SetActive(false);
-                }
+
+                if (_sideLightsRoot != null)
+                    _sideLightsRoot.SetActive(false);
+
                 if (_headlightsLowBeam != null)
                     _headlightsLowBeam.SetActive(false);
+
+                if (_headLightsHighBeam != null)
+                    _headLightsHighBeam.SetActive(false);
 
                 if (_insideLightRoot != null && _driverLightRoot != null)
                 {
