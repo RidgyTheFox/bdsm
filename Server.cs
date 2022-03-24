@@ -147,6 +147,7 @@ namespace BDSM
             if (!_isServerLaunched)
             {
                 StaticData.clockMachine.StartTime();
+                _server.Statistics.Reset();
                 _server.Start(_serverPort);
                 _isServerLaunched = true;
                 Debug.Log($"SERVER: Server launched on port {_serverPort}.");
@@ -159,6 +160,7 @@ namespace BDSM
             {
                 StaticData.clockMachine.StopTime();
                 _server.Stop();
+                _server.Statistics.Reset();
                 _isServerLaunched = false;
                 Debug.Log("SERVER: Server stopped!");
             }

@@ -242,6 +242,7 @@ namespace BDSM
                 if (_usePassword)
                 {
                     isPlayerOnMap = false;
+                    _client.Statistics.Reset();
                     _client.Start();
                     _client.Connect(_serverIp, _serverPort, _password);
                     Debug.Log($"CLIENT: Connecting to {_serverIp}:{_serverPort} with password...");
@@ -249,6 +250,7 @@ namespace BDSM
                 else
                 {
                     isPlayerOnMap = false;
+                    _client.Statistics.Reset();
                     _client.Start();
                     _client.Connect(_serverIp, _serverPort, "ass");
                     Debug.Log($"CLIENT: Connecting to {_serverIp}:{_serverPort} without password.");
@@ -273,6 +275,7 @@ namespace BDSM
                 isTimeSynced = false;
                 _client.DisconnectAll();
                 _client.Stop();
+                _client.Statistics.Reset();
                 _server = null;
                 _remotePlayers.Clear();
                 _serverState.currentAmountOfPlayers = 0;
