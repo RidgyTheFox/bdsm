@@ -22,6 +22,7 @@ Just install the mod, set up the server and client configs, and you're ready to 
 |Synchronizing time on the location for everyone in session|✅Works|
 |Interface|✅Functional, but design may be improved in the future|
 |Displaying nicknames above the buses|✅Works|
+|Discord Integration|✅Works|
 |Synchronizing lights on buses between players|🟨Works, but not on all buses. Work in progress.|
 |Synchronizing rotation and state of wheels on buses|🟨Works, but not on all buses. Work in progress.|
 |Synchronizing installed upgrades for buses|🟥Planned|
@@ -64,6 +65,8 @@ First off, clone this repository using your tool of choice (Visual Studio's git 
 ``copy /Y "X:\...\BDSM\bin\Debug\netstandard2.0\BDSM.dll" "Y:\...\Bus Driver Simulator\BepInEx\plugins"``,
 where X:\\...\BDSM is the path to your local copy of this repository and Y:\\...\Bus Driver Simulator\ is the path to your game folder.
 5. Press LCtrl+LShift+B to build the mod. It will be automatically copied to the game directory. Now you can start the game.
+6. Copy discord_game_sdk.dll from BDSM\Libs\Discord_Game_SDK into X:\\...\Bus Driver Simulator\BepInEx\plugins for the Discord integration to work.
+where X:\\...\Bus Driver Simulator is the path to your game folder.
 ### If you want to start the game with MVS debugger 
 Finally, click the arrow next to the Build button and click ``BDSM Debug Properties``. In the window, click Create a new profile and select Executable. 
 In "Executable" field, locate .exe file of the game using Browse button, and locate the game folder using Working directory field. You can rename your new profile to something like "Build and run". Close Launch Profiles window, and make sure that your newly created profile is set as default launch profile (click on the arrow next to Build button again and make sure that your profile is ticked).

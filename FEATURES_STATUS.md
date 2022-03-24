@@ -11,6 +11,7 @@ Everything that I would like to do in this fashion is described here. The lower 
 | Time syncing. | ✅ Implemented | N/A |
 | Basic bus sync. | ✅ Implemented | When you enter the garage you should disappear to other players. Changing bus should also be visible. |
 | Advanced bus sync (Stage 1). | ✅ Implemented | (Lights) Required classes and functions, network packets. |
+| Discord Integration | ✅ Implemented | N/A |
 | All buses sync. | 🟨 Work in progress | Bus classes, lighting layouts, wheels and so on. |
 | Advanced bus sync (Stage 2).| 🟥 Planned | Upgrades and liveries sync. |
 | Route numbers on route plates. | 🟥 Planned | N/A |
@@ -19,7 +20,6 @@ Everything that I would like to do in this fashion is described here. The lower 
 I also have a couple of other ideas, but they are very difficult to implement. I'm not sure if I'll be doing this as Bus World is due to be released soon.
 Here are my ideas:
 * Weather sync.
-* Discord Integration. (This one isn't so difficult actually...)
 * NPCs sync.
 * Traffic lights sync.
 * Anti-lag system. Right now movement works good for mod without any anti-lag or prediction system. But still, it would be cool to have one.
