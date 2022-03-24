@@ -41,7 +41,7 @@ namespace BDSM
         {
             Debug.Log("SERVER: Initializing...");
 
-            _server = new NetManager(this) { AutoRecycle = true };
+            _server = new NetManager(this) { AutoRecycle = true, EnableStatistics = true };
             StaticData.serverNetManInstance = _server;
             _writer = new NetDataWriter();
             _packetProcessor = new NetPacketProcessor();

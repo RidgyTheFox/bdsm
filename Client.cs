@@ -70,7 +70,7 @@ namespace BDSM
             _netStatsTextStyle = new GUIStyle();
             _netStatsTextStyle.normal.textColor = Color.green;
             _netStatsTextStyle.fontStyle = FontStyle.Bold;
-            _client = new NetManager(this) { AutoRecycle = true };
+            _client = new NetManager(this) { AutoRecycle = true, EnableStatistics = true };
             StaticData.clientNetManInstance = _client;
             _writer = new NetDataWriter();
 
