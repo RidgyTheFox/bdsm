@@ -150,7 +150,7 @@ namespace BDSM
                 _server.Statistics.Reset();
                 _server.Start(_serverPort);
                 _isServerLaunched = true;
-                Debug.Log($"SERVER: Server launched on port {_serverPort}.");
+                Debug.Log($"SERVER: Server started on port {_serverPort}.");
             }
         }
 
@@ -183,7 +183,7 @@ namespace BDSM
             if (l_valueToken != null)
             {
                 _serverName = l_valueToken.ToString();
-                Debug.Log($"SERVER: Server name was set to \"{_serverName}\".");
+                Debug.Log($"SERVER: Server name has been set to \"{_serverName}\".");
             }
             else
             {
@@ -196,7 +196,7 @@ namespace BDSM
             if (l_valueToken != null)
             {
                 _serverPort = int.Parse(l_valueToken.ToString());
-                Debug.Log($"SERVER: Server port was set to \"{_serverPort}\".");
+                Debug.Log($"SERVER: Server port has been set to \"{_serverPort}\".");
             }
             else
             {
@@ -209,7 +209,7 @@ namespace BDSM
             if (l_valueToken != null)
             {
                 _isPasswordRequired = bool.Parse(l_valueToken.ToString());
-                Debug.Log($"SERVER: \"passwordRequired\" was set to \"{_isPasswordRequired.ToString()}\".");
+                Debug.Log($"SERVER: \"passwordRequired\" has been set to \"{_isPasswordRequired.ToString()}\".");
             }
             else
             {
@@ -224,7 +224,7 @@ namespace BDSM
                 if (l_valueToken != null)
                 {
                     _password = l_valueToken.ToString();
-                    Debug.Log("SERVER: Password was set..");
+                    Debug.Log("SERVER: Password set.");
                 }
                 else
                 {
@@ -241,27 +241,27 @@ namespace BDSM
                 {
                     case "serpukhov":
                         _selectedMap = Enums.AvailableMaps.SERPUKHOV;
-                        Debug.Log("SERVER: Map was changed to \"Serpukhov\".");
+                        Debug.Log("SERVER: Map has been changed to \"Serpukhov\".");
                         break;
                     case "serpukhovWinter":
                         _selectedMap = Enums.AvailableMaps.SERPUKHOV_WINTER;
-                        Debug.Log("SERVER: Map was changed to \"Serpukhov Winter\".");
+                        Debug.Log("SERVER: Map has been changed to \"Serpukhov Winter\".");
                         break;
                     case "keln":
                         _selectedMap = Enums.AvailableMaps.KELN;
-                        Debug.Log("SERVER: Map was changed to \"Keln\".");
+                        Debug.Log("SERVER: Map has been changed to \"Keln\".");
                         break;
                     case "murom":
                         _selectedMap = Enums.AvailableMaps.MUROM;
-                        Debug.Log("SERVER: Map was chnged to \"Murom\".");
+                        Debug.Log("SERVER: Map has been chnged to \"Murom\".");
                         break;
                     case "muromWinter":
                         _selectedMap = Enums.AvailableMaps.MUROM_WINTER;
-                        Debug.Log("SERVER: Map was chnged to \"Murom Winter\".");
+                        Debug.Log("SERVER: Map has been chnged to \"Murom Winter\".");
                         break;
                     case "solnechnogorsk":
                         _selectedMap = Enums.AvailableMaps.SOLNECHNOGORSK;
-                        Debug.Log("SERVER: Map was changed to \"Solnechnogorsk\".");
+                        Debug.Log("SERVER: Map has been changed to \"Solnechnogorsk\".");
                         break;
                     default:
                         _selectedMap = Enums.AvailableMaps.SERPUKHOV;
@@ -280,7 +280,7 @@ namespace BDSM
             if (l_valueToken != null)
             {
                 _playersLimit = int.Parse(l_valueToken.ToString());
-                Debug.Log($"SERVER: \"playersLimit\" was set to \"{_playersLimit}\".");
+                Debug.Log($"SERVER: \"playersLimit\" has been set to \"{_playersLimit}\".");
             }
             else
             {
@@ -306,7 +306,7 @@ namespace BDSM
             else
             {
                 StaticData.clockMachine.SetTime(1, 12, 0, 0);
-                Debug.LogError("SERVER: Cannot read valoe \"startAtDay\"! Default value \"True\" will be used...");
+                Debug.LogError("SERVER: Cannot read value \"startAtDay\"! Default value \"True\" will be used...");
             }
 
             Debug.Log("SERVER: Settings loaded!");
@@ -329,7 +329,7 @@ namespace BDSM
             {
                 if (player.nickname == l_packet.nickname)
                 {
-                    Debug.LogWarning($"SERVER: Join request was declined because player with this nikcname already exist.");
+                    Debug.LogWarning($"SERVER: Join request has been rejected because player with this nickname already exists.");
                     SendPacket(new Network.ClientPackets.OnJoinDeclined { message = "Nickname already taken!"}, l_peer, DeliveryMethod.ReliableOrdered);
                     l_peer.Disconnect();
                     return;
@@ -373,14 +373,14 @@ namespace BDSM
                 }
             }
 
-            Debug.Log($"SERVER: new player {l_newPlayer.nickname}[{l_newPlayer.state.pid}] connected! His bus is {l_newPlayer.state.selectedBusShortName}.");
+            Debug.Log($"SERVER: new player {l_newPlayer.nickname}[{l_newPlayer.state.pid}] connected! Their bus is {l_newPlayer.state.selectedBusShortName}.");
         }
 
         public void OnServerStateRequest(Network.ServerPackets.RequestServerState l_packet)
         {
             if (_players[l_packet.pid] == null)
             {
-                Debug.LogError($"SERVER: User with PID {l_packet.pid} not exist!");
+                Debug.LogError($"SERVER: User with PID {l_packet.pid} does not exist!");
                 return;
             }
 
@@ -397,7 +397,7 @@ namespace BDSM
         {
             if (_players[l_packet.pid] == null)
             {
-                Debug.LogError($"SERVER: Players with PID {l_packet.pid} requested a server date and time, but server cannot find him in players!");
+                Debug.LogError($"SERVER: Player with PID {l_packet.pid} requested server date and time, but server cannot find him in players!");
                 return;
             }
 
@@ -414,7 +414,7 @@ namespace BDSM
 
         public void OnPlayerChangedBus(Network.ServerPackets.ChangeBus l_packet)
         {
-            Debug.Log($"SERVER: Player with PID {l_packet.pid} changed bus. Searching for player...");
+            Debug.Log($"SERVER: Player with PID {l_packet.pid} has changed bus. Searching for player...");
             Network.ServerPackets.ServerPlayer l_playerForEdit;
             _players.TryGetValue(l_packet.pid, out l_playerForEdit);
 
@@ -422,7 +422,7 @@ namespace BDSM
             {
                 if (l_playerForEdit.state.selectedBusShortName == l_packet.busShortName)
                 {
-                    Debug.LogWarning($"SERVER: {l_playerForEdit.nickname}[{l_playerForEdit.state.pid}] changed bus to \"{l_packet.busShortName}\" but already driving this bus...");
+                    Debug.LogWarning($"SERVER: {l_playerForEdit.nickname}[{l_playerForEdit.state.pid}] changed bus to \"{l_packet.busShortName}\" but they are already driving this bus...");
                     return;
                 }
                 Network.NestedTypes.BusState l_newBusState = new Network.NestedTypes.BusState {
@@ -486,7 +486,7 @@ namespace BDSM
                 Debug.Log($"SERVER: Bus state for {l_player.nickname}[{l_player.state.pid}] was updated and synced!");
             }
             else
-                Debug.LogError($"SERVER: New bus state was received from player with PID {l_packet.pid}, but server cannot find him in players list!");
+                Debug.LogError($"SERVER: New bus state has been received from player with PID {l_packet.pid}, but server cannot find them in players list!");
         }
 
         public void OnDispatchBusAction(Network.ServerPackets.DispatchBusAction l_packet)
@@ -553,7 +553,7 @@ namespace BDSM
                 if (l_player.state.pid!= l_packet.pid)
                     SendPacket(new Network.ClientPackets.ReceiveRemotePlayerBusAction { pid = l_packet.pid, actionName = l_packet.actionName, actionState = l_packet.actionState }, l_player.peer, DeliveryMethod.ReliableOrdered);
             }
-            Debug.Log($"SERVER: Action \"{l_packet.actionName}\" from {_players[l_packet.pid].nickname}[{_players[l_packet.pid]}] was dispatched to other players!");
+            Debug.Log($"SERVER: Action \"{l_packet.actionName}\" from {_players[l_packet.pid].nickname}[{_players[l_packet.pid]}] has been dispatched to other players!");
         }
         #endregion
 
@@ -563,14 +563,14 @@ namespace BDSM
             if (_players.Count == _playersLimit)
             {
                 l_request.Reject();
-                Debug.LogWarning($"SERVER: Inboung connection from {l_request.RemoteEndPoint.Address} was rejected because uer limit was reached.");
+                Debug.LogWarning($"SERVER: Inbound connection from {l_request.RemoteEndPoint.Address} has been rejected because user limit was reached.");
             }
             else
             {
                 if (_isPasswordRequired)
                 {
                     l_request.AcceptIfKey(_password);
-                    Debug.Log($"SERVER: Inbound connection from {l_request.RemoteEndPoint.Address} will be accepted if client have password.");
+                    Debug.Log($"SERVER: Inbound connection from {l_request.RemoteEndPoint.Address} will be accepted if client has password.");
                 }
                 else
                 {
@@ -599,7 +599,7 @@ namespace BDSM
 
         public void OnPeerConnected(NetPeer l_peer)
         {
-            Debug.Log($"SERVER: Peer {l_peer.EndPoint.Address} was connected!");
+            Debug.Log($"SERVER: Peer {l_peer.EndPoint.Address} has connected!");
         }
 
         public void OnPeerDisconnected(NetPeer l_peer, DisconnectInfo l_disconnectInfo)
@@ -613,7 +613,7 @@ namespace BDSM
             else
             {
                 _players.Remove((uint)l_peer.Id);
-                Debug.Log($"SERVER: Player was found and removed!");
+                Debug.Log($"SERVER: Player has been found and removed!");
             }
 
             foreach (Network.ServerPackets.ServerPlayer l_player in _players.Values)
