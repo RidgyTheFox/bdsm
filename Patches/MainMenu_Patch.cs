@@ -13,9 +13,8 @@ namespace BDSM.Patches
 
         [HarmonyPatch(typeof(MainMenu), "Loading")]
         [HarmonyPostfix]
-        public static void Loading()
+        public static void Loading(MainMenu __instance, string levelName)
         {
-
         }
 
         [HarmonyPatch(typeof(MainMenu), "GoBuySolDLC")]
