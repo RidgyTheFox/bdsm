@@ -9,6 +9,7 @@ namespace BDSM
         private static NetManager _clientNetManInstance;
         private static NetManager _serverNetManInstance;
         private static ClockMachine _clockMachine;
+        private static DiscordIntegration _discordIntegrationInstance;
 
         private static FreeMode.TimeKeeper _timeKeeper;
 
@@ -21,6 +22,7 @@ namespace BDSM
         public static NetManager clientNetManInstance { get { return _clientNetManInstance; } set { _clientNetManInstance = value; } }
         public static NetManager serverNetManInstance { get { return _serverNetManInstance; } set { _serverNetManInstance = value; } }
         public static ClockMachine clockMachine { get { return _clockMachine; } set { _clockMachine = value; } }
+        public static DiscordIntegration discordIntegrationInstance { get { return _discordIntegrationInstance; } set { _discordIntegrationInstance = value; } }
 
         public static FreeMode.TimeKeeper timeKeeper { get { return _timeKeeper; } set { _timeKeeper = value; } }
 

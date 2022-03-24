@@ -9,6 +9,11 @@ namespace BDSM.Patches
         public static void SelectToDriveSelected()
         {
             StaticData.clientInstance.OnPlayerChangedBusInGarage();
+
+            if (StaticData.clientInstance._isConnected)
+                StaticData.discordIntegrationInstance.UpdateActivity(AvailbaleActivities.IN_MULTIPLAYER);
+            else
+                StaticData.discordIntegrationInstance.UpdateActivity(AvailbaleActivities.IN_SINGLEPLAYER);
         }
     }
 }

@@ -263,6 +263,7 @@ namespace BDSM
             if (_isConnected)
             {
                 StaticData.clockMachine.RestoreSavedDateAndTime();
+                StaticData.discordIntegrationInstance.UpdateActivity(AvailbaleActivities.IN_MAIN_MENU);
                 foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
                 {
                     if (l_player.remotePlayerBus != null)
@@ -424,27 +425,39 @@ namespace BDSM
                 case Enums.AvailableMaps.SERPUKHOV:
                     FileBasedPrefs.SetInt("winter", 0);
                     FileBasedPrefs.SetBool("IsAutomatic", true);
+                    StaticData.discordIntegrationInstance.currentMap = "Serpukhov";
+                    StaticData.discordIntegrationInstance.UpdateActivity(AvailbaleActivities.IN_MULTIPLAYER);
                     UnityEngine.SceneManagement.SceneManager.LoadScene("FreeModeRoutes");
                     break;
                 case Enums.AvailableMaps.SERPUKHOV_WINTER:
                     FileBasedPrefs.SetInt("winter", 1);
                     FileBasedPrefs.SetBool("IsAutomatic", true);
+                    StaticData.discordIntegrationInstance.currentMap = "Serpukhov Winter";
+                    StaticData.discordIntegrationInstance.UpdateActivity(AvailbaleActivities.IN_MULTIPLAYER);
                     UnityEngine.SceneManagement.SceneManager.LoadScene("FreeModeRoutes");
                     break;
                 case Enums.AvailableMaps.KELN:
                     FileBasedPrefs.SetInt("winter", 1);
                     FileBasedPrefs.SetBool("IsAutomatic", true);
+                    StaticData.discordIntegrationInstance.currentMap = "Keln";
+                    StaticData.discordIntegrationInstance.UpdateActivity(AvailbaleActivities.IN_MULTIPLAYER);
                     UnityEngine.SceneManagement.SceneManager.LoadScene("FreeModeKeln");
                     break;
                 case Enums.AvailableMaps.MUROM:
                     StaticData.mainMenuInstance.winterToggleMurom.isOn = false;
+                    StaticData.discordIntegrationInstance.currentMap = "Murom";
+                    StaticData.discordIntegrationInstance.UpdateActivity(AvailbaleActivities.IN_MULTIPLAYER);
                     StaticData.mainMenuInstance.StartCampain(3);
                     break;
                 case Enums.AvailableMaps.MUROM_WINTER:
                     StaticData.mainMenuInstance.winterToggleMurom.isOn = true;
+                    StaticData.discordIntegrationInstance.currentMap = "Murom Winter";
+                    StaticData.discordIntegrationInstance.UpdateActivity(AvailbaleActivities.IN_MULTIPLAYER);
                     StaticData.mainMenuInstance.StartCampain(3);
                     break;
                 case Enums.AvailableMaps.SOLNECHNOGORSK:
+                    StaticData.discordIntegrationInstance.currentMap = "Solnechnogorst";
+                    StaticData.discordIntegrationInstance.UpdateActivity(AvailbaleActivities.IN_MULTIPLAYER);
                     StaticData.mainMenuInstance.StartCampain(4);
                     break;
             }

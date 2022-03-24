@@ -10,6 +10,7 @@ namespace BDSM.Patches
         public static void Awake()
         {
             GameObject l_ridgysStuffGameObject = new GameObject("RidgysStuff");
+            l_ridgysStuffGameObject.AddComponent<DiscordIntegration>();
             l_ridgysStuffGameObject.AddComponent<ClockMachine>();
             l_ridgysStuffGameObject.AddComponent<Server>();
             l_ridgysStuffGameObject.AddComponent<Client>();
