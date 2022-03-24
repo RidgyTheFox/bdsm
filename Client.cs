@@ -71,6 +71,7 @@ namespace BDSM
             _netStatsTextStyle.normal.textColor = Color.green;
             _netStatsTextStyle.fontStyle = FontStyle.Bold;
             _client = new NetManager(this) { AutoRecycle = true };
+            StaticData.clientNetManInstance = _client;
             _writer = new NetDataWriter();
 
             try
