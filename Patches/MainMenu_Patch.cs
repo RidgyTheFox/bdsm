@@ -11,6 +11,13 @@ namespace BDSM.Patches
             StaticData.mainMenuInstance = __instance;
         }
 
+        [HarmonyPatch(typeof(MainMenu), "Loading")]
+        [HarmonyPostfix]
+        public static void Loading()
+        {
+
+        }
+
         [HarmonyPatch(typeof(MainMenu), "GoBuySolDLC")]
         [HarmonyPrefix]
         public static void GoBuySolDLC()
