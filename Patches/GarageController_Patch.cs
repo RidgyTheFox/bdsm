@@ -14,6 +14,13 @@ namespace BDSM.Patches
             StaticData.clientInstance.isPlayerOnMap = false;
         }
 
+        [HarmonyPatch(typeof(FreeMode.Garage.GarageController), "SelectBus")]
+        [HarmonyPostfix]
+        public static void SelectBus()
+        {
+
+        }
+
         [HarmonyPatch(typeof(FreeMode.Garage.GarageController), "RespawnBus")]
         [HarmonyPostfix]
         public static void RespawnBus()
