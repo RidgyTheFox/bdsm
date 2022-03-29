@@ -9,7 +9,7 @@ namespace BDSM
     class Statistics : MonoBehaviour
     {
         private uint _statisticsWindowPosX = 0;
-        private uint _statisticsWindowPosY = 0;
+        private uint _statisticsWindowPosY = 366;
 
         private bool _isStatisticsWindowOpened = true;
         private bool _statisticsWindowMoveMode = false;
