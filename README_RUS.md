@@ -88,3 +88,4 @@ Copyright (c) 2022 RidgyTheFox ♥
 * [BepInEx 5.4.19](https://github.com/BepInEx/BepInEx) - был использован для инъекции библиотеки.
 * [HarmonyX 2.9.0 (NuGet)](https://github.com/BepInEx/HarmonyX) - был использован для захвата и изменения функций\классов.
 * [Newtonsoft.JSON 13.0.1 (NuGet)](https://www.newtonsoft.com/json) - был использован для десериализации настроек из JSON файлов.
+* [LiteNetLib by Ruslan Pyrch (RevenantX)](https://github.com/RevenantX/LiteNetLib) - была использована как основа для мультиплеера.

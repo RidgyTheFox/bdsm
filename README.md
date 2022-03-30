@@ -86,3 +86,4 @@ See file LICENSE.md
 * [BepInEx 5.4.19](https://github.com/BepInEx/BepInEx) - was used for injecting mod.
 * [HarmonyX 2.9.0 (NuGet)](https://github.com/BepInEx/HarmonyX) - was used for patching functions\Classes.
 * [Newtonsoft.JSON 13.0.1 (NuGet)](https://www.newtonsoft.com/json) - was used for parsing settings files.
+* [LiteNetLib by Ruslan Pyrch (RevenantX)](https://github.com/RevenantX/LiteNetLib) - was used as base for multiplayer.
