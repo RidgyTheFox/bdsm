@@ -11,7 +11,7 @@ namespace BDSM
         private uint _statisticsWindowPosX = 0;
         private uint _statisticsWindowPosY = 366;
 
-        private bool _isStatisticsWindowOpened = true;
+        private bool _isStatisticsWindowOpened = false;
         private bool _statisticsWindowMoveMode = false;
 
         GUIStyle _fontCaptionStyle;
