@@ -12,18 +12,20 @@ namespace BDSM
         private int _windowPositionX;
         private int _windowPositionY;
         private const int _windowSizeX = 375;
-        private const int _windowSizeY = 385;
+        private const int _windowSizeY = 405;
 
         private string _aboutText = "This is a small mod for Bus Driver Simulator.\n" +
                                     "So far, it is under active development.\n" +
                                     "There's still not much here, but I'm working on it.\n" +
                                     "This mod uses BepInEx injector,\n" +
                                     "HarmonyX library for hooking,\n" +
+                                    "Newtonsoft.JSON for parsing JSON,\n" +
                                     "and LiteNetLib networking library.\n\n" +
                                     "Keybindings:\n" +
                                     "  F1 - Client manager.\n" +
                                     "  F2 - Server manager.\n" +
                                     "  F3 - About Window (This window).\n" +
+                                    "  F4 - Statistics Window.\n" +
                                     "You can open or close windows by pressing keys.\n" +
                                     "You also can close windows by pressing \"X\" button.\n" +
                                     "To move any window, just press \"M\" button in the top-left\n" +
