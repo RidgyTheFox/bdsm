@@ -141,7 +141,7 @@ namespace BDSM
             if (GUI.Button(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 170, 240, 20), "Dump to file"))
                 DumpClientStatistics();
 
-            GUI.Label(new Rect(_statisticsWindowPosX + 20, _statisticsWindowPosY + 210, 100, 20), "Client", _fontCaptionStyle);
+            GUI.Label(new Rect(_statisticsWindowPosX + 20, _statisticsWindowPosY + 210, 100, 20), "Server", _fontCaptionStyle);
             GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 230, 100, 20), $"TX (bytes):\t{StaticData.serverNetManInstance.Statistics.BytesSent} ({serverBytesTXSpeed} Kb\\S)", _fontContentStyle);
             GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 250, 100, 20), $"RX (bytes):\t{StaticData.serverNetManInstance.Statistics.BytesReceived} ({serverBytesRXSpeed} Kb\\S)", _fontContentStyle);
             GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 270, 100, 20), $"TX (packets):\t{StaticData.serverNetManInstance.Statistics.PacketsSent} ({serverPacketsTXSpeed} P\\S)", _fontContentStyle);
