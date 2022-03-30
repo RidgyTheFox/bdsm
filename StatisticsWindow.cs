@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,40 @@ namespace BDSM
 {
     class StatisticsWindow : MonoBehaviour
     {
+        #region Variables for calculating speeds.
+        private long clientOldBytesReceivedPerSecond = 0;
+        private long clientOldBytesSendPerSecond = 0;
+        private long clientOldPacketsReceivedPerSecond = 0;
+        private long clientOldPacketsSendPerSecond = 0;
+
+        private long clientBytesReceivedPerSecond = 0;
+        private long clientBytesSendPerSecond = 0;
+        private long clientPacketsReceivedPerSecond = 0;
+        private long clientPacketsSendPerSecond = 0;
+                
+        private long serverOldBytesReceivedPerSecond = 0;
+        private long serverOldBytesSendPerSecond = 0;
+        private long serverOldPacketsReceivedPerSecond = 0;
+        private long serverOldPacketsSendPerSecond = 0;
+                
+        private long serverBytesReceivedPerSecond = 0;
+        private long serverBytesSendPerSecond = 0;
+        private long serverPacketsReceivedPerSecond = 0;
+        private long serverPacketsSendPerSecond = 0;
+
+        private int clientBytesRXSpeed = 0;
+        private int clientBytesTXSpeed = 0;
+        private int clientPacketsRXSpeed = 0;
+        private int clientPacketsTXSpeed = 0;
+
+        private int serverBytesRXSpeed = 0;
+        private int serverBytesTXSpeed = 0;
+        private int serverPacketsRXSpeed = 0;
+        private int serverPacketsTXSpeed = 0;
+        #endregion
+
+        private static System.Timers.Timer _speedCountTimer;
+
         private uint _statisticsWindowPosX = 0;
         private uint _statisticsWindowPosY = 366;
 
@@ -27,6 +62,44 @@ namespace BDSM
             _fontContentStyle = new GUIStyle();
             _fontContentStyle.normal.textColor = new Color(0.9f, 0.9f, 0.9f);
             _fontContentStyle.fontSize = 13;
+
+            _speedCountTimer = new System.Timers.Timer(500);
+            _speedCountTimer.AutoReset = true;
+            _speedCountTimer.Elapsed += OnSpeedCountTimer;
+            _speedCountTimer.Start();
+        }
+
+        private void OnSpeedCountTimer(object source, ElapsedEventArgs e)
+        {
+            clientBytesReceivedPerSecond = StaticData.clientNetManInstance.Statistics.BytesReceived;
+            clientBytesSendPerSecond = StaticData.clientNetManInstance.Statistics.BytesSent;
+            clientPacketsReceivedPerSecond = StaticData.clientNetManInstance.Statistics.PacketsReceived;
+            clientPacketsSendPerSecond = StaticData.clientNetManInstance.Statistics.PacketsSent;
+
+            serverBytesReceivedPerSecond = StaticData.serverNetManInstance.Statistics.BytesReceived;
+            serverBytesSendPerSecond = StaticData.serverNetManInstance.Statistics.BytesSent;
+            serverPacketsReceivedPerSecond = StaticData.serverNetManInstance.Statistics.PacketsReceived;
+            serverPacketsSendPerSecond = StaticData.serverNetManInstance.Statistics.PacketsSent;
+
+            clientBytesRXSpeed = (int)(clientBytesReceivedPerSecond - clientOldBytesReceivedPerSecond) / 1024;
+            clientBytesTXSpeed = (int)(clientBytesSendPerSecond - clientOldBytesSendPerSecond) / 1024;
+            clientPacketsRXSpeed = (int)(clientPacketsReceivedPerSecond - clientOldPacketsReceivedPerSecond);
+            clientPacketsTXSpeed = (int)(clientPacketsSendPerSecond - clientOldPacketsSendPerSecond);
+
+            serverBytesRXSpeed = (int)(serverBytesReceivedPerSecond - serverOldBytesReceivedPerSecond) / 1024;
+            serverBytesTXSpeed = (int)(serverBytesSendPerSecond - serverOldBytesSendPerSecond) / 1024;
+            serverPacketsRXSpeed = (int)(serverPacketsReceivedPerSecond - serverOldPacketsReceivedPerSecond);
+            serverPacketsTXSpeed = (int)(serverPacketsSendPerSecond - serverOldPacketsSendPerSecond);
+
+            clientOldBytesReceivedPerSecond = clientBytesReceivedPerSecond;
+            clientOldBytesSendPerSecond = clientBytesSendPerSecond;
+            clientOldPacketsReceivedPerSecond = clientPacketsReceivedPerSecond;
+            clientOldPacketsSendPerSecond = clientPacketsSendPerSecond;
+
+            serverOldBytesReceivedPerSecond = serverBytesReceivedPerSecond;
+            serverOldBytesSendPerSecond = serverBytesSendPerSecond;
+            serverOldPacketsReceivedPerSecond = serverPacketsReceivedPerSecond;
+            serverOldPacketsSendPerSecond = serverPacketsSendPerSecond;
         }
 
         private void Update()
@@ -59,20 +132,20 @@ namespace BDSM
             }
 
             GUI.Label(new Rect(_statisticsWindowPosX + 20, _statisticsWindowPosY + 30, 100, 20), "Client", _fontCaptionStyle);
-            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 50, 100, 20), $"TX (bytes):\t{StaticData.clientNetManInstance.Statistics.BytesSent}", _fontContentStyle);
-            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 70, 100, 20), $"RX (bytes):\t{StaticData.clientNetManInstance.Statistics.BytesReceived}", _fontContentStyle);
-            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 90, 100, 20), $"TX (packets):\t{StaticData.clientNetManInstance.Statistics.PacketsSent}", _fontContentStyle);
-            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 110, 100, 20), $"RX (packets):\t{StaticData.clientNetManInstance.Statistics.PacketsReceived}", _fontContentStyle);
+            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 50, 100, 20), $"TX (bytes):\t{StaticData.clientNetManInstance.Statistics.BytesSent} ({clientBytesTXSpeed} Kb\\S)", _fontContentStyle);
+            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 70, 100, 20), $"RX (bytes):\t{StaticData.clientNetManInstance.Statistics.BytesReceived} ({clientBytesRXSpeed} Kb\\S)", _fontContentStyle);
+            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 90, 100, 20), $"TX (packets):\t{StaticData.clientNetManInstance.Statistics.PacketsSent} ({clientPacketsTXSpeed} P\\S)", _fontContentStyle);
+            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 110, 100, 20), $"RX (packets):\t{StaticData.clientNetManInstance.Statistics.PacketsReceived} ({clientPacketsRXSpeed} P\\S)", _fontContentStyle);
             GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 130, 100, 20), $"Lost packets:\t{StaticData.clientNetManInstance.Statistics.PacketLoss}", _fontContentStyle);
             GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 150, 100, 20), $"Lost packets (%):\t{StaticData.clientNetManInstance.Statistics.PacketLossPercent}", _fontContentStyle);
             if (GUI.Button(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 170, 240, 20), "Dump to file"))
                 DumpClientStatistics();
 
             GUI.Label(new Rect(_statisticsWindowPosX + 20, _statisticsWindowPosY + 210, 100, 20), "Client", _fontCaptionStyle);
-            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 230, 100, 20), $"TX (bytes):\t{StaticData.serverNetManInstance.Statistics.BytesSent}", _fontContentStyle);
-            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 250, 100, 20), $"RX (bytes):\t{StaticData.serverNetManInstance.Statistics.BytesReceived}", _fontContentStyle);
-            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 270, 100, 20), $"TX (packets):\t{StaticData.serverNetManInstance.Statistics.PacketsSent}", _fontContentStyle);
-            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 290, 100, 20), $"RX (packets):\t{StaticData.serverNetManInstance.Statistics.PacketsReceived}", _fontContentStyle);
+            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 230, 100, 20), $"TX (bytes):\t{StaticData.serverNetManInstance.Statistics.BytesSent} ({serverBytesTXSpeed} Kb\\S)", _fontContentStyle);
+            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 250, 100, 20), $"RX (bytes):\t{StaticData.serverNetManInstance.Statistics.BytesReceived} ({serverBytesRXSpeed} Kb\\S)", _fontContentStyle);
+            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 270, 100, 20), $"TX (packets):\t{StaticData.serverNetManInstance.Statistics.PacketsSent} ({serverPacketsTXSpeed} P\\S)", _fontContentStyle);
+            GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 290, 100, 20), $"RX (packets):\t{StaticData.serverNetManInstance.Statistics.PacketsReceived} ({serverPacketsRXSpeed} P\\S)", _fontContentStyle);
             GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 310, 100, 20), $"Lost packets:\t{StaticData.serverNetManInstance.Statistics.PacketLoss}", _fontContentStyle);
             GUI.Label(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 330, 100, 20), $"Lost packets (%):\t{StaticData.serverNetManInstance.Statistics.PacketLossPercent}", _fontContentStyle);
             if (GUI.Button(new Rect(_statisticsWindowPosX + 5, _statisticsWindowPosY + 350, 240, 20), "Dump to file"))
