@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace BDSM
 {
-    class Statistics : MonoBehaviour
+    class StatisticsWindow : MonoBehaviour
     {
         private uint _statisticsWindowPosX = 0;
         private uint _statisticsWindowPosY = 366;
