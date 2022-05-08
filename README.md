@@ -1,5 +1,10 @@
 # Bus Driver Simulator Multiplayer
 
+## ATTENTION
+The development was abandoned for personal reasons. The repository is open. If you have a desire to continue what you started - I am open to pull requests in the indev branch.
+Probably a little later, I will add inline XML documentation to the project to understand what goes where and why.
+(See at indev branch for more info about mod state.)
+
 ## Enjoy the game - now with other players all around the globe!
 ![bds](https://i.imgur.com/fP6gvsm.jpg)
 
