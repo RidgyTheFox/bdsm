@@ -2,12 +2,15 @@
 
 namespace BDSM
 {
+    /// <summary>
+    /// This class can be used to get acces to different parts of game or mod. Be careful with it...
+    /// </summary>
     public static class StaticData
     {
         #region Fields.
-        private static Client _clientInstance;
-        private static NetManager _clientNetManInstance;
-        private static NetManager _serverNetManInstance;
+        private static Client _clientInstance;              // Client class reference.
+        private static NetManager _clientNetManInstance;    // Client LiteNetLib NetManager.
+        private static NetManager _serverNetManInstance;    // Server LiteNetLib NetManager.
         private static ClockMachine _clockMachine;
         private static DiscordIntegration _discordIntegrationInstance;
 
