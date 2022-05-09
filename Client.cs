@@ -12,6 +12,9 @@ using BDSM.Network;
 
 namespace BDSM
 {
+    /// <summary>
+    /// This class is repsonsible for all client stuff: connection, settings, syncing local and remote players, changing bus, map loading, creating models for remote players and etc...
+    /// </summary>
     public class Client : MonoBehaviour, LiteNetLib.INetEventListener
     {
         private NetManager _client;
@@ -19,6 +22,7 @@ namespace BDSM
         private NetPacketProcessor _packetProcessor;
 
         #region Client connection info.
+        // AKA Client settings.
         private string _nickname = "test";
         private string _serverIp = "127.0.0.1";
         private int _serverPort = 2022;
@@ -60,8 +64,12 @@ namespace BDSM
         private GUIStyle _netStatsTextStyle;
         #endregion
 
+        // This variable define distance limit for flying nicknames render.
         private const float _maxDistanceForNicknames = 60.0f;
 
+        /// <summary>
+        /// This function initializing everything on start.
+        /// </summary>
         private void Awake()
         {
             Debug.Log("CLIENT: Initializing...");
@@ -113,11 +121,15 @@ namespace BDSM
             Debug.Log("CLIENT: Initialized!");
         }
         
+        /// <summary>
+        /// Typical Update function responsible for keyboard events tracking. Dont use FixedUpdate because its creating some bugs and lags.
+        /// </summary>
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.F1))
                 _isMainWindowOpened = !_isMainWindowOpened;
 
+            // This is used for debugging. Just press END on your keyboard to change settings for local connection.
             if (Input.GetKeyDown(KeyCode.End))
             {
                 _serverIp = "127.0.0.1";
@@ -126,6 +138,8 @@ namespace BDSM
                 _password = "bdsmIsCool";
             }
 
+            // Syncing brakes. I like hardcoding. xD
+            // TODO: Add _onConnected check after commit with documentation for this file.
             if (Input.GetKeyDown(KeyCode.S))
                 SendPacket(new Network.ServerPackets.DispatchBusAction { pid = _localPlayerState.pid, actionName = "braking", actionState = true }, DeliveryMethod.ReliableOrdered);
             if (Input.GetKeyUp(KeyCode.S))
@@ -235,6 +249,9 @@ namespace BDSM
             }
         }
 
+        /// <summary>
+        /// This function will try to connect to the server according with the client settings.
+        /// </summary>
         private void Connect()
         {
             if (!_isConnected)
@@ -258,6 +275,9 @@ namespace BDSM
             }
         }
 
+        /// <summary>
+        /// This function taking control over disconnecting and other disconnection-related stuff. (Map unloading, deleting remote players and etc...)
+        /// </summary>
         public void Disconnect()
         {
             if (_isConnected)
@@ -286,14 +306,19 @@ namespace BDSM
             }
         }
 
+        /// <summary>
+        /// This function loads settings from ClientSettings.JSON and setting-up all client settings related variables.
+        /// </summary>
         private void ReloadSettings()
         {
+            // We cannot change settings when we connected.
             if (_isConnected)
             {
                 Debug.LogError("CLIENT: Unable to reload settings because the client is connected!");
                 return;
             }
 
+            // TODO: Refactor settings loading. Newtonsoft.JSON has a slightly easier way to parse data.
             Debug.Log("SERVER: Reloading settings...");
 
             JObject l_settings = JObject.Parse(System.IO.File.ReadAllText("ClientConfig.json"));
@@ -370,28 +395,41 @@ namespace BDSM
             Debug.Log("CLIENT: Settings loaded!");
         }
 
+        /// <summary>
+        /// This function will load and add to the world 3D models and classes (controllers for remote buses) for each remote player in _remotePlayers IF you`re on map..
+        /// </summary>
         public void CreateRemotePlayersModels()
         {
             foreach (Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
             {
                 if (l_player.remotePlayerBus == null)
                 {
+                    // This game uses FreeMode.Garage.GaragePrefabStorage for saving prefabs. So, we just can use bus short name from our player state.
                     _remotePlayers[l_player.state.pid].remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_player.state.selectedBusShortName, true));
                     CreateAssociatedControolerForBus(l_player.state.pid);
+                    // Dont forget about bus state.
                     _remotePlayers[l_player.state.pid].remotePlayerController.AssignBuState(_remotePlayers[l_player.state.pid].busState);
                 }
             }
         }
 
+        /// <summary>
+        /// This function turns on and off flying nicknames above each remote player.
+        /// </summary>
         private void SwitchFlyingNicknameVisibilityForRemotePlayers()
         {
             foreach(Network.ClientPackets.RemotePlayer l_player in _remotePlayers.Values)
             {
+                // We should check that controller is not null, because contorllers have flying nickname feature.
                 if (l_player.remotePlayerController != null)
                     l_player.remotePlayerController.SetFlyingNicknameVisibility();
             }
         }
 
+        /// <summary>
+        /// This function will create class for controlling remote bus according.
+        /// </summary>
+        /// <param name="pid">PID for creating controller.</param>
         private void CreateAssociatedControolerForBus(uint pid)
         {
             switch (_remotePlayers[pid].state.selectedBusShortName)
@@ -406,6 +444,7 @@ namespace BDSM
                     _remotePlayers[pid].remotePlayerController.SetNickname(_remotePlayers[pid].nickname, pid);
                     Debug.Log($"CLIENT: Created LZ controller for {_remotePlayers[pid].nickname}[{_remotePlayers[pid].state.pid}].");
                     break;
+                // If specific not coded yet, generic will be used. (Generic controller have only syncing functions and basic flying nickname feature. Specific controllers also have lights and wheels syncing.)
                 default:
                     Debug.LogError($"CLIENT: Controller for \"{_remotePlayers[pid].state.selectedBusShortName}\" not found! Generic class will be used...");
                     _remotePlayers[pid].remotePlayerController = _remotePlayers[pid].remotePlayerBus.AddComponent<RemotePlayerControllers.RemotePlayerController_Generic>();
@@ -414,6 +453,9 @@ namespace BDSM
             }
         }
 
+        /// <summary>
+        /// This function taking controls over map loading according with client settings.
+        /// </summary>
         private void ProceedMapLoading()
         {
             switch (_serverState.currentMap)
@@ -464,6 +506,9 @@ namespace BDSM
         }
 
         #region Public functions for other parts of mod.
+        /// <summary>
+        /// This function responsible for requesting time syncing with server.
+        /// </summary>
         public void RequestTimeUpdate()
         {
             if (!_isConnected || !_isAuthorized)
@@ -473,6 +518,10 @@ namespace BDSM
             Debug.Log("CLIENT: Server date and time requested...");
         }
 
+        /// <summary>
+        /// Use this function for triggering blinkers on your bus FOR OTHERS. This will not affect on local bus.
+        /// </summary>
+        /// <param name="l_blinkerSelect">Blinker for trigger. 0 All  blinkers disabled. -1 Left. 1 Right. 2 Both blinkers.</param>
         public void TriggerBlinkers(int l_blinkerSelect)
         {
             switch (l_blinkerSelect)
@@ -494,8 +543,14 @@ namespace BDSM
             }
         }
 
+        /// <summary>
+        /// This function have same functionality as TriggerBlinkers, but for other bus systems like engine, lights, doors (doors not implemented yet)and etc.
+        /// </summary>
+        /// <param name="l_actionName">There is should be a name of action. Frist time, i wanted to use a ENUM, but its not so soft and universal as text.</param>
+        /// <param name="l_actionState">Current state of aciton.</param>
         public void TriggerBusAction(string l_actionName, bool l_actionState)
         {
+            // This is just a checking. Nothing important...
             switch(l_actionName)
             {
                 case "engine":
@@ -524,15 +579,24 @@ namespace BDSM
         #endregion
 
         #region Callbacks.
+        /// <summary>
+        /// When server accepting our request, he will send OnJoinRequestAccepted packet with PID. This function creates states and assigning PID to the local player state.
+        /// </summary>
+        /// <param name="l_packet">A packet from server with our PID.</param>
         public void OnJoinRequestAccepted(Network.ClientPackets.OnJoinAccepted l_packet)
         {
             _localPlayerState.pid = l_packet.pid;
             _isAuthorized = true;
             Debug.Log($"CLIENT: Join request was accepted! Assigned PID is {l_packet.pid}. Requesting server state...");
             _localPlayerState.pid = l_packet.pid;
+            // Lets request server state.
             SendPacket(new Network.ServerPackets.RequestServerState { pid = l_packet.pid }, DeliveryMethod.ReliableOrdered);
         }
 
+        /// <summary>
+        /// If server for some reason declined our request, he will send OnJoinDeclined packet with reason.
+        /// </summary>
+        /// <param name="l_packet">Packet with disconnection reason.</param>
         public void OnJoinRequestDeclined(Network.ClientPackets.OnJoinDeclined l_packet)
         {
             _isAuthorized = false;
@@ -544,13 +608,22 @@ namespace BDSM
             Debug.LogError($"CLIENT: Cannot join server! Reason: {l_packet.message}.");
         }
         
+        /// <summary>
+        /// When our join request was accepted, we requesting server state. So, this function ctaching up server request and process packet.
+        /// </summary>
+        /// <param name="l_packet">Packet with current server state.</param>
         public void OnReceiveServerState(Network.ClientPackets.ReceiveServerState l_packet)
         {
             Debug.Log($"CLIENT: Server state has been received! Server name: {l_packet.serverName}. Current map: {EnumUtils.MapUintToEnum(l_packet.currentMap)}. Players limit: {l_packet.playersLimit}. Amount of players: {l_packet.currentAmountOfPlayers}.");
             _serverState = new Network.NestedTypes.ServerState { serverName = l_packet.serverName, currentMap = EnumUtils.MapUintToEnum(l_packet.currentMap), playersLimit = l_packet.playersLimit, currentAmountOfPlayers = l_packet.currentAmountOfPlayers };
+            // Now, when we have server state with map, we can load map according with server state.
             ProceedMapLoading();
         }
 
+        /// <summary>
+        /// This function saving somewhere our current game time from singleplater and asigning new, server time.
+        /// </summary>
+        /// <param name="l_packet">Packet with current server time.</param>
         public void OnReceiveServerDateAndTime(Network.ClientPackets.ReceiveServerDateAndTime l_packet)
         {
             if (StaticData.timeKeeper != null)
@@ -560,7 +633,7 @@ namespace BDSM
                 StaticData.timeKeeper.Hour = (int)l_packet.currentServerDateAndTime.hours;
                 StaticData.timeKeeper.Minute = (int)l_packet.currentServerDateAndTime.minutes;
                 StaticData.timeKeeper.Second = (int)l_packet.currentServerDateAndTime.seconds;
-                StaticData.timeKeeper.UpdateSky();
+                StaticData.timeKeeper.UpdateSky(); // This is very important thing. For some reason, its fixes lighting on map and main menu after disconnecting.
                 isTimeSynced = true;
                 Debug.Log($"CLIENT: Time has been set to day {l_packet.currentServerDateAndTime.day}, {l_packet.currentServerDateAndTime.hours}:{l_packet.currentServerDateAndTime.minutes}:{l_packet.currentServerDateAndTime.seconds}!");
             }
@@ -568,6 +641,10 @@ namespace BDSM
                 Debug.LogError("CLIENT: Cannot find FreeMode.TimeKeeper!");
         }
 
+        /// <summary>
+        /// When somebody joining on server, server will send OnAddRemotePlayer packet with player state for all clients (except new client) with player state for new player.
+        /// </summary>
+        /// <param name="l_packet">Packet with player state for a new player.</param>
         public void OnAddRemotePlayer(Network.ClientPackets.AddRemotePlayer l_packet)
         {
             Network.NestedTypes.BusState l_newBusState = l_packet.busState;
@@ -583,8 +660,9 @@ namespace BDSM
 
             Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, remotePlayerController = null, busState = l_newBusState, state = l_newPlayerState };
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
-            _serverState.currentAmountOfPlayers++;
+            _serverState.currentAmountOfPlayers++; // We taking care about amount of players on server in our instance of server state to not to spam packets.
 
+            // If we on map, lets create a gameobject with model and controller for this player.
             if (isPlayerOnMap)
             {
                 _remotePlayers[l_newPlayer.state.pid].remotePlayerBus = GameObject.Instantiate(FreeMode.Garage.GaragePrefabStorage.GetSingleton().GetPrefab(l_newPlayer.state.selectedBusShortName, true));
@@ -595,16 +673,25 @@ namespace BDSM
             Debug.Log($"CLIENT: Remote player with bus \"{l_newPlayer.state.selectedBusShortName}\" has been created for {l_newPlayer.nickname}[{l_newPlayer.state.pid}]!");
         }
 
+        /// <summary>
+        /// When somebody leaving from server, server will send OnRemoveRemotePlayer for each client. That packet contains PID for deleting.
+        /// </summary>
+        /// <param name="l_packet">Packet with PID.</param>
         public void OnRemoveRemotePlayer(Network.ClientPackets.RemoveRemotePlayer l_packet)
         {
+            // Dont forget to delete a gameobject for that player.
             if (_remotePlayers[l_packet.pid].remotePlayerBus != null)
                 GameObject.Destroy(_remotePlayers[l_packet.pid].remotePlayerBus);
 
             _remotePlayers.Remove(l_packet.pid);
-            _serverState.currentAmountOfPlayers--;
+            _serverState.currentAmountOfPlayers--; // Dont roget about server state...
             Debug.Log($"CLIENT: Remote player with PID {l_packet.pid} has been removed.");
         }
 
+        /// <summary>
+        /// When somebody changing bus, server will send OnRemotePlayerChanged bus.
+        /// </summary>
+        /// <param name="l_packet">Packet with PID and selected bus shortname.</param>
         public void OnRemotePlayerChangedBus(Network.ClientPackets.RemotePlayerChangedBus l_packet)
         {
             Network.NestedTypes.BusState l_newBusState = new Network.NestedTypes.BusState {
@@ -643,13 +730,17 @@ namespace BDSM
             }
         }
 
+        /// <summary>
+        /// This packet contains an array with player states for all players. Client receiving this packet each frame. It uses for sync.
+        /// </summary>
+        /// <param name="l_packet">Packet with array of player states.</param>
         public void OnUpdateRemotePlayers(Network.ClientPackets.UpdateRemotePlayers l_packet)
         {
             foreach (Network.NestedTypes.PlayerState l_receivedState in l_packet.states)
             {
                 if (l_receivedState.selectedBusShortName != null)
                 {
-                    if (l_receivedState.pid != _localPlayerState.pid)
+                    if (l_receivedState.pid != _localPlayerState.pid) // If this is player state not with our information.
                     {
                         Network.NestedTypes.PlayerState l_newState = new Network.NestedTypes.PlayerState {
                             pid = l_receivedState.pid,
@@ -667,8 +758,12 @@ namespace BDSM
             }
         }
 
+        /// <summary>
+        /// THis is not a callback. This function will be called when you changed your bus in garage. Its will send a packet to server to let him know that you`re changed the bus.
+        /// </summary>
         public void OnPlayerChangedBusInGarage()
         {
+            // If we not on server - we dont care.
             if (!_isConnected || !_isAuthorized)
                 return;
 
@@ -677,11 +772,19 @@ namespace BDSM
             SendPacket( new Network.ServerPackets.ChangeBus { pid = _localPlayerState.pid, busShortName = _localPlayerState.selectedBusShortName }, DeliveryMethod.ReliableOrdered);
         }
 
+        /// <summary>
+        /// This is a fucntion for assigning bus states for remote players.
+        /// </summary>
+        /// <param name="l_newState">Packet with new bus state and PID.</param>
         public void OnReceiveBusState(Network.ClientPackets.ReceiveBusState l_newState)
         {
             _remotePlayers[l_newState.pid].remotePlayerController.AssignBuState(l_newState.newBusState);
         }
 
+        /// <summary>
+        /// When somebody triggering action, server sends OnReceiveRemotePlayerBusAction with action name and state.
+        /// </summary>
+        /// <param name="l_packet">Packet with PID, action name and action state.</param>
         public void OnReceiveRemotePlayerBusAction(Network.ClientPackets.ReceiveRemotePlayerBusAction l_packet)
         {
             if (_remotePlayers[l_packet.pid].remotePlayerController == null)
@@ -691,6 +794,12 @@ namespace BDSM
         }
         #endregion
 
+        /// <summary>
+        /// Small function that helps you with sending packets to server.
+        /// </summary>
+        /// <typeparam name="T">Packet class for sending (BDSM.Network...).</typeparam>
+        /// <param name="l_packet">Packet for sending.</param>
+        /// <param name="l_deliveryMethod">Actually, delivery method. Use ReliableOrdered for actions, and Unreliable for syncing.</param>
         public void SendPacket<T>(T l_packet, DeliveryMethod l_deliveryMethod) where T : class, new()
         {
             if (_server != null)
@@ -702,28 +811,61 @@ namespace BDSM
         }
 
         #region INetListener Interface.
+
+        /// <summary>
+        /// Defauflt callback for INetSocketListener. We should reject any incoming connections. We are client, not a server.
+        /// </summary>
+        /// <param name="request">Incoming request class.</param>
         public void OnConnectionRequest(ConnectionRequest request)
         {
+            // TODO: Make refusing all incoming connections in next commit after documentation in client.cs. We are`nt a server! :C
         }
 
+        /// <summary>
+        /// When error in LiteNetLib happens, this functions will be called.
+        /// </summary>
+        /// <param name="l_endPoint">EndPoint where error occured.</param>
+        /// <param name="l_socketError">Error class.</param>
         public void OnNetworkError(IPEndPoint l_endPoint, SocketError l_socketError)
         {
             Debug.LogError($"CLIENT: Network error has occured! {l_socketError.ToString()}.");
         }
 
+        /// <summary>
+        /// This function when latency with client changing. So, you can get some useful info. But i`m personally using Statistics in LiteNetLib.NetManager (_client variable).
+        /// </summary>
+        /// <param name="l_peer">Peer class.</param>
+        /// <param name="l_latency">Peer latency.</param>
         public void OnNetworkLatencyUpdate(NetPeer l_peer, int l_latency)
         {
         }
 
+        /// <summary>
+        /// This functions will be called if we get any sort of a packet from server. We just re-routing these packets into our NetPacketProcessor for processing.
+        /// </summary>
+        /// <param name="l_peer">Sender.</param>
+        /// <param name="l_reader">Created NetPacketReader for this packet.</param>
+        /// <param name="l_channelNumber">Channel where we got this packet.</param>
+        /// <param name="l_deliveryMethod">What delivery type was used for delivering.</param>
         public void OnNetworkReceive(NetPeer l_peer, NetPacketReader l_reader, byte l_channelNumber, DeliveryMethod l_deliveryMethod)
         {
             _packetProcessor.ReadAllPackets(l_reader, l_peer);
         }
 
+        /// <summary>
+        /// Tbh, idk wtf is it.
+        /// </summary>
+        /// <param name="l_remoteEndPoint"></param>
+        /// <param name="l_reader"></param>
+        /// <param name="l_messageType"></param>
         public void OnNetworkReceiveUnconnected(IPEndPoint l_remoteEndPoint, NetPacketReader l_reader, UnconnectedMessageType l_messageType)
         {
         }
 
+        /// <summary>
+        /// If someone or we successfully connected to the server, then this function will be called.
+        /// </summary>
+        /// <param name="l_peer">Peer that was connected.</param>
         public void OnPeerConnected(NetPeer l_peer)
         {
             _server = l_peer;
@@ -732,6 +874,11 @@ namespace BDSM
             SendPacket(new Network.ServerPackets.RequestJoin { nickname = _nickname, state = _localPlayerState }, DeliveryMethod.ReliableOrdered);
         }
 
+        /// <summary>
+        /// If someone or we successfully connected to the server, then this function will be called.
+        /// </summary>
+        /// <param name="l_peer">Peer class.</param>
+        /// <param name="l_disconnectInfo">Some additional info.</param>
         public void OnPeerDisconnected(NetPeer l_peer, DisconnectInfo l_disconnectInfo)
         {
             if (l_peer == _server)
