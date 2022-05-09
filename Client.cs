@@ -818,7 +818,8 @@ namespace BDSM
         /// <param name="request">Incoming request class.</param>
         public void OnConnectionRequest(ConnectionRequest request)
         {
-            // TODO: Make refusing all incoming connections in next commit after documentation in client.cs. We are`nt a server! :C
+            request.RejectForce();
+            Debug.LogWarning($"Incoming connection request from {request.RemoteEndPoint.Address} was rejected!");
         }
 
         /// <summary>
