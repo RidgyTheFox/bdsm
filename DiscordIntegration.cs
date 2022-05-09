@@ -4,6 +4,9 @@ using Discord;
 
 namespace BDSM
 {
+    /// <summary>
+    /// This enum contains all available activities for displaying in Discord Rich Presence.
+    /// </summary>
     public enum AvailbaleActivities : ushort
     {
         IN_MAIN_MENU = 0,
@@ -11,11 +14,15 @@ namespace BDSM
         IN_MULTIPLAYER = 2
     }
 
+    /// <summary>
+    /// This class taking control over Discord Rich Presence integration.
+    /// </summary>
     public class DiscordIntegration : MonoBehaviour
     {
         private Discord.Discord _discord;
         private ActivityManager _activityManager;
 
+        // These activityes can be displayed in user profile in Discord.
         private Activity _inMainMenuActivity;
         private Activity _inSinglePlayerActivity;
         private Activity _inMultiplayerActivity;
@@ -24,6 +31,9 @@ namespace BDSM
         public int playersAmount = 1;
         public int playersLimit = 10;
 
+        /// <summary>
+        /// This method initializing everything with some basic data for next usage.
+        /// </summary>
         private void Awake()
         {
             Debug.Log("DISCORD_INTEGRATION: Initializing...");
@@ -69,6 +79,10 @@ namespace BDSM
             _discord.RunCallbacks();
         }
 
+        /// <summary>
+        /// To display players count in activity, you should provide secret and public keys for lobby in DRP. So, use this function to get random symbol-numeric key with 32 letters length.
+        /// </summary>
+        /// <returns></returns>
         private string GenerateRandomSecretKey()
         {
             const uint keyLength = 32;
@@ -97,6 +111,11 @@ namespace BDSM
             return output;
         }
 
+        /// <summary>
+        /// This function returns full bus name by him short name.
+        /// </summary>
+        /// <param name="l_shortname">bus short name.</param>
+        /// <returns></returns>
         private string GetFullBusNameByShortname(string l_shortname)
         {
             switch (l_shortname)
@@ -132,12 +151,18 @@ namespace BDSM
             }
         }
 
+        /// <summary>
+        /// This function will update internal activities classes and will diplay it in user profile in Discord.
+        /// </summary>
+        /// <param name="l_activityForUpdate"></param>
         public void UpdateActivity(AvailbaleActivities l_activityForUpdate)
         {
             DateTime foo = DateTime.Now;
             long unixTime = ((DateTimeOffset)foo).ToUnixTimeSeconds();
             string currentBus;
 
+            // This try-catch block was used to check for a saved game.
+            // If the player has never entered the campaign mode and has not bought a bus, then we will not be able to read the data and will get an exception.
             try
             {
                 currentBus = FreeMode.PlayerData.GetCurrentData().SelectedBusData.ShortName;
@@ -148,6 +173,7 @@ namespace BDSM
                 Debug.LogError($"DISCORD_INTEGRATION: Exception while try to get bus name. Cannot load save data! Falling back to default...");
             }
 
+            // This switch fills up selected activity and displaying it.
             switch (l_activityForUpdate)
             {
                 case AvailbaleActivities.IN_MAIN_MENU:
