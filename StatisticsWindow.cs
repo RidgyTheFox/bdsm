@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace BDSM
 {
+    /// <summary>
+    /// This is a class that provides Statistics window and statistics dumping functions.
+    /// </summary>
     class StatisticsWindow : MonoBehaviour
     {
         #region Variables for calculating speeds.
@@ -63,12 +66,20 @@ namespace BDSM
             _fontContentStyle.normal.textColor = new Color(0.9f, 0.9f, 0.9f);
             _fontContentStyle.fontSize = 13;
 
+            // This is a main timer that collects statistics and updating data in window.
+            // Timer tick time defines resolution of speed meters.
+            // Please keep it at least on 250 ms (4 updates per second) for saving perfomance.
             _speedCountTimer = new System.Timers.Timer(500);
             _speedCountTimer.AutoReset = true;
             _speedCountTimer.Elapsed += OnSpeedCountTimer;
             _speedCountTimer.Start();
         }
 
+        /// <summary>
+        /// This function is called every time the timer expires. Its collecting all data and calcualtes speeds.
+        /// </summary>
+        /// <param name="source">Not in use. Idk what is this.</param>
+        /// <param name="e">Not in use. Idk what is this.</param>
         private void OnSpeedCountTimer(object source, ElapsedEventArgs e)
         {
             clientBytesReceivedPerSecond = StaticData.clientNetManInstance.Statistics.BytesReceived;
@@ -152,6 +163,9 @@ namespace BDSM
                 DumpServerStatistics();
         }
 
+        /// <summary>
+        /// This function will collect and then dump client network statistics to the file that will be called as yyyy_mm_dd_hh_MM_ss_clientStatistics.dump Dont look at format, its just a plain text.
+        /// </summary>
         public void DumpClientStatistics()
         {
             DateTime timeNow = DateTime.Now;
@@ -171,6 +185,9 @@ namespace BDSM
             WriteTextToFile(l_fileName, l_lines, false);
         }
 
+        /// <summary>
+        /// This function will collect and then dump server network statistics to the file that will be called as yyyy_mm_dd_hh_MM_ss_serverStatistics.dump Dont look at format, its just a plain text.
+        /// </summary>
         private void DumpServerStatistics()
         {
             DateTime timeNow = DateTime.Now;
@@ -190,6 +207,12 @@ namespace BDSM
             WriteTextToFile(l_fileName, l_lines, false);
         }
 
+        /// <summary>
+        /// This is an async function for writing data into file.
+        /// </summary>
+        /// <param name="file">Filename for writing.</param>
+        /// <param name="lines">Array of lines for writing.</param>
+        /// <param name="append">Should function append new string to the old file if he exist and have same name.</param>
         public async void WriteTextToFile(string file, List<string> lines, bool append)
         {
             if (!append && File.Exists(file))
