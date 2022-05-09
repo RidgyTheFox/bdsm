@@ -1,7 +1,13 @@
 ﻿namespace BDSM
 {
+    /// <summary>
+    /// This class provides some usefull ENUM for using in mod.
+    /// </summary>
     public static class Enums
     {
+        /// <summary>
+        /// This ENUM represents all available maps.
+        /// </summary>
         public enum AvailableMaps : uint
         {
             UNKNOWN = 0,
@@ -13,6 +19,9 @@
             SOLNECHNOGORSK = 6
         }
 
+        /// <summary>
+        /// This ENUM represents all available buses in the game.
+        /// </summary>
         public enum AvailableBuses : uint
         {
             UNKNOWN = 0,
@@ -32,9 +41,17 @@
         }
     }
 
+    /// <summary>
+    /// This class provides some usefull functions for ENUMS.
+    /// </summary>
     public static class EnumUtils
     {
         #region AvailableMaps enum utils.
+        /// <summary>
+        /// This function will convert unsigned int into AvailableMaps ENUM.
+        /// </summary>
+        /// <param name="l_map">Unsigned int that represents map in AvailableMaps ENUM.</param>
+        /// <returns>AvailableMaps ENUM case.</returns>
         public static Enums.AvailableMaps MapUintToEnum(uint l_map)
         {
             switch(l_map)
@@ -50,6 +67,11 @@
             }
         }
 
+        /// <summary>
+        /// This function will convert AvailableMaps ENUM case into unsigned int.
+        /// </summary>
+        /// <param name="l_map">AvailableMaps ENUM case.</param>
+        /// <returns>Unsigned int that represents map in AvailableMaps ENUM.</returns>
         public static uint MapEnumToUint(Enums.AvailableMaps l_map)
         {
             switch (l_map)
@@ -65,6 +87,11 @@
             }
         }
 
+        /// <summary>
+        /// This function will give you a string with map name from AvailableMaps ENUM.
+        /// </summary>
+        /// <param name="mapEnum">AvailableMaps ENUM case.</param>
+        /// <returns>Map name.</returns>
         public static string MapEnumToString(Enums.AvailableMaps mapEnum)
         {
             switch (mapEnum)
@@ -82,6 +109,11 @@
         #endregion
 
         #region AvailableBuses enum utils.
+        /// <summary>
+        /// This function will convert unsigned int into AvailableBuses ENUM case.
+        /// </summary>
+        /// <param name="busUint">Unsigned int that represents case in AvailableBuses ENUM.</param>
+        /// <returns>AvailableBuses ENUM case.</returns>
         public static Enums.AvailableBuses BusUintToEnum(uint busUint)
         {
             switch (busUint)
@@ -104,6 +136,11 @@
             }
         }
 
+        /// <summary>
+        /// This function will convert AvailableBuses ENUM case into unsigned int.
+        /// </summary>
+        /// <param name="bus">AvailableBuses ENUM case.</param>
+        /// <returns>Unsigned int that represents bus in AvailableBuses ENUM.</returns>
         public static uint BusEnumToUint(Enums.AvailableBuses bus)
         {
             switch (bus)
@@ -126,6 +163,11 @@
             }
         }
 
+        /// <summary>
+        /// This function will give you a full bus name by AvailableBuses ENUM case.
+        /// </summary>
+        /// <param name="bus">AvailabeBuses ENUM case.</param>
+        /// <returns>Full bus name.</returns>
         public static string BusEnumToString(Enums.AvailableBuses bus)
         {
             switch (bus)
@@ -148,6 +190,11 @@
             }
         }
 
+        /// <summary>
+        /// This function will give you a short bus name by AvailableBuses ENUM case.
+        /// </summary>
+        /// <param name="bus">AvailableBuses ENUM case.</param>
+        /// <returns>Bus short name.</returns>
         public static string GetShortBusName(Enums.AvailableBuses bus)
         {
             switch (bus)
@@ -170,6 +217,11 @@
             }
         }
 
+        /// <summary>
+        /// This function will give you a short bus name by unsigned int that represents bus in AvailableBuses ENUM.
+        /// </summary>
+        /// <param name="l_busId">Unsigned int that represents bus in AvailableBuses ENUM.</param>
+        /// <returns>Bus short name.</returns>
         public static string GetShortBusNameById(uint l_busId)
         {
             switch(l_busId)
@@ -191,6 +243,13 @@
             }
         }
 
+        /// <summary>
+        /// This function will give you an AvailableBuses ENUM case from unsigned int that represents the bus.
+        /// </summary>
+        /// <param name="l_busId">Unsigned int that represents bus in AvailableBuses ENUM.</param>
+        /// <returns>Bus case in AvailableBuses ENUM.</returns>
+        /// IMPORTANT: Idk what it this. Maybe old code?
+        // TODO: Figure out what the f*ck is this.
         public static Enums.AvailableBuses GetBusEnumByBusId(uint l_busId)
         {
             switch (l_busId)
