@@ -2,20 +2,26 @@
 using LiteNetLib;
 using LiteNetLib.Utils;
 
+/// <summary>
+/// This namespace contain some classes that you can use in other classes for serialization. Its something like a data type in packets.
+/// </summary>
 namespace BDSM.Network.NestedTypes
 {
+    /// <summary>
+    /// This type contains all client-side information about player.
+    /// </summary>
     public struct PlayerState : INetSerializable
     {
-        public uint pid { get; set; }
-        public string selectedBusShortName { get; set; }
-        public Vector3 position { get; set; }
-        public Quaternion rotation { get; set; }
-        public Quaternion wheelFL { get; set; }
+        public uint pid { get; set; }                       // PID or Player identifier. Its a unicum number that represents player. PID is equal to the socket identifier on the server to which this player is connected. That is, two players can have the same ID, but only if they are not on the server at the same time.
+        public string selectedBusShortName { get; set; }    // Current player bus.
+        public Vector3 position { get; set; }               // Current player position. If player in garage, position will be -999.0f -999.0f -999.0f
+        public Quaternion rotation { get; set; }            // Current player rotation.
 
-        public Quaternion wheelFR { get; set; }
-
-        public Quaternion wheelRL { get; set; }
-        public Quaternion wheelRR { get; set; }
+        // Small notes about wheels sync: i know, that kind of a sync sucks at all... This shit should be refactored.
+        public Quaternion wheelFL { get; set; }             // Front-left wheel rotation.
+        public Quaternion wheelFR { get; set; }             // Front-right wheel rotation.
+        public Quaternion wheelRL { get; set; }             // Rear-left wheel rotation.
+        public Quaternion wheelRR { get; set; }             // Rear-right wheel rotation.
 
         public void Serialize(NetDataWriter l_writer)
         {
@@ -42,6 +48,9 @@ namespace BDSM.Network.NestedTypes
 
     }
 
+    /// <summary>
+    /// This class represents current server state and providing some useful information on client side.
+    /// </summary>
     public struct ServerState : INetSerializable
     {
         public string serverName { get; set; }
@@ -67,6 +76,9 @@ namespace BDSM.Network.NestedTypes
         }
     }
 
+    /// <summary>
+    /// This nested type for time syncing betwen server and client.
+    /// </summary>
     public struct NetDateAndTime : INetSerializable
     {
         public uint day { get; set; }
@@ -91,6 +103,9 @@ namespace BDSM.Network.NestedTypes
         }
     }
 
+    /// <summary>
+    /// This class represents current bus state of specified player.
+    /// </summary>
     public struct BusState : INetSerializable
     {
         public bool isEngineTurnedOn { get; set; }
@@ -139,10 +154,14 @@ namespace BDSM.Network.NestedTypes
         }
     }
 
+    /// <summary>
+    /// This class represents current state of one of the front wheels of bus. But this is not in use yet. Just for future...
+    /// </summary>
     public struct WheelState : INetSerializable
     {
-        public float wheelAngle { get; set; }
-        public float wheelRotation { get; set; }
+        public float wheelAngle { get; set; }       //
+                                                    // There is data only for one wheel, but we can just mirror this data on other fron wheel, and mirror rotation on rear wheels.
+        public float wheelRotation { get; set; }    //
 
         public void Serialize(NetDataWriter l_writer)
         {
