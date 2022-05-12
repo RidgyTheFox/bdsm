@@ -4,8 +4,14 @@ using UnityEngine;
 
 namespace BDSM
 {
+    /// <summary>
+    /// This class can save current in-game time, restore it from saved, and count time itself.
+    /// </summary>
     public class ClockMachine : MonoBehaviour
     {
+        /// <summary>
+        /// This struct contain time.
+        /// </summary>
         public struct DateAndTime
         {
             public uint days;
@@ -17,7 +23,7 @@ namespace BDSM
         private DateAndTime _savedDateAndTime;
         private bool _isDateAndTimeWasSaved = false;
 
-        private static System.Timers.Timer _mainTimer;
+        private static System.Timers.Timer _mainTimer; // This timer will count time.
 
         private static uint _currentDay;
         private static uint _currentHour;
@@ -42,10 +48,12 @@ namespace BDSM
             _currentMinute = 0;
             _currentSecond = 0;
 
+            // Dont change timer time!
             _mainTimer = new Timer(1000);
             _mainTimer.AutoReset = true;
             _mainTimer.Elapsed += OnClockMachineTimerElapsed;
 
+            // Lets add our current instance to StaticData so other parts of plugin can use us.
             StaticData.clockMachine = this;
         }
 
@@ -53,6 +61,11 @@ namespace BDSM
         {
         }
 
+        /// <summary>
+        /// This is a callback for timer. It counts time! "Time machine!" :P
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         private static void OnClockMachineTimerElapsed(object source, ElapsedEventArgs e)
         {
             if (_currentSecond < 59)
@@ -78,6 +91,13 @@ namespace BDSM
             }
         }
 
+        /// <summary>
+        /// This function allows you to change internal (in ClockMachine, not in game) time.
+        /// </summary>
+        /// <param name="l_day">Current day.</param>
+        /// <param name="l_hour">Current hour.</param>
+        /// <param name="l_minute">Current minute.</param>
+        /// <param name="l_second">Current second.</param>
         public void SetTime(uint l_day, uint l_hour, uint l_minute, uint l_second)
         {
             _currentDay = l_day;
@@ -88,11 +108,18 @@ namespace BDSM
             Debug.Log($"CLOCK_MACHINE: Time has been set to {_currentDay} Day, {_currentHour}:{_currentMinute}:{_currentSecond} (HH:MM:SS).");
         }
 
+        /// <summary>
+        /// This function will return you current ClockMachine time.
+        /// </summary>
+        /// <returns>Current ClockMachine time.</returns>
         public DateAndTime GetTime()
         {
             return new DateAndTime { days = _currentDay, hours = _currentHour, minutes = _currentMinute, seconds = _currentSecond };
         }
 
+        /// <summary>
+        /// This function starts the passage of time in the ClockMachine.
+        /// </summary>
         public void StartTime()
         {
             _mainTimer.Start();
@@ -100,6 +127,9 @@ namespace BDSM
             Debug.Log("CLOCK_MACHIME: Clock machine started!");
         }
 
+        /// <summary>
+        /// This function starts the passage of time in the ClockMachine.
+        /// </summary>
         public void StopTime()
         {
             _mainTimer.Stop();
@@ -107,6 +137,9 @@ namespace BDSM
             Debug.Log("CLOCK_MACHINE: Clock machine stopped!");
         }
 
+        /// <summary>
+        /// This function can save current in-game time. Be carefull, this time will be saved until game is running.
+        /// </summary>
         public void SaveCurrentDateAndTime()
         {
             if (StaticData.timeKeeper == null)
@@ -126,6 +159,9 @@ namespace BDSM
             Debug.Log($"CLOCK_MACHINE: Time {_savedDateAndTime.days}:{_savedDateAndTime.hours}:{_savedDateAndTime.minutes}:{_savedDateAndTime.seconds} has been saved.");
         }
 
+        /// <summary>
+        /// This function can restore in-game time from variable if you already saved it some time ago.
+        /// </summary>
         public void RestoreSavedDateAndTime()
         {
             if (!_isDateAndTimeWasSaved)
