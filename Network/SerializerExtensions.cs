@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using LiteNetLib.Utils;
 
+/// <summary>
+/// This namespace contains extensions for LiteNetLib serializer. So, i can serialize Unity`s data types in serialized classes.
+/// </summary>
 namespace BDSM.Network
 {
     public static class SerializerExtension_Quaternion
