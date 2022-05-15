@@ -10,6 +10,9 @@ using BDSM.Network;
 
 namespace BDSM
 {
+    /// <summary>
+    /// This class is repsonsible for all server stuff: handling clients, syncing players and etc...
+    /// </summary>
     public class Server : MonoBehaviour, LiteNetLib.INetEventListener
     {
         private NetManager _server;
@@ -37,6 +40,9 @@ namespace BDSM
         private uint _mainWindowPosY = 211;
         #endregion
 
+        /// <summary>
+        /// This function warming up everything for work.
+        /// </summary>
         private void Awake()
         {
             Debug.Log("SERVER: Initializing...");
@@ -71,16 +77,23 @@ namespace BDSM
             Debug.Log("SERVER: Initialized!");
         }
 
+        /// <summary>
+        /// Update function is used for handling keyboard input.
+        /// </summary>
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.F2))
                 _isMainWindowOpened = !_isMainWindowOpened;
         }
 
+        /// <summary>
+        /// Fixed function is used for everything else that you cannot place in Update function.
+        /// </summary>
         private void FixedUpdate()
         {
             _server.PollEvents();
 
+            // Sending array with positions and rotations of all players to all client.
             if (_players.Count > 1)
             {
                 int i = 0;
@@ -142,6 +155,9 @@ namespace BDSM
             }
         }
 
+        /// <summary>
+        /// This function launching server.
+        /// </summary>
         private void LaunchServer()
         {
             if (!_isServerLaunched)
@@ -154,6 +170,9 @@ namespace BDSM
             }
         }
 
+        /// <summary>
+        /// This function stops server.
+        /// </summary>
         private void StopServer()
         {
             if (_isServerLaunched)
@@ -166,6 +185,9 @@ namespace BDSM
             }
         }
 
+        /// <summary>
+        /// This funciton reading ServerSettings.json and parsing settings into class variables. (See "Server data" region.)
+        /// </summary>
         private void ReloadSettings()
         {
             if (_isServerLaunched)
@@ -312,6 +334,13 @@ namespace BDSM
             Debug.Log("SERVER: Settings loaded!");
         }
 
+        /// <summary>
+        /// This is a small fucntion that helps you with sending packets to a specific peer.
+        /// </summary>
+        /// <typeparam name="T">Packet class that was registered in LiteNetLib.</typeparam>
+        /// <param name="l_packet">Packet.</param>
+        /// <param name="l_peer">Receiver of packet.</param>
+        /// <param name="l_deliveryMethod">Packet delivering type.</param>
         public void SendPacket<T>(T l_packet, NetPeer l_peer, DeliveryMethod l_deliveryMethod) where T : class, new()
         {
             if (l_peer != null)
@@ -323,10 +352,17 @@ namespace BDSM
         }
 
         #region Callbacks.
+        /// <summary>
+        /// When player was connected on socket, he sending JoinRequest packet with information about him. This callback for this packet.
+        /// </summary>
+        /// <param name="l_packet">Packet with information about player.</param>
+        /// <param name="l_peer">Sender class.</param>
         public void OnJoinRequest(Network.ServerPackets.RequestJoin l_packet, NetPeer l_peer)
         {
+            // Lets if player with this nickname already on server.
             foreach(Network.ServerPackets.ServerPlayer player in _players.Values)
             {
+                // Lets disconnect new player if nickname already taken.
                 if (player.nickname == l_packet.nickname)
                 {
                     Debug.LogWarning($"SERVER: Join request has been rejected because player with this nickname already exists.");
@@ -336,6 +372,7 @@ namespace BDSM
                 }
             }
 
+            // Creating some stuff for that new player.
             Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState {
                 pid = (uint)l_peer.Id,
                 selectedBusShortName = l_packet.state.selectedBusShortName,
@@ -360,10 +397,12 @@ namespace BDSM
                 isReverseGear = l_packet.busState.isReverseGear,
                 isRightBlinkerBlinking = l_packet.busState.isRightBlinkerBlinking};
 
+            // Lets create a ServerPlayer class for that player, assign data, save it in _players dictionary and lets send a packet that will tell to the player that we accepted him join request.
             Network.ServerPackets.ServerPlayer l_newPlayer = new Network.ServerPackets.ServerPlayer { nickname = l_packet.nickname, busState = l_newPlayerBusState, peer = l_peer, state = l_newPlayerState };
             _players.Add(l_newPlayer.state.pid, l_newPlayer);
             SendPacket(new Network.ClientPackets.OnJoinAccepted { pid = l_newPlayer.state.pid }, l_peer, DeliveryMethod.ReliableOrdered);
-
+            
+            // Lets let to know to others that a new player has joined on server.
             foreach(Network.ServerPackets.ServerPlayer l_player in _players.Values)
             {
                 if (l_player.state.pid != l_newPlayer.state.pid)
@@ -376,14 +415,20 @@ namespace BDSM
             Debug.Log($"SERVER: new player {l_newPlayer.nickname}[{l_newPlayer.state.pid}] connected! Their bus is {l_newPlayer.state.selectedBusShortName}.");
         }
 
+        /// <summary>
+        /// This is a callback for answering on server state requests.
+        /// </summary>
+        /// <param name="l_packet">Packet with PID who requested server state.</param>
         public void OnServerStateRequest(Network.ServerPackets.RequestServerState l_packet)
         {
+            // If this player not in _players dictionary.
             if (_players[l_packet.pid] == null)
             {
                 Debug.LogError($"SERVER: User with PID {l_packet.pid} does not exist!");
                 return;
             }
 
+            // If that player exist.
             Network.ClientPackets.ReceiveServerState l_newServerState = new Network.ClientPackets.ReceiveServerState {
                 serverName = _serverName,
                      currentAmountOfPlayers = (uint)_players.Count,
@@ -393,6 +438,10 @@ namespace BDSM
             SendPacket(l_newServerState, _players[l_packet.pid].peer, DeliveryMethod.ReliableOrdered);
         }
 
+        /// <summary>
+        /// This is a callback for answeting on server time and date requests.
+        /// </summary>
+        /// <param name="l_packet">Packet with PID who requested server time and date.</param>
         public void OnRequestServerDateAndTime(Network.ServerPackets.RequestServerDateAndTime l_packet)
         {
             if (_players[l_packet.pid] == null)
@@ -412,14 +461,22 @@ namespace BDSM
             SendPacket(l_newPacket, _players[l_packet.pid].peer, DeliveryMethod.ReliableOrdered);
         }
 
+        /// <summary>
+        /// When player changing bus, he will send ChangeBus packet to the server. This packet contains information about bus. We should change osme data on our side and dispatch that event to other clients.
+        /// </summary>
+        /// <param name="l_packet"></param>
         public void OnPlayerChangedBus(Network.ServerPackets.ChangeBus l_packet)
         {
+            // TODO: Refactor that function. (I`m using dictionary in really strange way...)
             Debug.Log($"SERVER: Player with PID {l_packet.pid} has changed bus. Searching for player...");
             Network.ServerPackets.ServerPlayer l_playerForEdit;
+
+            // Lets try to find that player in _players dictionary and write that instance to l_playerForEdit variable.
             _players.TryGetValue(l_packet.pid, out l_playerForEdit);
 
             if (l_playerForEdit != null)
             {
+                // Assigning new data to the local variables.
                 if (l_playerForEdit.state.selectedBusShortName == l_packet.busShortName)
                 {
                     Debug.LogWarning($"SERVER: {l_playerForEdit.nickname}[{l_playerForEdit.state.pid}] changed bus to \"{l_packet.busShortName}\" but they are already driving this bus...");
@@ -454,6 +511,7 @@ namespace BDSM
                 _players.Remove(l_packet.pid);
                 _players.Add(l_packet.pid, l_playerForEdit);
 
+                // Lets dispatch that event to other clients.
                 foreach(Network.ServerPackets.ServerPlayer l_player in _players.Values)
                 {
                     if (l_player.state.pid != l_packet.pid)
@@ -466,11 +524,19 @@ namespace BDSM
                 Debug.LogError($"SERVER: Cannot find player with PID {l_packet.pid}!");
         }
 
+        /// <summary>
+        /// Player every his frame sending new him position and rotation. This callback will apply new data to the ServerPlayer.
+        /// </summary>
+        /// <param name="l_packet">Packet with player state.</param>
         public void OnUpdatePlayerState(Network.ServerPackets.UpdatePlayerState l_packet)
         {
             _players[l_packet.pid].state = l_packet.state;
         }
 
+        /// <summary>
+        /// This callback handling packet with new bus state from player and dispatching new data to others.
+        /// </summary>
+        /// <param name="l_packet">Packet with new player bus state.</param>
         public void OnSetBusState(Network.ServerPackets.SetBusState l_packet)
         {
             Network.ServerPackets.ServerPlayer l_player;
@@ -489,10 +555,15 @@ namespace BDSM
                 Debug.LogError($"SERVER: New bus state has been received from player with PID {l_packet.pid}, but server cannot find them in players list!");
         }
 
+        /// <summary>
+        /// When player doing triggering something on his bus (turning on blinkers or headlights and etc..), he will send TriggerAction packet. So, we should dispatch this action to others players.
+        /// </summary>
+        /// <param name="l_packet">Packet with action name and state.</param>
         public void OnDispatchBusAction(Network.ServerPackets.DispatchBusAction l_packet)
         {
             Network.NestedTypes.BusState l_newBusState = _players[l_packet.pid].busState;
 
+            // Just checking that this action is exist.
             switch (l_packet.actionName)
             {
                 case "engine":
@@ -547,6 +618,7 @@ namespace BDSM
                     return;
             }
 
+            // Dispatching new bus state.
             _players[l_packet.pid].busState = l_newBusState;
             foreach(Network.ServerPackets.ServerPlayer l_player in _players.Values)
             {
@@ -558,6 +630,10 @@ namespace BDSM
         #endregion
 
         #region INetListener Interface.
+        /// <summary>
+        /// This callback handling inbound connections from clients, checking some stuff and accepting connection if everything is ok.
+        /// </summary>
+        /// <param name="l_request">Inbound connection.</param>
         public void OnConnectionRequest(ConnectionRequest l_request)
         {
             if (_players.Count == _playersLimit)
@@ -580,28 +656,60 @@ namespace BDSM
             }
         }
 
+        /// <summary>
+        /// When error in LiteNetLib happens, this functions will be called.
+        /// </summary>
+        /// <param name="l_endPoint">EndPoint where error occured.</param>
+        /// <param name="l_socketError">Error class.</param>
         public void OnNetworkError(IPEndPoint l_endPoint, SocketError l_socketError)
         {
         }
 
+        /// <summary>
+        /// This function when latency with client changing. So, you can get some useful info. But i`m personally using Statistics in LiteNetLib.NetManager (_client variable).
+        /// </summary>
+        /// <param name="l_peer">Peer class.</param>
+        /// <param name="l_latency">Peer latency.</param>
         public void OnNetworkLatencyUpdate(NetPeer l_peer, int l_latency)
         {
         }
 
+        /// <summary>
+        /// When we getting new packet, we should read it for triggering callbacks.
+        /// </summary>
+        /// <param name="l_peer">Packet sender.</param>
+        /// <param name="l_reader">Reader for that packet.</param>
+        /// <param name="l_channelNumber">Channel where server got this packet.</param>
+        /// <param name="l_deliveryMethod">What delivery method was used for this packet.</param>
         public void OnNetworkReceive(NetPeer l_peer, NetPacketReader l_reader, byte l_channelNumber, DeliveryMethod l_deliveryMethod)
         {
             _packetProcessor.ReadAllPackets(l_reader, l_peer);
         }
 
+        /// <summary>
+        /// Tbh, idk wtf is it.
+        /// </summary>
+        /// <param name="l_remoteEndPoint">Wtf?</param>
+        /// <param name="l_reader">Wtf?</param>
+        /// <param name="l_messageType">Wtf?</param>
         public void OnNetworkReceiveUnconnected(IPEndPoint l_remoteEndPoint, NetPacketReader l_reader, UnconnectedMessageType l_messageType)
         {
         }
 
+        /// <summary>
+        /// This function will be called when we accepting new connection.
+        /// </summary>
+        /// <param name="l_peer">Peer class.</param>
         public void OnPeerConnected(NetPeer l_peer)
         {
             Debug.Log($"SERVER: Peer {l_peer.EndPoint.Address} has connected!");
         }
 
+        /// <summary>
+        /// If somebody disconnecting for some reason, this function will be called. Its will do some important stuff for it: removing ServerPlayer for that peer, letting know about it to others and etc...
+        /// </summary>
+        /// <param name="l_peer"></param>
+        /// <param name="l_disconnectInfo"></param>
         public void OnPeerDisconnected(NetPeer l_peer, DisconnectInfo l_disconnectInfo)
         {
             Debug.Log($"SERVER: Peer {l_peer.EndPoint.Address} disconnected! Trying to find and remove server player...");
