@@ -11,24 +11,28 @@ namespace BDSM
         private bool _moveMode = false;
         private int _windowPositionX;
         private int _windowPositionY;
-        private const int _windowSizeX = 350;
-        private const int _windowSizeY = 350;
+        private const int _windowSizeX = 375;
+        private const int _windowSizeY = 405;
 
         private string _aboutText = "This is a small mod for Bus Driver Simulator.\n" +
                                     "So far, it is under active development.\n" +
                                     "There's still not much here, but I'm working on it.\n" +
-                                    "This mod uses the BepInEx injector,\n" +
-                                    "the HarmonyX library for hooking,\n" +
-                                    "and the LiteNetLib networking library.\n\n" +
+                                    "This mod uses BepInEx injector,\n" +
+                                    "HarmonyX library for hooking,\n" +
+                                    "Newtonsoft.JSON for parsing JSON,\n" +
+                                    "and LiteNetLib networking library.\n\n" +
                                     "Keybindings:\n" +
                                     "  F1 - Client manager.\n" +
                                     "  F2 - Server manager.\n" +
-                                    "  F3 - About window (This window).\n" +
+                                    "  F3 - About Window (This window).\n" +
+                                    "  F4 - Statistics Window.\n" +
                                     "You can open or close windows by pressing keys.\n" +
-                                    "You also can close windows by pressing \"X\" buttons.\n" +
-                                    "To move some window, just press \"M\" button in top-left\n" +
+                                    "You also can close windows by pressing \"X\" button.\n" +
+                                    "To move any window, just press \"M\" button in the top-left\n" +
                                     "corner of window, move it somewhere, and click again.\n\n\n" +
-                                    "Mod author: RidgyTheFox\n" +
+                                    "Mod authors:\n" +
+                                    "  Lead developer: RidgyTheFox\n" +
+                                    "  QA/Localization: Resident007\n" +
                                     "    -Enjoy! ^_^";
 
         private void Awake()
@@ -49,11 +53,14 @@ namespace BDSM
             _windowPositionY = (Screen.currentResolution.height / 2) - (_windowSizeY / 2);
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             if (Input.GetKeyDown(KeyCode.F3))
                 _showWindow = !_showWindow;
+        }
 
+        private void FixedUpdate()
+        {
             if (_moveMode)
             {
                 _windowPositionX = (int)Input.mousePosition.x - 10;
@@ -69,9 +76,9 @@ namespace BDSM
             if (_showWindow)
             {
                 GUI.Box(new Rect(_windowPositionX, _windowPositionY, _windowSizeX, _windowSizeY), "Bus Driver Simulator Mod | About Window");
-                if (GUI.Button(new Rect(_windowPositionX+1, _windowPositionY+1, 21, 21), "M"))
+                if (GUI.Button(new Rect(_windowPositionX+1, _windowPositionY+1, 23, 21), "M"))
                     _moveMode = !_moveMode;
-                if (GUI.Button(new Rect(_windowPositionX + _windowSizeX - 22, _windowPositionY + 1, 21, 21), "X"))
+                if (GUI.Button(new Rect(_windowPositionX + _windowSizeX - 24, _windowPositionY + 1, 23, 21), "X"))
                     _showWindow = !_showWindow;
 
                 GUI.Label(new Rect(_windowPositionX + 5, _windowPositionY + 26, _windowSizeX - 10, 20), "Bus Driver Simulator Multiplayer", _captionTextStyle);

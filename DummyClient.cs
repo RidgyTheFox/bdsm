@@ -19,11 +19,11 @@ namespace BDSM
         private NetPeer _server;
         private bool _isConnected = false;
         private bool _isAuthorized = false;
+        private bool _isMoving = false;
 
         private Network.NestedTypes.PlayerState _localPlayerState;
         private Network.NestedTypes.ServerState _serverState;
-        private Vector3 _position = new Vector3(1.0f, 2.0f, 3.0f);
-        private Quaternion _rotation = new Quaternion(1.0f, 2.0f, 3.0f, 1.0f);
+        //-207.7788 12.4482 -492.7207 - Serpukhov spawn.
         private Dictionary<uint, Network.ClientPackets.RemotePlayer> _remotePlayers;
 
         private void Awake()
@@ -32,7 +32,7 @@ namespace BDSM
             _client = new NetManager(this) { AutoRecycle = true };
             _writer = new NetDataWriter();
             
-            _localPlayerState = new Network.NestedTypes.PlayerState { isBusHided = true, position = _position, rotation = _rotation };
+            _localPlayerState = new Network.NestedTypes.PlayerState { selectedBusShortName = "CT", position = new Vector3(-207.7788f, 12.4482f, -492.7207f), rotation = new Quaternion(0.0f, 180.0f, 0.0f, 1.0f)};
             _remotePlayers = new Dictionary<uint, Network.ClientPackets.RemotePlayer>();
 
             Debug.Log("DUMMY: Registering nested types...");
@@ -50,17 +50,33 @@ namespace BDSM
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.ReceiveServerState>(OnReceiveServerState);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.AddRemotePlayer>(OnAddRemotePlayer);
             _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemoveRemotePlayer>(OnRemoveRemotePlayer);
+            _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.RemotePlayerChangedBus>(OnRemotePlayerChangedBus);
+            _packetProcessor.SubscribeReusable<BDSM.Network.ClientPackets.UpdateRemotePlayers>(OnUpdateRemotePlayers);
             Debug.Log("DUMMY: Initialized!");
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.PageUp))
+                Connect();
+            if (Input.GetKeyDown(KeyCode.PageDown))
+                Disconnect();
+
+            if (Input.GetKeyDown(KeyCode.KeypadPlus))
+                _isMoving = !_isMoving;
+            if (Input.GetKeyDown(KeyCode.KeypadMinus))
+                _localPlayerState.position = new Vector3(-207.7788f, 12.4482f, - 492.7207f);
         }
 
         private void FixedUpdate()
         {
             _client.PollEvents();
 
-            if (Input.GetKeyDown(KeyCode.PageUp))
-                Connect();
-            if (Input.GetKeyDown(KeyCode.PageDown))
-                Disconnect();
+            if (_isMoving)
+                _localPlayerState.position += new Vector3(0.1f * Time.deltaTime, 0.1f * Time.deltaTime, 0.1f * Time.deltaTime);
+
+            if (_isConnected && _isAuthorized)
+                SendPacket( new Network.ServerPackets.UpdatePlayerState { pid = _localPlayerState.pid, state = _localPlayerState }, DeliveryMethod.Sequenced);
         }
 
         private void OnGUI()
@@ -72,6 +88,7 @@ namespace BDSM
         {
             if (!_isConnected)
             {
+                _remotePlayers.Clear();
                 _client.Start();
                 Debug.Log("DUMMY: Connecting to localhost...");
                 _client.Connect("127.0.0.1", 2022, "bdsmIsCool");
@@ -96,7 +113,7 @@ namespace BDSM
         {
             _localPlayerState.pid = l_packet.pid;
             _isAuthorized = true;
-            Debug.Log($"DUMMY: Join request was accepted! Given PID is {l_packet.pid}. Requesting server state...");
+            Debug.Log($"DUMMY: Join request has been accepted! Assigned PID is {l_packet.pid}. Requesting server state...");
             _localPlayerState.pid = l_packet.pid;
             SendPacket(new Network.ServerPackets.RequestServerState { pid = l_packet.pid }, DeliveryMethod.ReliableOrdered);
         }
@@ -109,21 +126,23 @@ namespace BDSM
             _client.Stop();
             _server = null;
             _remotePlayers.Clear();
-            Debug.LogError($"DUMMY: Cannot join on server! Reason: {l_packet.message}.");
+            Debug.LogError($"DUMMY: Cannot join server! Reason: {l_packet.message}.");
         }
 
         public void OnReceiveServerState(Network.ClientPackets.ReceiveServerState l_packet)
         {
-            Debug.Log($"DUMMY: Server state was received! Server name: {l_packet.serverName}. Current map: {EnumUtils.MapUintToEnum(l_packet.currentMap)}. Players limit: {l_packet.playersLimit}. Amount of players: {l_packet.currentAmountOfPlayers}.");
+            Debug.Log($"DUMMY: Server state has been received! Server name: {l_packet.serverName}. Current map: {EnumUtils.MapUintToEnum(l_packet.currentMap)}. Players limit: {l_packet.playersLimit}. Amount of players: {l_packet.currentAmountOfPlayers}.");
             _serverState = new Network.NestedTypes.ServerState { serverName = l_packet.serverName, currentMap = EnumUtils.MapUintToEnum(l_packet.currentMap), playersLimit = l_packet.playersLimit, currentAmountOfPlayers = l_packet.currentAmountOfPlayers };
         }
 
         public void OnAddRemotePlayer(Network.ClientPackets.AddRemotePlayer l_packet)
         {
-            Network.NestedTypes.PlayerState l_newState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, isBusHided = l_packet.state.isBusHided, position = l_packet.state.position, rotation = l_packet.state.rotation };
-            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, selectedBus = Enums.AvailableBuses.UNKNOWN, remotePlayerBus = null, state = l_newState };
+            Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_packet.state.pid, position = l_packet.state.position, rotation = l_packet.state.rotation };
+            Network.ClientPackets.RemotePlayer l_newPlayer = new Network.ClientPackets.RemotePlayer { nickname = l_packet.nickname, remotePlayerBus = null, state = l_newPlayerState };
             _remotePlayers.Add(l_newPlayer.state.pid, l_newPlayer);
-            Debug.Log($"DUMMY: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] was added.");
+            _serverState.currentAmountOfPlayers++;
+
+            Debug.Log($"DUMMY: Remote player for {l_newPlayer.nickname}[{l_newPlayer.state.pid}] has been created.");
         }
 
         public void OnRemoveRemotePlayer(Network.ClientPackets.RemoveRemotePlayer l_packet)
@@ -137,8 +156,39 @@ namespace BDSM
             }
             else
             {
-                Debug.Log($"DUMMY: Remote player for {l_playerToRemove.nickname}[{l_playerToRemove.state.pid}] was removed.");
+                Debug.Log($"DUMMY: Remote player for {l_playerToRemove.nickname}[{l_playerToRemove.state.pid}] has been removed.");
                 _remotePlayers.Remove(l_packet.pid);
+            }
+        }
+
+        public void OnRemotePlayerChangedBus(Network.ClientPackets.RemotePlayerChangedBus l_packet)
+        {
+            Debug.Log($"DUMMY: Player with PID {l_packet.pid} changed bus. Searching...");
+            Network.ClientPackets.RemotePlayer l_playerForEdit;
+            _remotePlayers.TryGetValue(l_packet.pid, out l_playerForEdit);
+            if (l_playerForEdit != null)
+            {
+                Network.NestedTypes.PlayerState l_newPlayerState = new Network.NestedTypes.PlayerState { pid = l_playerForEdit.state.pid, selectedBusShortName = l_packet.busShortName, position = l_playerForEdit.state.position, rotation = l_playerForEdit.state.rotation };
+                l_playerForEdit.state = l_newPlayerState;
+                _remotePlayers.Remove(l_packet.pid);
+                _remotePlayers.Add(l_packet.pid, l_playerForEdit);
+                Debug.Log($"DUMMY: Bus for {l_playerForEdit.nickname}[{l_playerForEdit.state.pid}] has been changed to {l_playerForEdit.state.selectedBusShortName}.");
+            }
+            else
+                Debug.LogError($"DUMMY: Cannot find remote player for {l_packet.pid}!");
+        }
+
+        public void OnUpdateRemotePlayers(Network.ClientPackets.UpdateRemotePlayers l_packet)
+        {
+            foreach (Network.NestedTypes.PlayerState l_newState in l_packet.states)
+            {
+                Network.ClientPackets.RemotePlayer l_playerToEdit;
+                if (l_newState.pid != _localPlayerState.pid)
+                {
+                    _remotePlayers.TryGetValue(l_newState.pid, out l_playerToEdit);
+                    if (l_playerToEdit != null)
+                        l_playerToEdit.state = l_newState;
+                }
             }
         }
 
@@ -152,7 +202,7 @@ namespace BDSM
             }
         }
 
-        public void OnConnectionRequest(ConnectionRequest request)
+        public void OnConnectionRequest(ConnectionRequest l_request)
         {
         }
 
@@ -192,6 +242,5 @@ namespace BDSM
                 Debug.Log($"DUMMY: Server disconnected!");
             }
         }
-
     }
 }
