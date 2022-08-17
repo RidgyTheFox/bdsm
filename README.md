@@ -1,9 +1,9 @@
 # Bus Driver Simulator Multiplayer
+[Русская версия](README_RUS.md)
 
 ## ATTENTION
 The development was abandoned for personal reasons. The repository is open. If you have a desire to continue what you started - I am open to pull requests in the indev branch.
 Probably a little later, I will add inline XML documentation to the project to understand what goes where and why.
-(See at indev branch for more info about mod state.)
 
 ## Enjoy the game - now with other players all around the globe!
 ![bds](https://i.imgur.com/fP6gvsm.jpg)
@@ -25,13 +25,16 @@ Just install the mod, set up the server and client configs, and you're ready to 
 |Synchronizing buses selected by players|✅Works|
 |Synchronizing time on the location for everyone in session|✅Works|
 |Interface|✅Functional, but design may be improved in the future|
-|Synchronizing lights on buses between players|🟨In progress|
-|Displaying nicknames above the buses|🟨In progress|
-|Synchronizing rotation and state of wheels on buses|🟥Planned|
+|Displaying nicknames above the buses|✅Works|
+|Discord Integration|✅Works|
+|Synchronizing lights on buses between players|🟨Works, but not on all buses. Work in progress.|
+|Synchronizing rotation and state of wheels on buses|🟨Works, but not on all buses. Work in progress.|
 |Synchronizing installed upgrades for buses|🟥Planned|
 |Synchronizing sounds produced by other players' buses|🟥Planned|
 |Synchronizing weather|🟥Planned|
 |Synchronizing plates with routes on buses|🟥Planned|
+
+[*See current features status.*](FEATURES_STATUS.md)
 
 ## Installing
 The first thing you'll need to do is to download the package from Releases. After that, extract contents of the archive into game directory so that ServerConfig.json and ClientConfig.json are next to the game's .exe file (Bus Driver Simulator.exe).
@@ -56,7 +59,7 @@ There are two files for configuring server and client part of this mod: ClientCo
 
 ## Compiling from source (for developers)
 ### Cloning repository
-First off, clone this repository using your tool of choice (Visual Studio's git plugin, GitHub Desktop, Sourcetree etc.)
+First off, clone this repository using your tool of choice (Visual Studio's git plugin, GitHub Desktop, Sourcetree etc.) If you want to get the latest features, you can switch to the indev branch. But be careful, the indev branch is essentially my workflow, so there are a lot of bugs, typos, and the project may not compile at all.
 ### Preparing your IDE
 1. Make sure you have VS 2019 or 2022 with **.NET desktop development workload installed.**
 2. Install .NET 6.0 SDK from [here](https://dotnet.microsoft.com/en-us/download) and install it. After rebooting, you can enter ``dotnet --list-sdks`` into you terminal to check that .NET SDK is sucessfuly installed.
@@ -66,6 +69,8 @@ First off, clone this repository using your tool of choice (Visual Studio's git 
 ``copy /Y "X:\...\BDSM\bin\Debug\netstandard2.0\BDSM.dll" "Y:\...\Bus Driver Simulator\BepInEx\plugins"``,
 where X:\\...\BDSM is the path to your local copy of this repository and Y:\\...\Bus Driver Simulator\ is the path to your game folder.
 5. Press LCtrl+LShift+B to build the mod. It will be automatically copied to the game directory. Now you can start the game.
+6. Copy discord_game_sdk.dll from BDSM\Libs\Discord_Game_SDK into X:\\...\Bus Driver Simulator\BepInEx\plugins for the Discord integration to work.
+where X:\\...\Bus Driver Simulator is the path to your game folder.
 ### If you want to start the game with MVS debugger 
 Finally, click the arrow next to the Build button and click ``BDSM Debug Properties``. In the window, click Create a new profile and select Executable. 
 In "Executable" field, locate .exe file of the game using Browse button, and locate the game folder using Working directory field. You can rename your new profile to something like "Build and run". Close Launch Profiles window, and make sure that your newly created profile is set as default launch profile (click on the arrow next to Build button again and make sure that your profile is ticked).
@@ -85,3 +90,4 @@ See file LICENSE.md
 * [BepInEx 5.4.19](https://github.com/BepInEx/BepInEx) - was used for injecting mod.
 * [HarmonyX 2.9.0 (NuGet)](https://github.com/BepInEx/HarmonyX) - was used for patching functions\Classes.
 * [Newtonsoft.JSON 13.0.1 (NuGet)](https://www.newtonsoft.com/json) - was used for parsing settings files.
+* [LiteNetLib by Ruslan Pyrch (RevenantX)](https://github.com/RevenantX/LiteNetLib) - was used as base for multiplayer.
